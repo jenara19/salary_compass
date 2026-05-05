@@ -10,7 +10,7 @@ Run with:  cd C:\\Personal\\salary-compass && python -m pytest tests/ -v
 
 import pytest
 
-from engine.tax import calculate_net, find_target_gross
+from engine.tax import calculate_net, find_gross_to_match_surplus, find_target_gross
 
 # ── Validated anchor points ────────────────────────────────────────────────────
 
@@ -577,6 +577,201 @@ class TestNL30to27RulingRateChange:
         all_events = [e for yr in traj for e in yr.get("events", [])]
         assert not any("⚡" in e for e in all_events), (
             "No rate-change event should fire when ruling expires before 2027"
+        )
+
+
+# ── Surplus reverse solver ─────────────────────────────────────────────────────
+
+
+class TestFindGrossToMatchSurplus:
+    """Tests for find_gross_to_match_surplus().
+
+    Logic: home_surplus = home_net - home_exp
+           target_net   = home_surplus + dest_exp
+           returned gross ≡ find_target_gross(target_net, country)
+    """
+
+    def test_basic_nl_round_trip(self):
+        """NL: home_net=3000, home_exp=2200, dest_exp=2500 → target_net=3300."""
+        gross = find_gross_to_match_surplus(
+            home_net_monthly_eur=3000,
+            home_expenses_eur=2200,
+            dest_expenses_eur=2500,
+            country_code="NL",
+        )
+        actual_net = calculate_net(gross, "NL")["net_monthly_eur"]
+        assert abs(actual_net - 3300) <= 10, f"Expected net ≈ €3300, got €{actual_net}"
+
+    def test_same_expenses_equals_find_target_gross(self):
+        """If dest_exp == home_exp, target_net == home_net → same as find_target_gross(home_net)."""
+        home_net = 3500.0
+        expenses = 2000.0
+        surplus_result = find_gross_to_match_surplus(
+            home_net_monthly_eur=home_net,
+            home_expenses_eur=expenses,
+            dest_expenses_eur=expenses,
+            country_code="NL",
+        )
+        direct_result = find_target_gross(home_net, "NL")
+        assert abs(surplus_result - direct_result) <= 10, (
+            f"Expected {direct_result}, got {surplus_result}"
+        )
+
+    def test_dest_more_expensive_requires_higher_gross(self):
+        """Destination more expensive → must earn more gross."""
+        base = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2500,
+            dest_expenses_eur=2500,
+            country_code="NL",
+        )
+        higher = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2500,
+            dest_expenses_eur=3000,  # +500
+            country_code="NL",
+        )
+        assert higher > base, f"More expensive dest should require higher gross: {higher} vs {base}"
+
+    def test_dest_cheaper_requires_lower_gross(self):
+        """Destination cheaper → can earn less gross and still match surplus."""
+        base = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2500,
+            dest_expenses_eur=2500,
+            country_code="NL",
+        )
+        lower = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2500,
+            dest_expenses_eur=2200,  # -300
+            country_code="NL",
+        )
+        assert lower < base, f"Cheaper dest should require lower gross: {lower} vs {base}"
+
+    def test_negative_surplus_still_returns_positive_gross(self):
+        """Negative home surplus (home_net < home_exp) still produces a valid gross > 0."""
+        # home_net=1800, home_exp=2200 → surplus=-400; dest_exp=1500 → target_net=1100
+        gross = find_gross_to_match_surplus(
+            home_net_monthly_eur=1800,
+            home_expenses_eur=2200,
+            dest_expenses_eur=1500,
+            country_code="NL",
+        )
+        assert gross > 0, f"Gross must be positive even with negative surplus, got {gross}"
+        actual_net = calculate_net(gross, "NL")["net_monthly_eur"]
+        assert abs(actual_net - 1100) <= 10, f"Expected target_net ≈ 1100, got {actual_net}"
+
+    def test_nl_30_ruling_reduces_required_gross(self):
+        """30% ruling should reduce the required gross to achieve the same net."""
+        without_ruling = find_gross_to_match_surplus(
+            home_net_monthly_eur=5000,
+            home_expenses_eur=3000,
+            dest_expenses_eur=3200,
+            country_code="NL",
+        )
+        with_ruling = find_gross_to_match_surplus(
+            home_net_monthly_eur=5000,
+            home_expenses_eur=3000,
+            dest_expenses_eur=3200,
+            country_code="NL",
+            active_schemes=["nl_30_ruling"],
+        )
+        assert with_ruling < without_ruling, (
+            f"30% ruling should reduce required gross: {with_ruling} vs {without_ruling}"
+        )
+
+    def test_monotonic_with_increasing_dest_expenses(self):
+        """Higher dest expenses → strictly higher required gross."""
+        g1 = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2000,
+            dest_expenses_eur=2000,
+            country_code="NL",
+        )
+        g2 = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2000,
+            dest_expenses_eur=2500,
+            country_code="NL",
+        )
+        g3 = find_gross_to_match_surplus(
+            home_net_monthly_eur=4000,
+            home_expenses_eur=2000,
+            dest_expenses_eur=3000,
+            country_code="NL",
+        )
+        assert g1 < g2 < g3, f"Not monotonic: g1={g1}, g2={g2}, g3={g3}"
+
+    def test_round_trip_surplus_precision(self):
+        """Returned gross → calculate_net → surplus ≈ home surplus within 5 EUR."""
+        home_net = 4200.0
+        home_exp = 2800.0
+        dest_exp = 3100.0
+        home_surplus = home_net - home_exp  # 1400
+
+        gross = find_gross_to_match_surplus(
+            home_net_monthly_eur=home_net,
+            home_expenses_eur=home_exp,
+            dest_expenses_eur=dest_exp,
+            country_code="NL",
+        )
+        dest_net = calculate_net(gross, "NL")["net_monthly_eur"]
+        dest_surplus = dest_net - dest_exp
+        assert abs(dest_surplus - home_surplus) <= 5, (
+            f"Surplus mismatch: home={home_surplus}, dest={dest_surplus:.1f}"
+        )
+
+    def test_es_country(self):
+        """Basic sanity check that function works for Spain."""
+        gross = find_gross_to_match_surplus(
+            home_net_monthly_eur=3000,
+            home_expenses_eur=1800,
+            dest_expenses_eur=1900,
+            country_code="ES",
+        )
+        assert isinstance(gross, (int, float)) and gross > 0
+        actual_net = calculate_net(gross, "ES")["net_monthly_eur"]
+        target_net = (3000 - 1800) + 1900  # 2100
+        assert abs(actual_net - target_net) <= 10, (
+            f"ES: expected net ≈ {target_net}, got {actual_net}"
+        )
+
+    def test_ch_country(self):
+        """Basic sanity check that function works for Switzerland."""
+        gross = find_gross_to_match_surplus(
+            home_net_monthly_eur=5000,
+            home_expenses_eur=3500,
+            dest_expenses_eur=4000,
+            country_code="CH",
+        )
+        assert isinstance(gross, (int, float)) and gross > 0
+        actual_net = calculate_net(gross, "CH")["net_monthly_eur"]
+        target_net = (5000 - 3500) + 4000  # 5500
+        assert abs(actual_net - target_net) <= 20, (
+            f"CH: expected net ≈ {target_net}, got {actual_net}"
+        )
+
+    def test_scheme_overrides_passthrough(self):
+        """scheme_overrides={'nl_30_ruling': {'multiplier': 0.73}} → less favourable → higher gross."""
+        with_30pct = find_gross_to_match_surplus(
+            home_net_monthly_eur=5000,
+            home_expenses_eur=3000,
+            dest_expenses_eur=3200,
+            country_code="NL",
+            active_schemes=["nl_30_ruling"],
+        )
+        with_27pct = find_gross_to_match_surplus(
+            home_net_monthly_eur=5000,
+            home_expenses_eur=3000,
+            dest_expenses_eur=3200,
+            country_code="NL",
+            active_schemes=["nl_30_ruling"],
+            scheme_overrides={"nl_30_ruling": {"multiplier": 0.73}},
+        )
+        assert with_27pct > with_30pct, (
+            f"Less favourable override (27%) should require higher gross: "
+            f"{with_27pct} vs {with_30pct}"
         )
 
     def test_find_target_gross_with_scheme_overrides(self):
