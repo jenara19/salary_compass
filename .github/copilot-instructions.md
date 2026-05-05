@@ -99,3 +99,6 @@ This is a **hard rule**: documentation is part of the task, not optional cleanup
 
 ## Read CONTEXT.md first
 For full architectural detail, data schemas, tax accuracy status, and original use-case context, read `CONTEXT.md`.
+
+## Design reference
+When making any UI changes to `app.py` (colours, spacing, typography, component style), consult `docs/DESIGN.md` first. It defines the General Intelligence Company design system — colour tokens, type scale, spacing, shadows, and component patterns that govern visual decisions.

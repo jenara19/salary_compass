@@ -48,6 +48,9 @@ Create `data/cities/<slug>.yaml` following the schema of any existing city file 
 2. Create city YAMLs referencing `country: XX`
 3. Restart the app to clear cache
 
+## Design System
+UI design tokens, color palette, typography, and component guidelines live in [`docs/DESIGN.md`](docs/DESIGN.md).
+
 ## Disclaimer
 Directional estimates only. Not financial or tax advice.
 
