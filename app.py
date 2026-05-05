@@ -1609,11 +1609,13 @@ with tab_compare:
                 )
 
             for city_slug in city_inputs:
+                city_events: set[str] = set()
                 for scen in scenarios_def:
                     traj = results_matrix[city_slug][scen["name"]]["trajectory"]
-                    all_events = [e for yr in traj for e in yr.get("events", [])]
-                    for ev in set(all_events):
-                        st.warning(f"{city_names[city_slug]} · {scen['name']}: {ev}")
+                    for yr in traj:
+                        city_events.update(yr.get("events", []))
+                for ev in sorted(city_events):
+                    st.warning(f"{city_names[city_slug]}: {ev}")
 
             # ── 30% Ruling / Beckham Law cliff analysis ──────────────────────
             cliff_entries = []
@@ -2175,7 +2177,13 @@ with tab_compare:
             st.header("📋 Negotiate & Relocate")
             st.caption("Print-ready before your negotiation call.")
 
-            _ref_scen = scen_names[0]
+            _ref_scen = st.selectbox(
+                "Reference scenario",
+                scen_names,
+                index=min(1, len(scen_names) - 1),
+                key="neg_ref_scen",
+                help="Expenses from this scenario are used as the baseline for all calculations below.",
+            )
             _dest_slugs = [s for s in city_inputs if s != home_city_slug]
 
             # ── 💰 Target Salary ──────────────────────────────────────────────
@@ -2191,13 +2199,14 @@ with tab_compare:
                     _home_r = results_matrix[home_city_slug][_ref_scen]
                     _home_net = _home_r["net"]["net_monthly_eur"]
                     _home_exp = float(_home_r["budget"]["total_eur"])
-                    _home_surplus = float(_home_r["surplus"])
+                    _home_surplus = float(_home_r["surplus"]["surplus_eur"])
                     st.caption(
                         f"Home: **{city_inputs[home_city_slug]['name']}** — "
                         f"net €{_home_net:,.0f}/mo · expenses €{_home_exp:,.0f}/mo · "
                         f"surplus **€{_home_surplus:+,.0f}/mo**"
                     )
                     _ts_rows = []
+                    _has_non_eur = any(city_inputs[s]["currency"] != "EUR" for s in _dest_slugs)
                     for _slug in _dest_slugs:
                         _ci = city_inputs[_slug]
                         _dest_r = results_matrix[_slug][_ref_scen]
@@ -2215,34 +2224,35 @@ with tab_compare:
                             _cur_eur = _ci["gross"] * _eur_rate
                             _tg_eur = _tg_local * _eur_rate
                             _gap = _tg_eur - _cur_eur
-                            _ts_rows.append(
-                                {
-                                    "City": _ci["name"],
-                                    "Current gross (€/yr)": f"€{_cur_eur:,.0f}",
-                                    "Target gross (€/yr)": f"€{_tg_eur:,.0f}",
-                                    "Gap (€/yr)": f"€{_gap:+,.0f}",
-                                    f"Target ({_ccy}/yr)": (
-                                        f"{_ccy} {_tg_local:,.0f}" if _ccy != "EUR" else "—"
-                                    ),
-                                    "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
-                                }
-                            )
+                            _row: dict = {
+                                "City": _ci["name"],
+                                "Current gross (€/yr)": f"€{_cur_eur:,.0f}",
+                                "Target gross (€/yr)": f"€{_tg_eur:,.0f}",
+                                "Gap (€/yr)": f"€{_gap:+,.0f}",
+                                "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
+                            }
+                            if _has_non_eur:
+                                _row["In local currency"] = (
+                                    f"{_ccy} {_tg_local:,.0f}" if _ccy != "EUR" else "—"
+                                )
+                            _ts_rows.append(_row)
                         except Exception:
-                            _ts_rows.append(
-                                {
-                                    "City": _ci["name"],
-                                    "Current gross (€/yr)": "—",
-                                    "Target gross (€/yr)": "—",
-                                    "Gap (€/yr)": "—",
-                                    f"Target ({_ccy}/yr)": "—",
-                                    "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
-                                }
-                            )
+                            _row = {
+                                "City": _ci["name"],
+                                "Current gross (€/yr)": "—",
+                                "Target gross (€/yr)": "—",
+                                "Gap (€/yr)": "—",
+                                "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
+                            }
+                            if _has_non_eur:
+                                _row["In local currency"] = "—"
+                            _ts_rows.append(_row)
                     st.dataframe(pd.DataFrame(_ts_rows).set_index("City"), width="stretch")
                     st.caption(
-                        f"_Target gross_ = annual gross yielding the same monthly surplus "
-                        f"as home (€{_home_surplus:+,.0f}/mo), after local taxes and "
-                        "destination cost of living. Based on Comfortable scenario."
+                        f"_Target gross_ = annual gross in the destination city that yields "
+                        f"the same monthly surplus as home (€{_home_surplus:+,.0f}/mo), "
+                        f"after local taxes and destination cost of living. "
+                        f"Based on **{_ref_scen}** scenario."
                     )
 
             # ── 🧳 Move Readiness ─────────────────────────────────────────────
