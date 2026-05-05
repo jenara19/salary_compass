@@ -29,11 +29,44 @@ Use `python -m streamlit` (not `streamlit run`) — the CLI may not be on PATH.
 | `pytest` | Tests + coverage | `uv run python -m pytest` |
 | `pre-commit` | Git hook checks | `uv run pre-commit install` |
 
+## Branching workflow — ALWAYS follow this
+This project uses **GitHub Flow**: one long-lived `main` branch; all work happens on short-lived feature branches.
+
+```
+main          → production-ready. Protected. No direct pushes. Ever.
+feature/*     → branch from main, open PR back to main when done
+hotfix/*      → branch from main for urgent fixes, PR back immediately
+experiment/*  → exploratory, may never merge
+```
+
+### Every task follows these steps
+1. `git checkout main && git pull` — start from latest main
+2. `git checkout -b feature/<short-description>` — create a branch
+3. Make changes, commit with Conventional Commits format (see below)
+4. `git push -u origin feature/<short-description>`
+5. Open a PR → CI must go green → merge to main
+6. `git checkout main && git pull && git branch -d feature/<short-description>`
+
+### Conventional commit format
+```
+feat:     new feature (calc, chart, tab, city, country)
+fix:      bug fix or calculation correction
+update:   modify existing behaviour (not a bug)
+docs:     documentation only
+refactor: restructuring without behaviour change
+chore:    tooling, config, dependencies
+remove:   delete obsolete files
+wip:      work in progress (use on feature branch, squash before merge)
+```
+Example: `feat: add pension contribution modelling for DE`
+
+**Never use `git push --force` on `main`.** Force-push is allowed only on your own feature branch.
+
 ## CI / CD
-- **CI**: GitHub Actions (`.github/workflows/ci.yml`) runs lint → type-check → test on every push/PR to `main`
-- **Releases**: Tag with `vX.Y.Z` → `.github/workflows/release.yml` creates a GitHub Release
-- **Branch protection**: `main` requires `ci-passed` check and PR approval
-- **Dependabot**: weekly updates for Python deps, Actions, Docker base images
+- **CI**: GitHub Actions (`.github/workflows/ci.yml`) runs lint → type-check → test on every push/PR
+- **Gate**: the `ci-passed` job is the only required check — branch protection targets this name
+- **Releases**: tag with `vX.Y.Z` → `.github/workflows/release.yml` creates a GitHub Release + CHANGELOG extract
+- **Dependabot**: weekly updates for Python deps, Actions, and Docker base images (auto-PRs)
 
 ## Documentation — keep it current
 **After every change to app.py, engine/, or data/**, update the relevant docs before considering the task done:
