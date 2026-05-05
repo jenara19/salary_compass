@@ -5,6 +5,26 @@
 
 ---
 
+## Resuming on a new machine or new Copilot CLI session
+
+Session checkpoints from Copilot CLI are stored locally and do not travel with the repo.
+To restore full context on a new machine, read these two files before starting:
+
+1. **This file** (`CONTEXT.md`) — architecture, data schemas, engine API, gotchas, accuracy status
+2. **`.github/copilot-instructions.md`** — project conventions, branching rules, agent coordination guidelines
+3. **`CHANGELOG.md`** — chronological history of what was built and when
+
+The `CHANGELOG.md` + `Pending improvements` section at the bottom of this file together
+describe the current state and next priorities.
+
+**Quick state summary (as of 2026-05-05):**
+- All 4 Compare tab inner tabs fully implemented (Budget/Surplus, 10yr Trajectory, Negotiate ladder, Details)
+- Negotiate tab: Target Salary, Move Readiness, Sign-on Bonus, Permit Timeline all live
+- 11 cities, 7 countries, 197 tests, deployed on Streamlit Community Cloud
+- Open work: LLM qualitative layer, GE single_lookup recalibration above CHF 140k
+
+---
+
 ## Documentation rule
 
 **After every change to `app.py`, `engine/`, or `data/`, update docs before closing the task:**
@@ -42,12 +62,15 @@ actual monthly expenses, lifestyle) and the app produces:
 
 ```
 salary-compass/
-├── app.py                    # All UI logic (Streamlit). ~1,700 lines.
-├── requirements.txt
-├── .streamlit/config.toml    # theme + server settings
+├── app.py                    # All UI logic (Streamlit). ~2,400 lines.
+├── requirements.txt          # Pinned deps — used by Streamlit Community Cloud
+├── pyproject.toml            # Project metadata + dev deps (ruff, pytest, mypy)
+├── runtime.txt               # Python version pin for Streamlit Cloud
+├── .streamlit/config.toml    # Theme + server settings
 │
 ├── engine/
-│   ├── tax.py                # calculate_net(), find_target_gross()
+│   ├── __init__.py           # Public API exports
+│   ├── tax.py                # calculate_net(), find_target_gross(), find_gross_to_match_surplus()
 │   ├── budget.py             # calculate_budget_v2(), get_budget_for_city()
 │   └── trajectory.py        # 10-year savings projection
 │
@@ -66,11 +89,15 @@ salary-compass/
 ## Running the app
 
 ```bash
-pip install -r requirements.txt
-python -m streamlit run app.py --server.headless true
+uv sync                    # install all deps including dev
+uv run streamlit run app.py
 ```
 
-> Use `python -m streamlit` — `streamlit` may not be on PATH.
+For non-developers using plain pip (e.g. Streamlit Cloud):
+```bash
+pip install -r requirements.txt
+python -m streamlit run app.py
+```
 
 ---
 
@@ -122,7 +149,24 @@ python -m streamlit run app.py --server.headless true
 - **💼 Sign-on bonus recommendation**: grossed-up relocation cost formula
 - **🛂 Permit & Visa Timeline**: EU/EEA path vs Non-EU path, complexity rating, expert notes
 
-#### ℹ️ Details & Caveats
+#### 📋 Negotiate
+The 5th inner tab. Only rendered when `has_actuals` is true and at least one destination city is selected.
+
+**Target Salary** — calls `find_gross_to_match_surplus(home_net, home_exp, dest_exp, country_code, schemes)` per dest city.
+Shows current gross, required gross to match home surplus, gap, and local-currency equivalent.
+
+**Move Readiness** — total cash needed on day 1:
+- N-month cash buffer (slider, default 3)
+- 2-month rent deposit (from `rent_2bed.comfortable` in city YAML)
+- One-off relocation costs (slider, default €3,000)
+
+**Sign-on Bonus** — gross sign-on to request:
+`net_needed = buffer + deposit + relocation`
+`gross_needed = net_needed / (1 - effective_tax_rate)`
+
+**Permit Timeline** — reads `permit.eu_eea` and `permit.non_eu` from city YAML. EU passport toggle.
+Shows path description, steps list, timeline in weeks, complexity badge (low / medium / high), government fees, sponsor requirement.
+
 - Per-city: country disclaimer, healthcare model, hidden costs (in local currency), permit summary
 - Lifestyle anchors summary
 - Household model assumptions
@@ -174,8 +218,26 @@ permit:
 - `comfortable` is the primary baseline used for scaling and overrides.
 - `travel` and `personal` are marked `fixed: true` — they are **portable** (don't scale by city).
 - `hidden_costs` items can have `monthly`, `annual`, or `one_time` fields; `mandatory: true/false`.
-- `permit` section is present on all 11 cities.
-- Adding a new city requires only a YAML file; no code changes needed.
+- `permit` section is present on all 11 cities. Schema:
+```yaml
+permit:
+  eu_eea:
+    path: "EU/EEA citizens register at municipality — no work permit needed"
+    timeline_weeks: 2
+    steps:
+      - "Register at city hall (DigiD + BSN)"
+    notes: "..."
+  non_eu:
+    path: "Employer-sponsored work + residence permit via IND"
+    timeline_weeks: 12
+    steps:
+      - "Employer applies for TWV at UWV"
+      - "IND processes combined residence + work permit"
+    complexity: medium        # low | medium | high
+    sponsor_required: true
+    costs_eur: 0
+    notes: "Key tips and gotchas for this city's permit process."
+```
 
 ### Country YAML (`data/countries/<code>.yaml`)
 Two tax calculation methods:
@@ -246,6 +308,15 @@ calculate_net(gross_annual, country_code, active_schemes=[],
 # Returns:
 #   gross_annual, net_annual, net_monthly_local, net_monthly_eur,
 #   effective_rate, tax_annual, social_annual, currency, eur_rate, country_code
+
+find_gross_to_match_surplus(
+    *, home_net_monthly_eur, home_expenses_eur, dest_expenses_eur,
+    country_code, active_schemes=[], scheme_overrides=None
+) -> float
+# target_net = (home_net - home_exp) + dest_exp  (preserve home surplus)
+# Delegates to find_target_gross() binary search.
+# Returns LOCAL currency gross for the destination country.
+# All monetary inputs in EUR; return value is in local currency (e.g. CHF, NOK).
 
 find_target_gross(target_net_monthly_eur, country_code, active_schemes=[],
                   scheme_overrides=None, tolerance_eur=5.0) -> float
@@ -375,7 +446,7 @@ Upper bound is 2,000,000 (local currency). Convergence is guaranteed because `ca
 | ES      | Lookup  | ✅ Validated (€57.5k → €3,450/mo) |
 | NL      | Brackets + credits | ✅ Validated 2026 (€85k + 30% ruling → ~€5,620/mo; 3-bracket system + AHK + arbeidskorting) |
 | CH (ZH) | Lookup  | ⚠️ Directional only — Canton Zurich rates |
-| GE      | Lookup  | ⚠️ Directional — computed from LIPP Art. 41 §1 barème 1; CHF 140k+ extrapolated |
+| GE      | Lookup  | ⚠️ Directional — CHF 80k–130k from official LIPP barème 1; CHF 140k+ extrapolated at 60% marginal retention (likely undertaxed ~5–13pp vs real outcomes). `married_lookup` (barème 2) added. Recalibration of CHF 140k+ single lookup recommended — requires official LIPP tariff source from ge.ch. |
 | DE      | Lookup  | ✅ Recalculated 2025 (progressive formula, Steuerklasse 1, GKV, no church tax) |
 | NOR     | Lookup  | ✅ Recalculated 2025 (Skatteetaten-verified trinnskatt brackets) |
 | UK      | Lookup  | ✅ Recalculated 2025/26 (income tax + NI, PA taper captured) |
@@ -394,9 +465,8 @@ New keys added: `city_travel_<slug>` (travel allowance) and `city_meals_<slug>` 
 
 ## Pending improvements (not yet built)
 
-- **LLM qualitative layer** — `engine/llm.py` was planned but never built
-- **Push to GitHub + Streamlit Community Cloud** — for sharing via URL
-- **Geneva married tariff** — currently uses single/cohabiting barème 1; married couples get ~CHF 350–450/month more net
+- **LLM qualitative layer** — `engine/llm.py` planned but not yet built; would add per-city narrative summaries
+- **Geneva single_lookup recalibration** — CHF 140k–200k values extrapolated at 60% marginal retention; likely undertaxed vs real outcomes (see GE.yaml disclaimer + tax accuracy table). Requires official LIPP tariff data from ge.ch Quellensteuer tables.
 
 ---
 
@@ -410,194 +480,7 @@ This tool was built for a real decision:
 
 Rotterdam flip-point vs Zurich: ~CHF 115-120k without RSUs.
 
-> Read this before touching any code. It captures every architectural decision,
-> gotcha, and current state so you can contribute without breaking things.
 
----
-
-## What this app does
-
-SalaryCompass is a Streamlit web app that compares **net income, cost of living,
-and 10-year career trajectory** across multiple cities simultaneously.
-
-The user enters their personal situation (gross salary per city, household,
-actual monthly expenses, lifestyle) and the app produces:
-- A **Income · Cost · Surplus matrix** for all scenario × city combinations
-- A **budget breakdown chart** per scenario
-- A **full expense table** per scenario
-- A **10-year cumulative savings trajectory**
-- A **negotiation ladder** per city
-
----
-
-## Architecture overview
-
-```
-salary-compass/
-├── app.py                    # All UI logic (Streamlit). ~1100 lines.
-├── requirements.txt
-├── .streamlit/config.toml    # theme + server settings
-│
-├── engine/
-│   ├── tax.py                # calculate_net() — gross → net monthly
-│   ├── budget.py             # calculate_budget_v2(), get_budget_for_city()
-│   └── trajectory.py        # 10-year savings projection
-│
-├── output/
-│   └── charts.py             # Plotly chart builders
-│
-└── data/
-    ├── countries/            # Tax + scheme config (ES NL CH DE NOR UK)
-    └── cities/               # CoL estimates (11 cities)
-```
-
----
-
-## Running the app
-
-```bash
-pip install -r requirements.txt
-python -m streamlit run app.py --server.headless true
-```
-
-> Use `python -m streamlit` — `streamlit` may not be on PATH.
-
----
-
-## UI flow (two tabs)
-
-### Tab 1 — 📋 My Setup
-1. **Section A — Cities & Salaries**: multiselect cities → per-city card with:
-   - Gross annual salary input
-   - Active special schemes (30% ruling etc.)
-   - Net income metric (live preview)
-   - 🔧 Override city estimates expander (rent, utilities, health, groceries, transport, eating out)
-
-2. **Section B — My Actual Expenses**: two modes:
-   - ⚡ Quick: one total monthly number
-   - 📋 Detailed: per-category table with city YAML reference column
-   - Switching Quick→Detailed pre-populates categories from YAML proportions
-   - Switching Detailed→Quick sums the categories
-
-3. **Section C — Scenarios**: three scenario cards, each with:
-   - Custom name
-   - Global intensity slider (50–200% of your actual expenses)
-   - Per-category fine-tune expanders
-   - Live implied total caption e.g. `"Global: 75% → ≈ €2,800/mo"`
-
-### Tab 2 — 📊 Compare
-- **Income · Cost · Surplus table**: one row per scenario, multi-level column headers
-  with net income in city header. Cost (grey) + Surplus (green/red bold) per city.
-- **Drill-down section**: scenario radio → stacked budget chart → full expense table
-- **10-Year Trajectory tab**: cumulative savings lines for all scenario × city combos
-- **Negotiation Ladder tab**: per-city gross→surplus ladder across salary range
-
----
-
-## Data model
-
-### City YAML (`data/cities/<slug>.yaml`)
-```yaml
-name: Rotterdam
-country: NL          # must match a data/countries/ file
-currency: EUR
-cost_of_living:
-  rent_2bed:      {generous: 2000, comfortable: 1700, frugal: 1700}
-  utilities:      {generous: 300,  comfortable: 300,  frugal: 200}
-  health_extra:   {generous: 500,  comfortable: 400,  frugal: 300}
-  groceries_2pax: {generous: 800,  comfortable: 700,  frugal: 600}
-  transport_2pax: {generous: 200,  comfortable: 200,  frugal: 100}
-  eating_out:     {generous: 500,  comfortable: 350,  frugal: 200}
-  leisure:        {generous: 200,  comfortable: 100,  frugal: 100}
-  misc:           {generous: 250,  comfortable: 200,  frugal: 100}
-  travel:         {generous: 350,  comfortable: 350,  frugal: 350, fixed: true}
-  personal:       {generous: 700,  comfortable: 700,  frugal: 700, fixed: true}
-hidden_costs:
-  - {name: "Gemeentebelasting", annual: 700, mandatory: true}
-career:
-  typical_cagr: 0.05
-  ceiling_gross_eur: 135000
-```
-
-- `comfortable` is the primary baseline used for scaling and overrides.
-- `travel` and `personal` are marked `fixed: true` — they are **portable** (don't scale by city).
-- Adding a new city requires only a YAML file; no code changes needed.
-
-### Country YAML (`data/countries/<code>.yaml`)
-Two tax calculation methods:
-
-**Bracket method** (NL, DE, UK):
-```yaml
-income_tax:
-  brackets:
-    - {up_to: 75518, rate: 0.3697}
-    - {from: 75518,  rate: 0.495}
-social_contributions:
-  employee:
-    - {name: "ZVW nominal premium", monthly_flat: 155}
-```
-
-**Lookup method** (ES, CH, NOR):
-```yaml
-income_tax:
-  method: effective_rate_lookup
-  marginal_retention: 0.57    # used above highest lookup point
-  lookup:
-    - {gross: 57500, net_monthly: 3450}
-    - {gross: 70000, net_monthly: 4083}
-    # ...
-```
-
-Special schemes (e.g. 30% ruling):
-```yaml
-special_schemes:
-  - id: nl_30_ruling
-    name: "30% Ruling (expat)"
-    type: taxable_multiplier
-    multiplier: 0.70          # only 70% of gross is taxable
-    duration_years: 5
-```
-
----
-
-## Key engine functions
-
-### `engine/tax.py`
-```python
-calculate_net(gross_annual, country_code, active_schemes=[]) -> dict
-# Returns: gross_annual, net_monthly_local, net_monthly_eur,
-#          effective_rate, currency, eur_rate
-```
-
-### `engine/budget.py`
-```python
-get_budget_for_city(
-    city_slug, scenario_def, home_city_slug,
-    user_expenses_by_cat, lifestyle_anchors_eur,
-    pax, partner_net_eur,
-    city_overrides={}     # {cat: multiplier_vs_yaml_comfortable}
-) -> dict
-# Returns: items, total_local, total_eur, hidden_costs, ...
-
-calculate_surplus(net_monthly_eur, budget) -> dict
-# Returns: surplus_eur, surplus_pct
-```
-
-**Budget resolution for a non-home city:**
-1. If user has actuals: scale from home city via YAML `comfortable` ratios, capped [0.5×, 3.0×]
-2. Apply `city_overrides` multipliers (user manual overrides in the UI)
-3. Apply `scenario_def["category_multipliers"]` × `global_pct / 100`
-4. Portable categories (`travel`, `personal`) don't scale by city
-
-### `engine/trajectory.py`
-```python
-calculate_trajectory(
-    gross_annual, country_code, active_schemes,
-    budget, years=10, cagr=0.05,
-    scheme_expires_year=None,
-    ...
-) -> list[dict]
-```
 
 ---
 

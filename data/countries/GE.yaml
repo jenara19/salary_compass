@@ -9,12 +9,14 @@ disclaimer: "City of Geneva / Canton GE. Single/cohabiting earner, no children.
   mandatory minimum 7% (up to CHF 88,200 insured). G=80k-130k computed from
   official 2025 GE LIPP tariff; G=140k-200k extrapolated at ~60% marginal retention.
   Married/civil partnership (income splitting) adds approx. CHF 350-450/month net at
-  typical expat salaries. +-4-6% accuracy.
-  ACCURACY NOTE (single lookup): Extrapolated values at CHF 140k-200k are likely
-  undertaxed vs real outcomes. At CHF 150k the model shows 27.1% effective vs
-  expected ~32-36%; at CHF 200k it shows 30.1% vs expected ~38-43%. Gap grows to
-  ~13pp at the upper end. Recalibration of single_lookup above CHF 140k is
-  recommended as a follow-up."
+  typical expat salaries. +-4-6% accuracy for G<=130k.
+  ⚠️ RECALIBRATION NEEDED (single_lookup above CHF 140k): Extrapolated values at
+  CHF 140k-200k are likely undertaxed by 5-13pp vs real Geneva outcomes. At CHF 150k
+  the model shows ~27% effective vs expected ~32-36%; at CHF 200k ~30% vs ~38-43%.
+  To fix: obtain the official 2025 Quellensteuer barème 1 tables from
+  https://www.ge.ch (search 'bareme impot source 2025') and replace lookup rows
+  from gross: 140000 onward. When recalibrated, re-derive married_lookup to preserve
+  the correct ~350-450 CHF/month advantage at CHF 100k-160k gross."
 
 income_tax:
   method: effective_rate_lookup
@@ -40,13 +42,11 @@ income_tax:
   # Bareme 2 / Tarif marie -- married couples or registered civil partners
   # Combined Canton GE ICC (LIPP bareme 2) + Ville de Geneve communal surcharge
   # + federal IFD (DBG bareme 2) + AHV/ALV/BVG (already included, same as single).
-  # Source: AFC Geneva estimates 2024. Official JS calculator unreachable for
-  # automated verification; values from task brief approximations.
-  # NOTE: Values appear calibrated against a higher single-rate baseline than the
-  # current single lookup. Apparent advantage vs single_lookup is ~CHF 750-1165/mo
-  # (not the stated ~350-450/mo) because single_lookup above CHF 140k is undertaxed.
-  # When single_lookup is recalibrated, re-derive married_lookup to preserve the
-  # correct ~350-450 CHF/month advantage at CHF 100k-160k gross.
+  # Source: AFC Geneva estimates 2024. Official JS calculator not machine-readable.
+  # ⚠️ NOTE: These values are calibrated against a ~30% effective rate baseline.
+  # Once single_lookup above CHF 140k is recalibrated, verify that married_lookup
+  # preserves the correct ~350-450 CHF/month net advantage vs single_lookup at
+  # CHF 100k-160k gross.
   married_lookup:
     - {gross: 60000,  net_monthly: 4750}
     - {gross: 80000,  net_monthly: 6100}
