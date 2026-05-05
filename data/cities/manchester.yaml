@@ -1,0 +1,44 @@
+name: Manchester
+country: UK
+currency: GBP
+cost_of_living:
+  rent_2bed:      {generous: 1900, comfortable: 1400, frugal: 1000, note: "Modest = Longsight/Levenshulme/Wythenshawe older stock. Ample = Chorlton/Salford Quays/mid-tier city centre (best value). Great = Ancoats/Deansgate Square/NOMA/Circle Square high-spec. Numbeo: 1-bed centre £1,259; 3-bed centre £2,228. Manchester 2-beds ~40–50% cheaper than London equivalent. Deposit capped at 5 weeks rent (Tenant Fees Act 2019). No agent fees for tenants."}
+  utilities:      {generous: 325, comfortable: 255, frugal: 200, note: "Electricity + gas (Ofgem Q2 2026 cap: £1,641/year typical; 2-bed flat ~70–80% of typical = £115–165/month). Water (United Utilities NW England): ~£42/month. Broadband (Virgin/BT/Sky): £27–45. 2× SIM-only mobile (giffgaff/iD/O2): £20–45. Modest = frugal energy + cheapest broadband + budget SIM. Great = higher consumption + full-fibre + EE/Vodafone plans."}
+  health_extra:   {generous: 170, comfortable: 90, frugal: 0, note: "NHS is FREE at point of use — no direct cost for routine care. This line = OPTIONAL private health insurance only. Modest = NHS-only (entirely adequate). Ample = AXA/Bupa essential mid-plan, 2 adults age 30, ~£250–500 excess. Great = Bupa Gold/AXA Advance comprehensive. NOTE: NHS Immigration Health Surcharge (£1,035/person/year) is a separate one-off — see hidden_costs."}
+  groceries_2pax: {generous: 650, comfortable: 450, frugal: 300, note: "Modest: Aldi/Lidl-led, disciplined meal planning. comfortable: Tesco/Sainsbury's mix + some Aldi, wine/beer. generous: Waitrose/M&S/Booths, meal kits (Gousto/HelloFresh). Manchester groceries ~10–20% cheaper than London. Numbeo: milk £1.13/L, eggs £2.76/12, chicken £6.78/kg — all significantly below London."}
+  transport_2pax: {generous: 270, comfortable: 200, frugal: 130, note: "Bee Network (TfGM franchise since Sept 2023): integrated bus+tram. All-modes monthly pass (bus+Metrolink, all GM zones): ~£88–100/person. Single bus: £2.00 capped. Metrolink tram: key corridors incl. MediaCity (BBC/ITV), Airport, Didsbury. Numbeo monthly pass: £80. vs London £200 = 60% cheaper. Car-free viable in M1–M5, M14–M15, M20–M21, M50."}
+  eating_out:     {generous: 500, comfortable: 250, frugal: 100, note: "Numbeo mid-range dinner for 2 (3-course, no drinks): £70. Pint: £5.50–6.50. Cappuccino: £3.60. Manchester ~10–15% cheaper than London. Northern Quarter/Ancoats excellent independent scene. Modest = 2–3 pub meals/month. Ample = 4–6 meals out incl. pub + mid-range restaurants. Great = 8–12 meals incl. Ancoats restaurants + cocktail bars."}
+  leisure:        {generous: 380, comfortable: 160, frugal: 80, note: "PureGym Manchester: £14.99–24.99/person/month (confirmed May 2026). The Gym Group: £15–25. David Lloyd: £65–90/person. Cinema: £10–12 (Vue/Odeon/Everyman). Gig venues (Band on the Wall, Gorilla): £8–20/ticket. Football: Man City/United match ticket £25–50+. Band on the Wall etc. £8–20."}
+  misc:           {generous: 450, comfortable: 200, frugal: 100, note: "Clothing, personal care, subscriptions (Netflix/Spotify ~£15–20), gifts, household goods. Does NOT include Council Tax (hidden_costs). TV Licence £180/year = £15/month also in hidden_costs."}
+  travel:         {generous: 400, comfortable: 400, frugal: 400, fixed: true}
+  personal:       {generous: 800, comfortable: 800, frugal: 800, fixed: true}
+hidden_costs:
+  - {name: "Council Tax Manchester City Band C 2025/26", monthly: 150, mandatory: true}
+  - {name: "TV Licence", annual: 180, mandatory: true}
+  - {name: "NHS Immigration Health Surcharge (per person/year, Skilled Worker visa)", annual: 1035, mandatory: true}
+  - {name: "Contents + liability insurance", monthly: 22, mandatory: false}
+  - {name: "Tenancy deposit 5 weeks (ample tier)", one_time: 1616, mandatory: true}
+  - {name: "Skilled Worker visa application fee (non-EEA nationals, per person)", one_time: 1618, mandatory: false}
+career:
+  market: "Manchester tech, media, finance"
+  typical_cagr: 0.05
+  ceiling_gross_gbp: 110000
+  note: "BBC MediaCity, Amazon NOMA, BNY Mellon, KPMG/PwC/Deloitte, Co-op Group, Autotrader, NHS ICB. BI/data roles 15–20% below London equivalent. Senior DA/BI developer £45–65k; Head of BI £65–90k; Director £85–120k+. CAGR ~5–7% driven by Power BI/dbt/Databricks skills shortage."
+
+permit:
+  eu_eea:
+    timeline: '3-8 weeks'
+    steps:
+      - 'Employer obtains Certificate of Sponsorship from licensed sponsor'
+      - 'Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)'
+      - 'Pay NHS Immigration Health Surcharge upfront'
+  non_eu:
+    timeline: '3-8 weeks'
+    steps:
+      - 'Same process as EU nationals post-Brexit'
+      - 'Employer must hold Home Office sponsor licence'
+      - 'Points-based Skilled Worker system'
+  complexity: high
+  sponsor_required: true
+  costs_eur: 1900
+  notes: 'Identical UK-wide rules to London. Manchester employers (MediaCity, Manchester Airport, NHS, BBC) are established sponsors. Processing time same as London. NHS IHS: £1,035/year paid upfront. Many digital/tech companies cover visa costs - ask before signing.'

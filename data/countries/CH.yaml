@@ -1,0 +1,45 @@
+name: Switzerland
+code: CH
+currency: CHF
+eur_rate: 1.091
+tax_year: 2026
+disclaimer: "City of Zurich / Canton ZH. Single/cohabiting earner, no children. Estimates from estv.admin.ch (CHF 120k and 130k anchors). Other levels extrapolated at ~65-68% marginal retention. ±3-5% accuracy. For Geneva (Canton GE) see GE.yaml."
+
+income_tax:
+  method: effective_rate_lookup
+  lookup:
+    - {gross: 80000,  net_monthly: 5583}
+    - {gross: 90000,  net_monthly: 6167}
+    - {gross: 100000, net_monthly: 6575}
+    - {gross: 110000, net_monthly: 7141}
+    - {gross: 115000, net_monthly: 7425}
+    - {gross: 120000, net_monthly: 7708}
+    - {gross: 125000, net_monthly: 7979}
+    - {gross: 130000, net_monthly: 8250}
+    - {gross: 140000, net_monthly: 8775}
+    - {gross: 150000, net_monthly: 9300}
+    - {gross: 160000, net_monthly: 9800}
+    - {gross: 180000, net_monthly: 10750}
+    - {gross: 200000, net_monthly: 11650}
+  marginal_retention: 0.66
+
+social_contributions:
+  employee: []
+  note: "AHV/IV/EO (5.3%) and BVG Pillar 2 (~3.5% of insured salary) already factored into lookup net figures."
+
+healthcare:
+  model: mandatory_separate
+  employee_extra_monthly: 0
+  note: "KVG mandatory health insurance paid SEPARATELY from salary (not deducted). Show as expense. Age 30 in Zurich: CHF 400-530/person/month. Couple: CHF 800-1060/month."
+
+special_schemes:
+  - id: ch_pillar3a
+    name: "Pillar 3a (tax-deductible savings)"
+    description: "Up to CHF 7,258/year is tax-deductible into a pension savings account. Reduces taxable income, saving ~CHF 1,500-2,000/year in taxes."
+    annual_max: 7258
+    tax_saving_estimate: 1750
+    type: informational
+
+career:
+  typical_cagr: 0.045
+  note: "Zurich finance/pharma/tech pays structurally higher than NL. Ceiling CHF 150-200k+ for senior ICs in finance/pharma/global tech."

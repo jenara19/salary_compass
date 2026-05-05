@@ -1,0 +1,519 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SalaryCompass — General Intelligence Company Design System
+   Light theme · Architectural Night Sky palette
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Design tokens ─────────────────────────────────────────────────────────── */
+:root {
+  --night-sky:       #1f1f29;
+  --cofounder-blue:  #0081c0;
+  --action-azure:    #41a1cf;
+  --canvas-white:    #ffffff;
+  --off-white:       #fefffc;
+  --ash-gray:        #f9faf7;
+  --cool-gray:       #eef1ed;
+  --steel-gray:      #dee2de;
+  --dark-charcoal:   #171717;
+  --charcoal:        #2c2c2c;
+  --rich-black:      #282834;
+  --slate-gray:      #444141;
+  --medium-gray:     #646464;
+  --light-gray:      #b4b8b4;
+
+  --shadow-sm:     rgba(0,0,0,0.15)  0px 2px 6px 0px;
+  --shadow-card:   rgba(0,0,0,0.08)  0px 1px 1px 0px,
+                   rgba(0,0,0,0.08)  0px 4px 5px 0px;
+  --shadow-input:  rgba(0,0,0,0.05)  0px 1px 8px 0px;
+  --shadow-subtle: rgb(222,226,222)  0px 0px 0px 1px;
+
+  --font-display: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-btn:     4px;
+  --radius-card-sm: 12px;
+  --radius-card-md: 16px;
+  --radius-card-lg: 24px;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+html, body {
+  font-family: var(--font-body) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.stApp {
+  background-color: var(--canvas-white) !important;
+}
+
+/* ── Main content area ────────────────────────────────────────────────────── */
+.main .block-container {
+  padding-top: 0 !important;
+  padding-left:  2.5rem !important;
+  padding-right: 2.5rem !important;
+  max-width: 1380px !important;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+  background-color: var(--ash-gray) !important;
+  border-right: 1px solid var(--steel-gray) !important;
+}
+
+[data-testid="stSidebarContent"] {
+  padding-top: 1rem !important;
+}
+
+[data-testid="stSidebar"] hr {
+  border-color: var(--steel-gray) !important;
+  opacity: 1 !important;
+  margin: 0.75rem 0 !important;
+}
+
+/* ── Typography — headings ─────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-display) !important;
+  color: var(--dark-charcoal) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+  font-weight: 500 !important;
+}
+
+h1 { font-size: 2.25rem !important; }
+h2 { font-size: 1.6rem  !important; }
+h3 { font-size: 1.15rem !important; }
+
+p, li {
+  font-family: var(--font-body) !important;
+  letter-spacing: -0.012em;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--steel-gray) !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  color: var(--medium-gray) !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+  padding: 12px 24px !important;
+  border-radius: 0 !important;
+  transition: color 0.15s ease !important;
+}
+
+.stTabs [aria-selected="true"] {
+  color: var(--dark-charcoal) !important;
+  border-bottom: 2px solid var(--cofounder-blue) !important;
+  font-weight: 600 !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+  color: var(--charcoal) !important;
+  background-color: rgba(0,0,0,0.02) !important;
+}
+
+/* Tab panel */
+.stTabs [data-baseweb="tab-panel"] {
+  padding-top: 1.5rem !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+[data-testid="stButton"] > button,
+[data-testid="stFormSubmitButton"] > button {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+  border-radius: var(--radius-btn) !important;
+  padding: 7px 16px 8px !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+
+/* Default/secondary: outlined with Action Azure border */
+[data-testid="stButton"] > button {
+  background-color: transparent !important;
+  color: var(--dark-charcoal) !important;
+  border: 1px solid var(--steel-gray) !important;
+}
+
+[data-testid="stButton"] > button:hover {
+  background-color: var(--ash-gray) !important;
+  border-color: var(--action-azure) !important;
+  color: var(--dark-charcoal) !important;
+}
+
+/* Primary button variant */
+[data-testid="stButton"] > button[kind="primary"],
+[data-testid="stFormSubmitButton"] > button {
+  background-color: var(--night-sky) !important;
+  color: var(--canvas-white) !important;
+  border: 1px solid var(--rich-black) !important;
+}
+
+[data-testid="stButton"] > button[kind="primary"]:hover,
+[data-testid="stFormSubmitButton"] > button:hover {
+  background-color: var(--rich-black) !important;
+}
+
+/* ── Input fields ─────────────────────────────────────────────────────────── */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input {
+  background-color: var(--ash-gray) !important;
+  border-color: var(--steel-gray) !important;
+  border-radius: 0px !important;
+  color: var(--dark-charcoal) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  letter-spacing: -0.012em !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus {
+  border-color: var(--action-azure) !important;
+  box-shadow: 0 0 0 2px rgba(65,161,207,0.12) !important;
+}
+
+/* Textarea */
+.stTextArea > div > div > textarea {
+  background-color: var(--ash-gray) !important;
+  border-color: var(--steel-gray) !important;
+  border-radius: 0px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  letter-spacing: -0.012em !important;
+  color: var(--dark-charcoal) !important;
+}
+
+.stTextArea > div > div > textarea:focus {
+  border-color: var(--action-azure) !important;
+  box-shadow: 0 0 0 2px rgba(65,161,207,0.12) !important;
+}
+
+/* ── Select / Multiselect ─────────────────────────────────────────────────── */
+.stSelectbox [data-baseweb="select"] > div,
+.stMultiSelect [data-baseweb="select"] > div {
+  background-color: var(--ash-gray) !important;
+  border-color: var(--steel-gray) !important;
+  border-radius: 0px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+}
+
+.stSelectbox [data-baseweb="select"] > div:focus-within,
+.stMultiSelect [data-baseweb="select"] > div:focus-within {
+  border-color: var(--action-azure) !important;
+  box-shadow: 0 0 0 2px rgba(65,161,207,0.12) !important;
+}
+
+/* Multiselect tags */
+[data-baseweb="tag"] {
+  background-color: rgba(0,129,192,0.1) !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(0,129,192,0.25) !important;
+}
+
+[data-baseweb="tag"] span {
+  color: var(--cofounder-blue) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+/* Dropdown menu */
+[data-baseweb="popover"] {
+  border-radius: var(--radius-card-sm) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid var(--steel-gray) !important;
+}
+
+/* ── Widget labels ────────────────────────────────────────────────────────── */
+.stTextInput label > div,
+.stNumberInput label > div,
+.stSelectbox label > div,
+.stMultiSelect label > div,
+.stTextArea label > div,
+.stSlider label > div {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--charcoal) !important;
+  letter-spacing: -0.01em !important;
+  margin-bottom: 4px !important;
+}
+
+/* Radio & checkbox labels */
+.stRadio label,
+.stCheckbox label {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  color: var(--dark-charcoal) !important;
+  letter-spacing: -0.012em !important;
+}
+
+.stRadio > label > div,
+.stCheckbox > label > div {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--charcoal) !important;
+}
+
+/* ── Slider ───────────────────────────────────────────────────────────────── */
+[data-testid="stSlider"] [data-baseweb="slider"] [role="slider"] {
+  background-color: var(--cofounder-blue) !important;
+  border-color: var(--cofounder-blue) !important;
+  box-shadow: 0 1px 4px rgba(0,129,192,0.3) !important;
+}
+
+/* ── Captions / help text ─────────────────────────────────────────────────── */
+.stCaption,
+[data-testid="stCaptionContainer"] > p {
+  color: var(--medium-gray) !important;
+  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ── Dividers ─────────────────────────────────────────────────────────────── */
+hr {
+  border: none !important;
+  border-top: 1px solid var(--steel-gray) !important;
+  opacity: 1 !important;
+}
+
+/* ── Expanders ────────────────────────────────────────────────────────────── */
+[data-testid="stExpander"] {
+  border: 1px solid var(--steel-gray) !important;
+  border-radius: var(--radius-card-sm) !important;
+  background-color: var(--off-white) !important;
+  box-shadow: var(--shadow-input) !important;
+  overflow: hidden !important;
+  margin-bottom: 8px !important;
+}
+
+[data-testid="stExpander"] > details > summary {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--charcoal) !important;
+  letter-spacing: -0.012em !important;
+  padding: 12px 16px !important;
+}
+
+[data-testid="stExpander"] > details[open] > summary {
+  border-bottom: 1px solid var(--steel-gray) !important;
+}
+
+/* ── Metric components ────────────────────────────────────────────────────── */
+[data-testid="stMetric"] {
+  background-color: var(--off-white) !important;
+  border: 1px solid var(--steel-gray) !important;
+  border-radius: var(--radius-card-sm) !important;
+  padding: 16px 20px !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+[data-testid="stMetricLabel"] > div {
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--medium-gray) !important;
+}
+
+[data-testid="stMetricValue"] > div {
+  font-family: var(--font-display) !important;
+  font-size: 1.6rem !important;
+  color: var(--dark-charcoal) !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.2 !important;
+}
+
+[data-testid="stMetricDelta"] > div {
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* ── DataFrame / Table ────────────────────────────────────────────────────── */
+[data-testid="stDataFrame"],
+[data-testid="stTable"] {
+  border-radius: var(--radius-card-sm) !important;
+  overflow: hidden !important;
+  border: 1px solid var(--steel-gray) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* ── Alert / info boxes ────────────────────────────────────────────────────── */
+[data-testid="stAlert"] {
+  border-radius: var(--radius-card-sm) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+}
+
+/* ── Markdown headings inside content ─────────────────────────────────────── */
+[data-testid="stMarkdownContainer"] h3 {
+  color: var(--dark-charcoal) !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  letter-spacing: -0.012em !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* ── Sidebar markdown bold text ────────────────────────────────────────────── */
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] strong {
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--medium-gray) !important;
+}
+
+/* ── Section headers (st.header → h2) ─────────────────────────────────────── */
+.main h2 {
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid var(--steel-gray) !important;
+  margin-bottom: 24px !important;
+  margin-top: 8px !important;
+}
+
+/* ── Subheaders ─────────────────────────────────────────────────────────────── */
+.main h3 {
+  margin-top: 28px !important;
+  margin-bottom: 16px !important;
+}
+
+/* ── Scrollbar (subtle) ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--ash-gray); }
+::-webkit-scrollbar-thumb { background: var(--light-gray); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--steel-gray); }
+
+/* ── Plotly chart containers ───────────────────────────────────────────────── */
+[data-testid="stPlotlyChart"] {
+  border: 1px solid var(--steel-gray) !important;
+  border-radius: var(--radius-card-sm) !important;
+  box-shadow: var(--shadow-card) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+/* ── Column containers ─────────────────────────────────────────────────────── */
+[data-testid="column"] {
+  gap: 8px !important;
+}
+
+/* ── Sidebar brand header ──────────────────────────────────────────────────── */
+.sc-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 8px;
+}
+
+.sc-brand-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sc-brand-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark-charcoal);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.sc-brand-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--medium-gray);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* ── Hero section ──────────────────────────────────────────────────────────── */
+.sc-hero {
+  background: linear-gradient(135deg, #1f1f29 0%, #282834 55%, #1c2235 100%);
+  border-radius: var(--radius-card-lg);
+  padding: 48px 56px 44px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sc-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 45%; height: 100%;
+  background: radial-gradient(ellipse at 80% 20%, rgba(65,161,207,0.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.sc-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,129,192,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.sc-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(65,161,207,0.12);
+  border: 1px solid rgba(65,161,207,0.30);
+  border-radius: 50px;
+  padding: 4px 14px;
+  margin-bottom: 24px;
+}
+
+.sc-hero-badge span {
+  color: #41a1cf;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+.sc-hero-title {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.88px;
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+
+.sc-hero-sub {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.62);
+  letter-spacing: -0.015em;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 560px;
+}

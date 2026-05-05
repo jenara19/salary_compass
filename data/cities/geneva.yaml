@@ -1,0 +1,220 @@
+name: Geneva
+country: GE
+currency: CHF
+cost_of_living:
+  # Rent includes net rent + charges (heating/water where included — confirm per flat).
+  # Geneva has one of Europe's tightest rental markets: vacancy rate consistently below 0.5%.
+  # Existing tenants enjoy rent stability under LGL; new entrants pay full market rate.
+  rent_2bed:
+    generous:  3200
+    comfortable:  2900
+    frugal: 2500
+    note: "Tightest rental market in Switzerland. generous: Eaux-Vives/Champel/Carouge right bank;
+           70-80m², renovated. comfortable: Plainpalais/Jonction/Charmilles; 65-75m². frugal: Onex/
+           Lancy/Meyrin (outer communes); 60-70m². Geneva's Loi générale sur les loyers (LGL)
+           protects existing tenants from arbitrary rent increases — finding a flat is the hard
+           part, not the price once you have one. Many expats use relocation agents (CHF 1,000-3,000)
+           to queue-jump. International organisations sometimes provide housing allowances."
+
+  # Electricity via SIG (Services Industriels de Genève). Heating often included in charges.
+  # Unlike Zurich, many Geneva apartments include chauffage in rent — verify per flat.
+  utilities:
+    generous:  350
+    comfortable:  320
+    frugal: 240
+    note: "SIG electricity rate: ~CHF 0.22-0.26/kWh all-in (slightly above Swiss average).
+           Many Geneva apartments include heating (chauffage compris) in rent — significantly
+           reduces utility bills vs. Zurich where heating is always separate. If charges not
+           included: add CHF 100-150/month for heat. Breakdown ample (charges not included):
+           electricity CHF 70 + heat/water CHF 120 + broadband Salt/Sunrise CHF 50 + 2x mobile
+           CHF 80. Salt Home: competitive broadband from CHF 35/month. Sunrise unlimited SIM:
+           CHF 35/person/month."
+
+  # Geneva has the HIGHEST mandatory KVG (OKP) premiums of all Swiss cantons.
+  # Age 30, Canton Geneva 2025. Modest=Telmed+CHF 2500 franchise; ample=Hausarzt+CHF 1000;
+  # great=Standard model+CHF 300 franchise. Must enroll within 3 months of arrival.
+  health_kvg:
+    generous:  1280
+    comfortable:  1100
+    frugal:   900
+    note: "Mandatory KVG basic health insurance for both persons — paid out of pocket, NOT
+           deducted from salary. Geneva has Switzerland's highest KVG premiums. Per person
+           (age 30, 2025): modest CHF 450 (Telmed model + CHF 2,500 franchise — highest out-of-
+           pocket risk, lowest premium); ample CHF 550 (Hausarzt/HMO + CHF 1,000 franchise);
+           great CHF 640 (standard model + CHF 300 franchise — maximum coverage). Enroll within
+           3 months of arrival — retroactive coverage required by law and late enrollment results
+           in backdated premiums. Providers: Assura (cheapest), CSS, Helsana, Groupe Mutuel."
+
+  # Optional VVG supplemental insurance (dental, semi-private, complementary medicine).
+  # KVG covers ZERO dental — plan separately for all dental work.
+  health_extra:
+    generous:  400
+    comfortable:  130
+    frugal:   0
+    note: "VVG supplemental on top of mandatory KVG. generous: semi-private hospital room +
+           dental coverage + complementary medicine + international emergency coverage ~CHF
+           200/person/month (Helsana, Sanitas, CSS Zusatz). comfortable: dental + complementary
+           medicine only ~CHF 65/person/month. frugal: KVG only — adequate for all medical
+           needs but zero dental and no private room. Buy VVG supplemental before age 35:
+           premiums rise sharply and pre-existing conditions can be excluded on application."
+
+  # 2 adults, includes food, beverages, toiletries, cleaning products.
+  # Cross-border shopping in France (Ferney-Voltaire, Saint-Genis-Pouilly) saves 30-50%.
+  groceries_2pax:
+    generous:  1150
+    comfortable:  1000
+    frugal:  850
+    note: "Geneva grocery prices among Europe's highest — comparable to Zurich. Budget chains:
+           Lidl and Aldi (significant savings vs. Migros/Coop). Mid-range: Migros, Coop,
+           Manor. Premium: Globus Food Hall, specialty shops. Cross-border shopping in France
+           (15-30 min drive: Ferney-Voltaire, Divonne-les-Bains, Saint-Genis) saves 30-50% on
+           most items — CHF 300/person/day duty-free import limit. Wine dramatically cheaper
+           in France (€5-10 vs. CHF 12-20 in Geneva). Many Geneva residents do weekly French
+           supermarket runs (Carrefour/Leclerc). Note: duty-free limit applies strictly."
+
+  # TPG (Transports Publics Genevois) + unireso network.
+  # Zone 10 (Geneva city) monthly pass: ~CHF 70/person. Annual: CHF 720/person.
+  transport_2pax:
+    generous:  200
+    comfortable:  180
+    frugal: 160
+    note: "TPG integrated network (bus, tram, Mouettes ferry on lake). Zone 10 (Geneva city)
+           monthly pass: CHF 70/person (~CHF 720/year annual pass). Leman Pass (all zones
+           including French side of border): CHF 89/person/month. Geneva city is compact — tram
+           and bus efficient; no car needed. PubliBike city bikes: annual pass CHF 290. Taxis
+           expensive (CHF 3-4+/km). frugal: 2x Zone 10 monthly = CHF 140. comfortable: 2x Leman Pass
+           = CHF 178. generous: Leman Pass + occasional VTC/taxi. Airport: bus line 10 (CHF 3 with
+           pass) or train (7 min, included in Leman Pass)."
+
+  # Dinner out 2x/week as couple. Geneva slightly below Zurich on eating out costs.
+  # Numbeo: cheap meal CHF 25/person; mid-range dinner for 2 (no drinks) = CHF 110.
+  eating_out:
+    generous:  950
+    comfortable:  600
+    frugal: 350
+    note: "Geneva expensive for eating out but slightly below Zurich. Lunch menu (plat du jour
+           + salad) at brasserie: CHF 18-26/person. Mid-range dinner for 2 (2 courses, no drinks):
+           CHF 100-150. Fine dining: CHF 200-400+/couple. Coffee (café au lait): CHF 4.50-6.50.
+           Beer: CHF 8-13/0.5L at bar. Cheap meal (kebab/Vietnamese): CHF 15-22. Carouge
+           quartier (just south of city centre) has more neighbourhood bistros and better value.
+           CERN canteen: CHF 12-16 for staff — exceptional value if you work there."
+
+  # Free options: Lac Léman swimming, Parc des Bastions, Jet d'Eau. Mountains accessible.
+  leisure:
+    generous:  800
+    comfortable:  420
+    frugal: 130
+    note: "Free world-class options: Lac Léman swimming (Genève-Plage, Bains des Pâquis), Parc des Bastions, Jet d'Eau, MAMCO free first Sunday. Frugal = free activities + 1 cinema/month (CHF 22). Comfortable: 2x gym CHF 70/person/month = CHF 140 + cinema 4x CHF 88 + hobbies/activities CHF 150 + sports club/padel CHF 50 ≈ CHF 420. Generous: premium gym (Les Bains Geneva CHF 160/person) + skiing day trip (Chamonix CHF 100-170) 2x/month + frequent dining/events ≈ CHF 800+. International organisations often subsidise sports facilities for staff."
+
+  # Household insurance (assurance ménage RC) + misc. Required by virtually all landlords.
+  misc:
+    generous:  380
+    comfortable:  300
+    frugal: 160
+    note: "Includes assurance ménage + RC (household contents + liability insurance) ~CHF 25-40/
+           month, required by virtually all landlords. Clothing expensive in Switzerland — buy
+           in France on cross-border trips or online. Haircut: CHF 30-50 (budget), CHF 80-130
+           (mid salon). Pharmacy: stock common medications from home — Swiss prices very high.
+           Dry cleaning: CHF 8-18/item. Home repairs and services: very expensive. Misc covers:
+           clothing, self-care, pharmacy, subscriptions, household goods, online shopping."
+
+  travel:         {generous: 380, comfortable: 380, frugal: 380, fixed: true}
+  personal:       {generous: 800, comfortable: 800, frugal: 800, fixed: true}
+
+hidden_costs:
+  - name: "Serafe TV/radio fee (mandatory per household)"
+    annual: 335
+    mandatory: true
+    note: "2025 rate CHF 335/year. Charged per household regardless of whether you own a TV
+           or listen to radio. No opt-out for registered households. Rate drops to CHF 312/year
+           from January 2027. Replaces the old Billag licence (since 2019)."
+  - name: "Apartment deposit (3 months net rent, compte bloqué)"
+    one_time: 8700
+    mandatory: true
+    note: "Standard 3 months' net rent held in a blocked bank account (compte bloqué de garantie
+           de loyer) in tenant's name. At ample tier CHF 2,900: CHF 8,700 deposit. generous: CHF
+           9,600. You earn interest. Returned at lease end (deductions for damage). Extremely
+           high upfront cash outlay — often exceeds 1 month's net salary. Banks (Credit Suisse/
+           UBS/PostFinance) provide deposit guarantee certificates (caution) as alternative to
+           cash blocking."
+  - name: "Canton Geneva income tax (higher than Zurich)"
+    annual: 0
+    mandatory: false
+    note: "Geneva (Canton GE) has substantially higher cantonal + communal income tax than Zurich.
+           For CHF 120,000 gross, single person: effective total tax ~27-30% in Geneva vs. ~24-27%
+           in Zurich — difference of CHF 300-600/month net. Always model with Geneva-specific
+           rates via calculimpot.ch or the federal ESTV calculator. B-permit holders are taxed
+           at source (Quellensteuer) — file a bordereau de rectification to claim Pillar 3a
+           deductions (CHF 7,258/yr) and professional expenses."
+  - name: "Church tax — OPT OUT immediately"
+    annual: 800
+    mandatory: false
+    note: "Catholics and Protestants registered in Geneva are automatically subject to impôt
+           ecclésiastique (church tax) — collected as part of cantonal tax. Deregister at OCPM
+           (Office Cantonal de la Population et des Migrations) on arrival if non-religious.
+           Saves CHF 600-1,200/year. Many expatriates miss this on their first tax declaration."
+  - name: "Permis B registration (EU/EFTA citizens)"
+    one_time: 145
+    mandatory: true
+    note: "EU/EFTA citizens need Permis B (initial 5-year renewable residence permit) for stays
+           over 3 months. Apply at OCPM within 8 days of establishing residence. Fee: ~CHF 145.
+           Required for: employment contract, bank account, rental agreement. Non-EU nationals:
+           more complex Permis L/B work permit process — employer's HR must initiate. Swiss
+           labour market test (priorité aux résidents) may apply for non-EU applications."
+  - name: "KVG franchise + Selbstbehalt out-of-pocket"
+    annual: 2000
+    mandatory: true
+    note: "Annual deductible (franchise): CHF 300 minimum to CHF 2,500 maximum per person.
+           Plus 10% co-pay (Selbstbehalt) on costs above franchise, capped at CHF 700/year.
+           Maximum annual out-of-pocket at CHF 300 franchise: CHF 300 + CHF 700 = CHF 1,000/
+           person = CHF 2,000/couple before full coverage. At CHF 2,500 franchise: up to
+           CHF 3,200/couple. Budget accordingly and build a CHF 2,000-3,200 emergency buffer."
+  - name: "Apartment furnishing (some Geneva flats arrive without kitchen)"
+    one_time: 5000
+    mandatory: false
+    note: "Unlike Zurich, Geneva rentals usually include a fitted kitchen (cuisine équipée).
+           However, some older unfurnished flats may arrive without appliances or fixtures.
+           Confirm with landlord. Budget CHF 3,000-8,000 for furnishing a 2-bed from scratch
+           (IKEA in Aubonne ~40 min, Conforama). Brocante markets and Anibis.ch for second-hand.
+           Landlords occasionally expect you to maintain or replace appliances."
+  - name: "Assurance ménage + responsabilité civile"
+    annual: 300
+    mandatory: false
+    note: "Household contents + personal liability insurance. Required by virtually all Geneva
+           landlords (often written into the lease) and essential in practice. Combined RC ménage:
+           CHF 200-450/year with Zurich Insurance, AXA, Vaudoise, Groupe Mutuel. Covers: theft,
+           fire, water damage, liability for damage to third parties (e.g. flooding neighbour
+           below). Do not skip — one incident without coverage can cost tens of thousands."
+
+career:
+  market: "Geneva international orgs, finance, pharma, trading"
+  typical_cagr: 0.04
+  ceiling_gross_chf: 200000
+  note: "United Nations cluster (WHO, UNHCR, UNOG, ILO, WTO, WIPO) and diplomatic missions.
+         Private banking (Pictet, Lombard Odier, Julius Bär, Union Bancaire Privée). Pharma/
+         biotech (Novartis Geneva, Roche diagnostics, Ferring Pharmaceuticals, Merck Serono).
+         Commodity trading capital: Glencore, Trafigura, Vitol, Gunvor — very high total comp
+         but demanding. CERN (physics research, strong data/computing roles). More international/
+         NGO-oriented than Zurich — many roles require French. B-permit Quellensteuer: withheld
+         at source (~22-25% for CHF 100k single). File bordereau de rectification to claim
+         Pillar 3a (CHF 7,258/yr tax-deductible) and professional expenses — typically worth
+         CHF 1,500-2,500/year in additional tax savings. Use VIAC or frankly for 3a investment."
+
+permit:
+  eu_eea:
+    timeline: '2-4 weeks'
+    steps:
+      - 'Register at OCPM (Office cantonal de la population et des migrations) within 14 days'
+      - 'Employer notifies OCPM'
+      - 'Permit B issued (5-year, renewable)'
+  non_eu:
+    timeline: '16-24 weeks'
+    steps:
+      - 'Cantonal quota - Geneva has a separate allocation from Zurich'
+      - 'Employer applies at OCPM with full documentation'
+      - 'Federal SEM approval'
+      - 'Labour market test required (Inlaendervorrang)'
+  complexity: high
+  sponsor_required: true
+  costs_eur: 145
+  notes: 'Same federal rules as Zurich but under Geneva cantonal jurisdiction. Geneva hosts many international organisations (UN, ICRC, WHO, CERN, WTO) - these use different accreditation processes outside Swiss immigration law. Finance (private banking, commodity trading) and pharma employers in the Geneva arc are experienced sponsors. International school costs in Geneva are very high if children are involved.'

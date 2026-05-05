@@ -1,0 +1,38 @@
+name: Norway
+code: NOR
+currency: NOK
+eur_rate: 0.087
+tax_year: 2026
+disclaimer: "Norwegian tax 2025. All parameters verified from Skatteetaten.no (year=2025). Trinnskatt brackets: 217k(0%) → 306k(1.7%) → 697k(4.0%) → 942k(13.7%) → 1411k(16.7%) → 17.7%. Trygdeavgift 7.7%. Minstefradrag 46%/max NOK 92,000. Personfradrag NOK 108,550. Single person. NOK/EUR at 1 NOK = 0.087 EUR (≈ 11.5 NOK/EUR, May 2026)."
+
+income_tax:
+  method: effective_rate_lookup
+  lookup:
+    # All values verified from Skatteetaten.no (year=2025). Single person, Oslo.
+    # Trygdeavgift 7.7%, minstefradrag max NOK 92,000, personfradrag NOK 108,550.
+    - {gross: 500000,  net_monthly: 32196}
+    - {gross: 600000,  net_monthly: 37721}
+    - {gross: 700000,  net_monthly: 43223}
+    - {gross: 800000,  net_monthly: 47940}
+    - {gross: 900000,  net_monthly: 52657}
+    - {gross: 1000000, net_monthly: 57229}
+    - {gross: 1100000, net_monthly: 61696}
+    - {gross: 1200000, net_monthly: 66163}
+    - {gross: 1400000, net_monthly: 75096}
+  marginal_retention: 0.52
+  note: "Net figures in NOK/month, include income tax + trygdeavgift (7.7%). Convert to EUR: multiply by 0.087."
+
+social_contributions:
+  employee: []
+  note: "Trygdeavgift (7.8%) already included in lookup net figures."
+
+healthcare:
+  model: public
+  employee_extra_monthly: 0
+  note: "Norwegian public healthcare via NAV. Essentially free at point of use (small egenandel co-pay ~NOK 2,500-3,000/year max). No mandatory private insurance needed."
+
+special_schemes: []
+
+career:
+  typical_cagr: 0.035
+  note: "Norwegian market well-paid with high welfare, but Oslo is extremely expensive. Finance (DNB, Equinor) and tech pay well. Structured raises, less job-hop culture than US/UK."

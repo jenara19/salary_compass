@@ -1,0 +1,155 @@
+name: Madrid
+country: ES
+currency: EUR
+cost_of_living:
+  rent_2bed:
+    generous:  2600
+    comfortable:  1800
+    frugal: 1200
+    note: "Salamanca/Chamberí/Chamartín (upscale) vs. Malasaña/Chueca/Lavapiés (mid-central) vs.
+           Carabanchel/Vallecas/Hortaleza (outer). Madrid rents surged +11.6% YoY Q1 2025 (INE).
+           Comunidad de Madrid refused rent controls under Ley de Vivienda 12/2023 — market is
+           uncontrolled. Temporary ('temporal') contracts common; command 20-40% premium over
+           long-term LAU contracts. Pisos.com May 2025 listings cross-checked."
+  utilities:
+    generous:  320
+    comfortable:  210
+    frugal: 120
+    note: "Breakdown comfortable: electricity €85 + gas €35 + water €25 + fibre €35 + 2x SIM €30.
+           Digi.es offers 1Gbps FTTH €25/month + 25GB SIM €5/person — market's best value.
+           Gas present in ~50% of rental stock (pre-2010 builds); many newer flats are all-electric.
+           Electricity peaks Jan-Feb (heating) and Jul-Aug (A/C). PVPC tariff volatile — consider
+           fixed-rate contract (mercado libre) on Holaluz or Octopus Energy for budgeting certainty."
+  health_extra:
+    generous:  200
+    comfortable:  130
+    frugal:   0
+    note: "Optional private supplement over SNS public system. generous: 2x Sanitas/DKV Premium
+           ~€100/person (dental, ophthalmology, private rooms, zero waits). comfortable: 2x Adeslas/
+           Asisa Standard ~€65/person (no wait, specialists, basic dental). frugal: SNS only —
+           entirely free for registered workers, excellent acute care. Main SNS limitation:
+           3-6 month specialist waits for non-urgent referrals."
+  groceries_2pax:
+    generous:  580
+    comfortable:  380
+    frugal: 280
+    note: "Modest: Mercadona/Lidl/Aldi own-brand, seasonal produce, table wine €4-6. Ample:
+           Mercadona + weekly visit to fresh market (Antón Martín, Maravillas), mid-range wine
+           €8-12, varied diet. generous: El Corte Inglés/Carrefour premium + daily mercado, organic,
+           gourmet, quality fish and wine. Madrid is 40-50% cheaper than Amsterdam/Munich for
+           groceries (Numbeo May 2026, 1,845 entries). Numbeo: chicken €7.85/kg, wine €7/bottle."
+  transport_2pax:
+    generous:  190
+    comfortable:  140
+    frugal: 110
+    note: "Abono Transportes Zone A (metro + EMT buses + Cercanías within Madrid city) =
+           €54.60/person/month (standard adult 26+, 2025 base price). Government 30% subsidy
+           may reduce to ~€38 if extended through 2025. No car needed — 296km metro/241 stations
+           + dense bus network. Madrid Centralísima ZBE restricts ICE vehicles in city centre.
+           BiciMAD annual bike-share pass €25. Bolt/Cabify: base fare ~€3.50 + €0.90/km."
+  eating_out:
+    generous:  700
+    comfortable:  420
+    frugal: 220
+    note: "Menú del día €12-16 (3 courses + wine). Mid-range dinner for 2 ~€50-65. Tapas route
+           for 2 in neighbourhood bars (Lavapiés/Malasaña): €20-35. Beer at bar: €1.50-2.50,
+           often with free tapa. Café con leche: €1.20-2.00. Madrid materially cheaper than
+           Paris/Amsterdam/London. Numbeo: cheap meal €15/person, mid-range for 2 = €60.
+           Salamanca/tourist zones 30-50% pricier than Usera/Vallecas for equivalent quality."
+  leisure:
+    generous:  350
+    comfortable:  200
+    frugal:  90
+    note: "Free: Parque del Retiro, Casa de Campo, Prado (Mon-Sat 18-20h + Sun 18-20h), Reina
+           Sofía (free Sat 19-21h + Sun 12:30-14:30). Gym: polideportivo municipal €20-30,
+           VivaGym/Basic-Fit €19-25, Metropolitan/Holmes Place €70-85/person. Cinema: €8-12
+           (€7 on día del espectador). Padel court: €15-20/hr (hugely popular). BiciMAD first
+           30 min free. Real Madrid/Atlético match tickets: €20-200+."
+  misc:
+    generous:  450
+    comfortable:  250
+    frugal: 120
+    note: "Spain notably affordable for clothing — Zara/Inditex HQ country; Mango/H&M priced
+           below Northern Europe. Haircut: €12-20 (barbershop), €25-45 (mid salon). Pharmacy
+           goods affordable. Misc covers: clothing, self-care, subscriptions, household goods,
+           online shopping, gifts, occasional Renfe day-trip within Spain."
+  travel:         {generous: 350, comfortable: 350, frugal: 350, fixed: true}
+  personal:       {generous: 700, comfortable: 700, frugal: 700, fixed: true}
+hidden_costs:
+  - name: "Rental deposit (fianza)"
+    one_time: 3600
+    mandatory: true
+    note: "2 months rent required under LAU 29/1994. At ample tier €1,800: €3,600 deposit.
+           Some landlords add garantía adicional up to 2 extra months (legally capped by Ley
+           de Vivienda 12/2023). Agent fees are BANNED for tenants under Ley de Vivienda;
+           watch for illegal charges disguised as 'gestión' or 'tramitación'."
+  - name: "NIE + TIE (residency paperwork)"
+    one_time: 350
+    mandatory: true
+    note: "NIE tax number (€10.24, Modelo 790-012) + TIE residence card (€10.60). Strongly
+           recommended: hire a gestoría (€150-350) to navigate heavily overloaded Madrid
+           appointment system — waits of 3-6 months in 2025. Book via policía nacional website
+           on Day 1. EU citizens: NIE is just a tax number; TIE (Certificado de registro) is
+           the residence document for stays over 3 months."
+  - name: "Empadronamiento (municipal registration)"
+    one_time: 0
+    mandatory: true
+    note: "Free registration at your local Ayuntamiento de Madrid within 30 days. Required for:
+           tarjeta sanitaria (public health card), bank account, TIE application, school enrollment.
+           Appointment waits 2-6 weeks in Madrid. Use sede electrónica with digital certificate
+           to book earlier. Essential first step — do this before anything else."
+  - name: "IBI (if owner-occupying)"
+    annual: 500
+    mandatory: false
+    note: "Property tax paid by owners ONLY — renters have zero direct liability. ~€400-700/year
+           for a typical Madrid flat, varying by district and valor catastral. Renters are
+           protected: landlords cannot legally pass IBI to tenants under a residential LAU contract."
+  - name: "Comunidad de propietarios (if owner)"
+    monthly: 80
+    mandatory: false
+    note: "HOA fees: owner's liability (€50-200/month). Renters don't pay directly but fees inflate
+           asking rent in buildings with pools/gym/doorman (€150-250/month typical in premium
+           developments). Standard mid-century block: €50-100/month."
+  - name: "Gestoría — annual IRPF tax filing"
+    annual: 250
+    mandatory: false
+    note: "Annual declaración de la renta (April-June). Simple single-employer: free via Hacienda's
+           Renta Web. Complex situations (multiple income streams, foreign assets, Beckham Law,
+           autónomo): use a gestoría at €150-900/year. Beckham Law impatriado filings: €400-900+."
+  - name: "Beckham Law (Ley de Impatriados) — potential tax saving"
+    annual: 0
+    mandatory: false
+    note: "New tax residents relocating for work pay a flat 24% IRPF rate on first €600,000 of
+           income for 6 years (vs. progressive 24-47%). Requires: 5+ years of prior non-residency
+           + employment contract from a Spanish entity. Apply via Modelo 149 within 6 months of
+           first payslip. At €80K gross: saves ~€6,000-9,000/year vs. standard rates. Digital
+           Nomad Visa holders also eligible."
+career:
+  market: "Madrid tech, finance, consulting"
+  typical_cagr: 0.05
+  ceiling_gross_eur: 150000
+  note: "Key employers: BBVA, Santander, Telefónica, Inditex, Glovo, Cabify, Amazon/Microsoft/
+         Google España. BI/data roles grew 7-10%/year CAGR 2020-2025. Spain pays 14 salaries/year
+         (July + December bonuses) — monthly take-home appears 14% lower than UK/NL equivalent
+         but annual gross is the same. Madrid regional IRPF rates are Spain's lowest — ~€500-800/
+         year more net than equivalent role in Barcelona. Beckham Law applies for first 6 years."
+
+
+permit:
+  eu_eea:
+    timeline: '1-3 weeks'
+    steps:
+      - 'Obtain NIE at Extranjeria or via consulate abroad'
+      - 'Register at Ayuntamiento padron municipal (same day, free)'
+      - 'Apply for TIE for stays more than 3 months - cita previa wait 2-4 weeks'
+  non_eu:
+    timeline: '10-20 weeks'
+    steps:
+      - 'Employer requests Autorizacion de Residencia y Trabajo at Delegacion del Gobierno'
+      - 'Labour market test unless role is on shortage list'
+      - 'Employee applies at Spanish consulate in home country'
+      - 'TIE card on arrival in Spain'
+  complexity: medium
+  sponsor_required: true
+  costs_eur: 20
+  notes: 'Beckham Law: apply via Modelo 149 within 6 months of first payslip - no extensions. EU citizens: NIE appointment waits 3-8 weeks in Madrid (2025). Hire a gestoria (150-350 euros). Empadronamiento required before TIE and before opening most bank accounts.'

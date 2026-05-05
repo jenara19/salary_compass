@@ -1,0 +1,128 @@
+name: Zurich
+country: CH
+currency: CHF
+cost_of_living:
+  # Rent includes net rent + Nebenkosten (NK: heating, water, garbage, building maintenance).
+  # Electricity is always billed SEPARATELY by EWZ. Apartments often arrive completely empty.
+  # Sources: Numbeo Zurich May 2026 (1,332 entries), real-market cross-check.
+  rent_2bed:
+    generous: 4200
+    comfortable: 3000
+    frugal: 2200
+    note: "Includes NK ~CHF 200-250. Areas: modest=Kreis 9-12; ample=Kreis 3-7; great=Kreis 1/2/6/8 (Seefeld, Enge)."
+
+  # Electricity (EWZ) + internet + mobile phones (2 persons). Heating/water are in NK (rent).
+  # EWZ 2025: ~26-30 Rp/kWh. Internet: Salt/Sunrise mid plans. Mobile: 2 SIMs.
+  utilities:
+    generous: 310
+    comfortable: 235
+    frugal: 130
+    note: "Electricity (EWZ) + internet + 2x mobile only — heating/water are in NK inside rent. Breakdown comfortable: electricity CHF 85 (3,000 kWh/yr at ~28-30 Rp/kWh) + internet CHF 50 (Salt/Sunrise mid) + 2x mobile CHF 50 (Sunrise/Salt mid SIM) = CHF 185. Frugal: electricity 60 + internet 46 + 2x budget SIM CHF 12 = CHF 130. Generous: higher usage + premium SIM plans."
+
+  # Mandatory KVG basic health insurance (2 persons, age ~30, Canton Zurich).
+  # Paid out-of-pocket — NOT employer-subsidised. Premium is NOT linked to salary.
+  # Modest=Telmed+CHF 2500 franchise; ample=Hausarzt+CHF 1000; great=Standard+CHF 300.
+  # Canton ZH has above-average premiums. Rose +0.6% in 2025 (after +8.7% in 2024).
+  health_kvg:
+    generous: 1080
+    comfortable: 760
+    frugal: 580
+    note: "KVG mandatory (2 pax, age 30). Paid separately, NOT deducted from salary. Per person: modest CHF 290 (Telmed+2500 fr.), ample CHF 380 (Hausarzt+1000 fr.), great CHF 540 (Standard+300 fr.)."
+
+  # Optional VVG supplemental insurance (2 persons). Buy before age 35.
+  # KVG covers ZERO dental. Dental: CHF 100-2000+ per procedure.
+  # Ample = dental basic + complementary medicine (2x CHF 65/month).
+  # Great = semi-private hospital + dental + complementary + international (2x CHF 200/month).
+  health_extra:
+    generous: 400
+    comfortable: 130
+    frugal: 0
+    note: "VVG supplemental on top of KVG. Ample=dental+complementary; great=semi-private+dental+complementary+international. Buy before age 35 — premiums rise sharply and pre-existing conditions can be excluded."
+
+  # 2 adults, includes food, beverages, toiletries, cleaning products.
+  # Zurich is ~50-70% more expensive than Madrid (Numbeo). Budget stores: Denner, Aldi, Lidl.
+  # Mainstream: Migros, Coop. Pro tip: cross-border shopping in Germany (Konstanz, ~45 min) saves 20-40%.
+  groceries_2pax:
+    generous: 1300
+    comfortable: 850
+    frugal: 600
+    note: "Incl. toiletries/cleaning. Modest=Denner/Aldi/Lidl; ample=Migros/Coop; great=Globus/organic."
+
+  # ZVV public transport (no car needed in Zurich). Zone 110 = entire city.
+  # Annual pass is cheapest (1 month free vs monthly). SBB Halbtax = CHF 185/yr for 50% off national rail.
+  # Modest=2x Zone 110 annual only; ample=+2x Halbtax; great=Zone 110+120+2x Halbtax.
+  transport_2pax:
+    generous: 274
+    comfortable: 199
+    frugal: 168
+    note: "ZVV Zone 110 annual = CHF 84/person/month. Halbtax = +CHF 15/person/month. No car needed."
+
+  # ~2x/week dining out as couple. Zurich meals ~100-120% pricier than Madrid.
+  # Numbeo: cheap meal CHF 27/person; mid-range dinner for 2 (no drinks) = CHF 120.
+  eating_out:
+    generous: 1100
+    comfortable: 700
+    frugal: 400
+    note: "Based on 2x/week. Cheap: kebab/Asian ~CHF 35-50/outing. Mid-range: CHF 80-120. Nice: CHF 150-220."
+
+  # Gym + cinema + hobbies + cultural events. Free options: Zürichsee, Uetliberg hiking, festivals.
+  # Gym: Activ Fitness ~CHF 79/month; Numbeo avg CHF 73. Cinema: CHF 20/ticket.
+  leisure:
+    generous: 950
+    comfortable: 520
+    frugal: 220
+    note: "Modest: 1 shared gym + cinema 2x. comfortable: 2 gyms + cinema 4x + hobbies. generous: premium gyms + skiing."
+
+  # Household insurance (Hausrat + Haftpflicht) + small miscellaneous.
+  # Hausrat+Haftpflicht combined: CHF 20-48/month. Providers: Mobiliar, Zurich, AXA.
+  misc:
+    generous: 700
+    comfortable: 460
+    frugal: 150
+    note: "Clothing, personal care, subscriptions, household goods, gifts. Zurich is one of Europe's most expensive cities for these: H&M basics CHF 25-40, haircut CHF 50-100, pharmacy goods very expensive (stock from home/DE). Comfortable: clothing ~CHF 150 + subscriptions (Netflix/Spotify/etc) ~CHF 55 + personal care ~CHF 100 + household ~CHF 80 + gifts/misc ~CHF 80 + Hausrat+Haftpflicht insurance ~CHF 35 = ~CHF 460. Insurance alone is CHF 22-48/month. Buy clothes in Germany (Konstanz, 45 min) for 20-40% savings."
+
+  travel:         {generous: 350,  comfortable: 350,  frugal: 350, fixed: true}
+  personal:       {generous: 800,  comfortable: 800,  frugal: 800, fixed: true}
+
+hidden_costs:
+  - {name: "Serafe TV/radio fee (mandatory per household)", annual: 335, mandatory: true,
+     note: "2025 rate. No opt-out even without TV. Drops to CHF 312/yr from Jan 2027."}
+  - {name: "Church tax — OPT OUT on arrival!", annual: 1200, mandatory: false,
+     note: "Deregister at Zivilstandsamt immediately. Saves CHF 800-1500/yr."}
+  - {name: "Apartment deposit (3 months net rent, blocked account)", one_time: 9000, mandatory: true,
+     note: "Returned at end of tenancy. frugal: ~CHF 5,850. comfortable: ~CHF 9,000. generous: ~CHF 12,600."}
+  - {name: "Züri-Säcke (official city garbage bags)", monthly: 15, mandatory: true,
+     note: "Zurich uses pre-paid garbage bags. ~CHF 3-4 per 35L bag; ~4/month for couple."}
+  - {name: "Apartment furnishing (Swiss apts often have NO kitchen or fixtures)", one_time: 8000, mandatory: false,
+     note: "Budget: CHF 3,000-6,000 (IKEA + Brocki). Full: CHF 10,000-30,000. Swiss landlords often expect you to install own kitchen (Einbauküche)."}
+  - {name: "International moving costs (from Madrid)", one_time: 5000, mandatory: false,
+     note: "Professional mover: CHF 3,000-10,000. Van rental + friends: CHF 500-1,000."}
+  - {name: "B-permit registration (EU citizens — free)", one_time: 25, mandatory: true,
+     note: "Register at Einwohnerkontrolle within 14 days of arrival. CHF 20-30 admin fee."}
+  - {name: "KVG health insurance retroactive enrollment risk", one_time: 0, mandatory: true,
+     note: "Must enroll within 3 months of arrival. Late = forced enrollment + backdated premiums. Enroll on Day 1."}
+
+career:
+  market: "Zurich finance, pharma, global tech"
+  typical_cagr: 0.045
+  ceiling_gross_chf: 200000
+  note: "UBS, Zurich Insurance, Google, Meta, Novartis, Roche, ABB. Highest BI/data ceilings in Europe. B-permit: Quellensteuer withheld at source (~22-25% for CHF 100K single). Pillar 3a max CHF 7,258/yr (100% tax-deductible) — use VIAC/frankly for equity investment."
+
+permit:
+  eu_eea:
+    timeline: '2-4 weeks'
+    steps:
+      - 'Register at Einwohnerkontrolle within 14 days of arrival'
+      - 'Employer notifies cantonal migration office (Migrationsamt)'
+      - 'Permit B (5-year renewable) or Permit L (short-stay) issued'
+  non_eu:
+    timeline: '16-24 weeks'
+    steps:
+      - 'Cantonal quota allocation required - limited slots per year'
+      - 'Employer applies at cantonal Migrationsamt with full documentation'
+      - 'Federal SEM approval required after cantonal recommendation'
+      - 'Labour market test (Inlaendervorrang): Swiss/EU/EFTA candidates must be ruled out first'
+  complexity: high
+  sponsor_required: true
+  costs_eur: 145
+  notes: 'Switzerland uses strict annual cantonal quotas for non-EU nationals. Inlaendervorrang (Swiss/EU priority) means the employer must document why no local candidate was suitable. Tech, finance, and pharma get quota exceptions more easily than other sectors. Start the process months before the intended start date. Permit B holders: keep it valid - gaps in residency can reset years toward Permit C (permanent). Pillar 3a pension: can only be opened once you have a work permit.'

@@ -1,0 +1,51 @@
+name: United Kingdom
+code: UK
+currency: GBP
+eur_rate: 1.176
+tax_year: 2025-26
+disclaimer: "UK income tax + National Insurance 2025/26. Personal allowance £12,570 tapers above £100k. GBP/EUR at 1 GBP = 1.176 EUR (May 2026). Post-Brexit EU citizens need visa sponsorship (Skilled Worker route)."
+
+income_tax:
+  method: effective_rate_lookup
+  lookup:
+    # England 2025/26. Includes income tax + National Insurance. Personal allowance
+    # taper above £100k is captured (PA eliminated at £125,140 → 60% effective marginal rate).
+    # Assumes: standard personal allowance £12,570, no pension contributions.
+    - {gross: 30000,  net_monthly: 2093}
+    - {gross: 40000,  net_monthly: 2693}
+    - {gross: 50000,  net_monthly: 3293}
+    - {gross: 60000,  net_monthly: 3780}
+    - {gross: 70000,  net_monthly: 4263}
+    - {gross: 80000,  net_monthly: 4746}
+    - {gross: 90000,  net_monthly: 5230}
+    - {gross: 100000, net_monthly: 5713}
+    - {gross: 110000, net_monthly: 6030}
+    - {gross: 120000, net_monthly: 6346}
+    - {gross: 130000, net_monthly: 6724}
+    - {gross: 150000, net_monthly: 7607}
+  marginal_retention: 0.53
+  note: "Net figures include income tax and National Insurance Class 1 (8% on £12,570-£50,270, 2% above). PA taper region £100k-£125k gives ~60% effective marginal rate — handled by lookup interpolation."
+  pa_taper_note: "Personal allowance tapers by £1 per £2 above £100k. Fully eliminated at £125,140 gross."
+
+social_contributions:
+  employee: []
+  note: "National Insurance Class 1 included in lookup net figures. Rates for reference: 8% on £12,570-£50,270, 2% above £50,270 (2025/26)."
+
+healthcare:
+  model: public_nhs
+  employee_extra_monthly: 0
+  note: "NHS is free at point of use. Private health insurance optional: £50-150/mo per person for Bupa/AXA level cover. EU citizens eligible for NHS after settling."
+
+special_schemes:
+  - id: uk_isa
+    name: "ISA (Individual Savings Account)"
+    description: "Up to £20,000/year invested tax-free. Not a salary scheme but worth using."
+    type: informational
+
+career:
+  typical_cagr: 0.05
+  note: "London finance/tech highly competitive. Strong upside but extremely high cost of living offsets gains. Manchester/Edinburgh better value. Post-Brexit: EU citizens need Skilled Worker visa sponsorship."
+
+warnings:
+  - "⚠ POST-BREXIT: As an EU citizen you need employer visa sponsorship (Skilled Worker). Factor in ~6-12 week application process and employer willingness."
+  - "⚠ NHS prescriptions £9.90/item (England). Scotland/Wales free."

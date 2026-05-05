@@ -1,0 +1,43 @@
+name: Germany
+code: DE
+currency: EUR
+eur_rate: 1.0
+tax_year: 2026
+disclaimer: "Germany 2025. Progressive income tax formula (not simple brackets). Solidarity surcharge = 0 below ~€90,800 gross (Soli-Freigrenze €19,950 income tax, 2025). Church tax opt-out recommended (saves ~8-9% of income tax). KV Zusatzbeitrag fund-dependent — use as directional estimate."
+
+income_tax:
+  method: effective_rate_lookup
+  lookup:
+    # Assumptions: Steuerklasse 1 (single), GKV public health (avg Zusatzbeitrag ~2.5% total,
+    # employee pays 1.25%), PV with childless surcharge (2.4% employee), no church tax.
+    # West Germany BBG 2025. Soli = 0 below ~€90,800 gross (Freigrenze €19,950 income tax).
+    - {gross: 30000,  net_monthly: 1767}
+    - {gross: 40000,  net_monthly: 2239}
+    - {gross: 50000,  net_monthly: 2692}
+    - {gross: 60000,  net_monthly: 3126}
+    - {gross: 70000,  net_monthly: 3563}
+    - {gross: 80000,  net_monthly: 4014}
+    - {gross: 85000,  net_monthly: 4231}
+    - {gross: 90000,  net_monthly: 4445}
+    - {gross: 100000, net_monthly: 4827}
+    - {gross: 110000, net_monthly: 5246}
+    - {gross: 120000, net_monthly: 5710}
+    - {gross: 130000, net_monthly: 6174}
+    - {gross: 150000, net_monthly: 7102}
+  marginal_retention: 0.55
+  note: "Net figures include all social contributions (KV+PV+RV+ALV) and Solidaritätszuschlag. Church tax NOT included (opt out at Einwohnermeldeamt). KV Zusatzbeitrag varies by fund (TK ~1.2%, others up to 4%); avg 2025 = 2.5% used. Actual net may differ by ±€100/mo."
+
+social_contributions:
+  employee: []
+  note: "Social contributions (KV ~8.1%, PV ~1.7%, RV 9.3%, ALV 1.3%) are already factored into the net lookup table. Caps apply at ~€66k (health) and ~€96k (pension)."
+
+healthcare:
+  model: public_deducted
+  employee_extra_monthly: 50
+  note: "Public health insurance (GKV) deducted from gross salary. Supplemental private dental/vision optional €30-80/mo. Private full (PKV) possible above income threshold ~€69k but complex."
+
+special_schemes: []
+
+career:
+  typical_cagr: 0.04
+  note: "German market stable but slower raises than NL/CH. Berlin tech scene growing fast. Munich/Frankfurt finance pays well. Job hops typical 15-20% bumps."

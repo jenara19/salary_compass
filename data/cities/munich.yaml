@@ -1,0 +1,44 @@
+name: Munich
+country: DE
+currency: EUR
+cost_of_living:
+  rent_2bed:      {generous: 2600, comfortable: 1950, frugal: 1500, note: "Warmmiete (Kaltmiete + Nebenkosten incl. heating/water/garbage). Modest = Moosach/Milbertshofen outer (Kalt ~€1,200 + NK €300). Ample = Neuhausen/Sendling/Giesing (Kalt ~€1,600 + NK €350). Great = Schwabing/Maxvorstadt/Bogenhausen (Kalt ~€2,200 + NK €400). Vacancy rate <0.5%. Mietpreisbremse applies but widely circumvented via new-build/renovation exemptions. Electricity billed separately. IMPORTANT: most apartments come WITHOUT a kitchen."}
+  utilities:      {generous: 215, comfortable: 170, frugal: 130, note: "Electricity (Strom) only — heating/hot water/water/garbage in Warmmiete (Nebenkosten). SWM or competitive tariff: ~€0.30–0.35/kWh (Check24 March 2026: 34.81 ct/kWh avg). 2-person ~2,800 kWh/year = €70–110/month. Broadband: M-Net/Telekom/Vodafone fiber 250–1,000 Mbps €32–50. 2× SIM-only: Aldi Talk €10–12 to Telekom MagentaMobil €30–50/person."}
+  health_extra:   {generous: 130, comfortable: 50, frugal: 0, note: "GKV deducted from gross salary (~8.5% employee share) — NOT out-of-pocket. This line = OPTIONAL Zusatzversicherung only. Modest = GKV only (covers full basic care). Ample = Zahnzusatz dental for 2 (~€15/person) + basic vision. Great = comprehensive dental + vision + Wahlleistungen (hospital private room, Chefarzt). Munich dentists are private-heavy; GKV covers basic treatments only. 3–8 month waiting period before claims."}
+  groceries_2pax: {generous: 720, comfortable: 490, frugal: 320, note: "Modest: Lidl/Aldi primary. comfortable: REWE/Edeka mix + some organic, Wochenmarkt. generous: Alnatura/denn's bio, Edeka Premium, Käfer deli, quality meat+wine. Munich prices 3–8% above Berlin/national avg. Key items 2025: milk €1.19/L, eggs €3.36/12, chicken €10.44/kg, beef €16.80/kg, wine €6 (mid)."}
+  transport_2pax: {generous: 210, comfortable: 160, frugal: 134, note: "Deutschlandticket 2025: €58/person/month (confirmed; Finanztip, DB, MVV sources; raised to €63 Jan 2026). Covers all MVV buses, U-Bahn, S-Bahn, trams + entire national ÖPNV. For 2: €116/month base. Many Munich employers offer subsidized Jobticket. Alps day trips (Garmisch, Zugspitze) by S-Bahn included. Modest = D-Ticket + bike maintenance. Great = D-Ticket + quality bikes + taxis/SIXT."}
+  eating_out:     {generous: 1020, comfortable: 500, frugal: 240, note: "Numbeo mid-range for 2 (3-course, no drinks): €80; inexpensive 1 person: €18; beer 0.5L: €5. Biergarten culture (Englischer Garten, Augustiner): €15–20/person incl. food+beer. Maß Bier Oktoberfest 2025: ~€15.50–16.40. Modest = ~8 biergarten/Imbiss outings/month avg €30. Ample = ~10 outings avg €50. Great = ~12 outings avg €85 incl. fine dining."}
+  leisure:        {generous: 480, comfortable: 275, frugal: 120, note: "McFit/FitX: €22–25/month. EVO Fitness: €25–35. Holmes Place: €75–90/person. Cinema: €14.50–18/ticket (UCI/Mathäser). Pinakotheken: €1 Sunday, annual pass €30–40. Staatsoper: gallery €10–15. Alps hiking near free in summer; Zugspitze day ski ~€55–65/person. Oktoberfest: ~€100–200/person/day."}
+  misc:           {generous: 700, comfortable: 350, frugal: 170, note: "Includes Rundfunkbeitrag €18.36/month (per household), Hausratversicherung ~€13/month (Munich premiums higher than national avg), Haftpflichtversicherung ~€9/month (couple policy), clothing, personal care, subscriptions, gifts."}
+  travel:         {generous: 350, comfortable: 350, frugal: 350, fixed: true}
+  personal:       {generous: 700, comfortable: 700, frugal: 700, fixed: true}
+hidden_costs:
+  - {name: "Rundfunkbeitrag (broadcasting fee, per household)", monthly: 18.36, mandatory: true}
+  - {name: "Hausratversicherung + Haftpflichtversicherung (combined)", monthly: 22, mandatory: false}
+  - {name: "Mietkaution 3× Kaltmiete (ample tier deposit)", one_time: 4800, mandatory: true}
+  - {name: "Einbauküche from departing tenant or new purchase", one_time: 2000, mandatory: false}
+  - {name: "Steuerberater / tax software for expat filing", annual: 300, mandatory: false}
+  - {name: "Kirchensteuer in Bavaria: 8% of income tax — OPT OUT on Anmeldung", note: "Write 'keine' for religion. At €70k gross: saves ~€1,120/year. File Kirchenaustritt at Standesamt (€30 fee) if accidentally enrolled."}
+career:
+  market: "Munich tech, automotive, finance"
+  typical_cagr: 0.05
+  ceiling_gross_eur: 150000
+  note: "BMW, Siemens, Allianz, Munich Re, Google, Apple, Celonis. Germany's premier BI/data hub. Salaries 12–18% above national avg. Senior IC €72–115k at traditional industry, up to €160k at Big Tech. CAGR 5–8% career progression."
+
+permit:
+  eu_eea:
+    timeline: '2-5 weeks'
+    steps:
+      - 'Anmeldung (residence registration) at Burgeramt within 14 days - very important'
+      - 'EU free movement: no work permit needed, no quota system'
+      - 'Tax ID (Steuer-ID) issued automatically by post within 4 weeks'
+  non_eu:
+    timeline: '8-16 weeks'
+    steps:
+      - 'Apply for national visa (Arbeitsvisa) at German embassy/consulate in home country'
+      - 'Employer provides work contract and Vorabzustimmung (advance approval) from Auslaenderbehoerde'
+      - 'Aufenthaltserlaubnis (residence permit) obtained at Burgeramt after arrival'
+  complexity: medium
+  sponsor_required: false
+  costs_eur: 100
+  notes: 'Germany Fachkraeftemigration (Skilled Immigration Act, expanded 2023) makes it significantly easier for qualified non-EU workers. EU Blue Card: available for university graduates earning above EUR 48,300 (2025 threshold) - fast-tracks to permanent residence after 21-33 months. Opportunity Card (Chancenkarte): allows 1 year to job-seek without offer. Kirchensteuer: write keine on Anmeldung to avoid 8% of income tax charge. Anmeldung is the most critical first step - required for bank account, health insurance enrollment, employer tax setup.'

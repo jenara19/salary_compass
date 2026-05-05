@@ -1,0 +1,164 @@
+name: London
+country: UK
+currency: GBP
+cost_of_living:
+  rent_2bed:
+    generous:  2800
+    comfortable:  2200
+    frugal: 1700
+    note: "Zone 1-2 premium (Islington, Hackney, Clapham, Shoreditch) vs. Zone 2-3 value
+           (Brixton, Stratford, Peckham, Walthamstow) vs. Zone 3-4 outer boroughs. Post-2022
+           London rental surge: average 2-bed Zone 1-2 regularly £2,500-3,500 in 2025.
+           Zone 3 Outer East (Leyton, Walthamstow) and South (Tooting, Forest Hill) offer
+           better value. All-bills-included rentals command 20-30% premium over bills-excluded."
+  utilities:
+    generous:  300
+    comfortable:  250
+    frugal: 200
+    note: "UK energy bills remain elevated post-2022 crisis. Ofgem Energy Price Cap Q1 2025:
+           ~£1,738/year for average household. 2-bed flat: electricity + gas ~£130-170/month.
+           Breakdown comfortable: energy £150 + water £35 + broadband £35 + 2x mobile SIM £30.
+           Budget broadband: Community Fibre (London-only) from £22/month; Sky/Virgin ~£30-40.
+           Three/Voxi SIM-only from £10/month. Water is billed by Thames Water/Affinity
+           separately (~£35/month for a 2-bed flat)."
+  health_extra:
+    generous:  150
+    comfortable:   60
+    frugal:   0
+    note: "NHS is entirely free at point of use for all UK residents including settled EU nationals.
+           generous: comprehensive private (Bupa/AXA Health) ~£100-150/person — dental, optical,
+           private consultations, 0-wait specialists. comfortable: basic dental/optical cover ~£30-40/
+           person (Denplan dental from £14/month, specsavers optical plans from £10/month).
+           frugal: NHS only — zero cost. Main NHS limitations: 6-18 week waits for non-urgent
+           specialists; NHS dentistry increasingly hard to access (many patients pay Band 1-3
+           NHS charges of £26/£73/£319 or go entirely private)."
+  groceries_2pax:
+    generous:  700
+    comfortable:  550
+    frugal: 450
+    note: "UK Big Five: Tesco, Sainsbury's, Asda, Morrisons, Waitrose. Budget: Aldi, Lidl (save
+           £150-200/month vs Tesco for equivalent basket). frugal: Aldi/Lidl + Asda basics.
+           comfortable: Tesco/Sainsbury's + occasional Waitrose. generous: M&S Food/Waitrose + farmers
+           market + Ocado delivery. Ethnic supermarkets (Brixton Market, Green Street, Dalston)
+           excellent value for fresh produce. Olio/Too Good To Go apps for surplus food savings."
+  transport_2pax:
+    generous:  350
+    comfortable:  280
+    frugal: 200
+    note: "TfL network: Tube, Overground, Elizabeth line, buses, DLR. Zone 1-2 contactless
+           monthly cap: ~£180/person. Zone 1-3: ~£200/person. Annual Travelcard saves ~13% vs
+           daily caps — worth it for 5-day commuters. frugal: one person Zone 1-2 + bus-heavy
+           other person + Santander Cycles (annual £90). comfortable: 2x Zone 1-3 equivalent (~£200
+           each) but walk/bus offset brings it to £280. generous: adds £70 Uber/Bolt monthly budget
+           for late nights and cross-zone trips. Santander Cycles: annual membership £90."
+  eating_out:
+    generous:  700
+    comfortable:  500
+    frugal: 300
+    note: "London is expensive for eating out. Cheap meal (kebab/noodles/doner): £12-16. Mid-range
+           dinner for 2 (2 courses, no drinks): £60-90. Gastropub Sunday roast: £20-30/person.
+           Coffee at independent café: £3.50-5.00. Set lunch menus at mid-range restaurants:
+           £15-25 for 2-3 courses — best value in London. Wetherspoons pint: £2.50-4.00.
+           Neighbourhood restaurants in Dalston, Peckham, Hackney significantly cheaper than
+           City/Mayfair/South Bank. Borough Market: good for browsing but pricey to eat."
+  leisure:
+    generous:  300
+    comfortable:  200
+    frugal: 100
+    note: "Free world-class options: British Museum, Natural History Museum, National Gallery,
+           V&A, Tate Modern, Tate Britain, Hyde/Regent/Victoria parks, South Bank walks.
+           Gym: PureGym from £20/month (excellent value), Nuffield Health ~£55, Equinox/Third
+           Space (premium) £120-200/month. Cinema: Odeon/Vue £12-16; Curzon indie £14-17;
+           Vue Tuesdays ~£7. Theatre: day seats/Tkts discount ~£20-40; West End premium £60-150.
+           Gigs at O2 Academy/Roundhouse £30-80. Comedy clubs: Angel Comedy free/donation."
+  misc:
+    generous:  400
+    comfortable:  300
+    frugal: 150
+    note: "Clothing: Oxford Street, Westfield Stratford/Shepherd's Bush. Primark for budget;
+           ASOS for mid-range online. Haircut: Turkish barber £10-15; mid salon £35-65; premium
+           £70+. London premium: dry cleaning £8-15/item, plumbers/electricians £80-120/hr call-out.
+           Tip culture growing (10-15% at restaurants). Amazon Prime £8.99/month. Contents
+           insurance ~£15-25/month (factor into misc or separate line). Pharmacy: NHS prescriptions
+           £9.90/item (England) — prepayment certificate £31.25/quarter saves money if on
+           regular medication."
+  travel:         {generous: 400, comfortable: 400, frugal: 400, fixed: true}
+  personal:       {generous: 700, comfortable: 700, frugal: 700, fixed: true}
+hidden_costs:
+  - name: "Council Tax"
+    monthly: 130
+    mandatory: true
+    note: "Levied per property (not per person); varies by borough and band. Band D (typical
+           2-bed flat) range: Westminster ~£900/yr (exceptionally low), Haringey ~£2,200/yr (high).
+           Average London ~£1,500/yr (~£125/month). 25% single-person discount applies. Full
+           exemption for full-time students. Check your specific borough before budgeting."
+  - name: "TV Licence"
+    annual: 169
+    mandatory: false
+    note: "2025 rate £169/year. Required if watching live broadcast TV (any channel) or BBC
+           iPlayer. Not required for Netflix/Disney+/YouTube/Apple TV+ only usage. Legally
+           avoidable if you genuinely avoid live TV and iPlayer."
+  - name: "Skilled Worker visa (EU/non-UK nationals)"
+    one_time: 1500
+    mandatory: true
+    note: "Post-Brexit requirement for EU citizens. Employer must hold a Home Office sponsor
+           licence. Visa application fee: £610 (3-year) to £1,235 (5-year). Healthcare surcharge
+           also due. Many employers cover the fee — negotiate before signing. Total process
+           including Certificate of Sponsorship: 6-12 weeks. No freelance/self-employment on
+           Skilled Worker visa."
+  - name: "NHS Immigration Health Surcharge"
+    annual: 1035
+    mandatory: true
+    note: "Paid upfront for the full visa duration before the visa is granted. 2025 rate: £1,035/
+           year per person. For a 3-year visa: £3,105 paid upfront. Gives full NHS access
+           equivalent to a UK citizen (including free GP, A&E, hospital). Some employers
+           reimburse this — always ask HR before signing."
+  - name: "Rental deposit (5-week cap)"
+    one_time: 2538
+    mandatory: true
+    note: "Tenant Fees Act 2019 caps deposits at 5 weeks' rent. At ample rent £2,200/month:
+           5 × (£2,200 ÷ 4.33) = £2,538. Must be held in a government-approved Tenancy Deposit
+           Scheme (DPS, MyDeposits, or TDS) — you earn interest. Contested deposits are the
+           #1 landlord-tenant dispute. Document every scratch and mark on check-in inventory."
+  - name: "Contents insurance"
+    annual: 220
+    mandatory: false
+    note: "Building insurance is landlord's responsibility; contents (your possessions) are yours.
+           ~£150-350/year for a London 2-bed flat, including accidental damage and public liability.
+           Providers: Admiral, Policy Expert, Aviva, Direct Line. Compare annually via
+           Comparethemarket or MoneySupermarket. Higher in Zone 1-2 (higher burglary rates)."
+  - name: "Annual Travelcard Zone 1-3 optimisation"
+    annual: 0
+    mandatory: false
+    note: "Annual Travelcard Zone 1-3: ~£2,604 (saves ~13% vs daily contactless caps). Load onto
+           Railcard-linked Oyster or contactless. Best value for 5-day commuters. If WFH 2+ days/
+           week, pay-as-you-go contactless may beat annual card. 16-25/26-30/Network Railcard:
+           £30/year gives 1/3 off off-peak national rail — useful for weekend travel."
+career:
+  market: "London finance, tech, consulting"
+  typical_cagr: 0.055
+  ceiling_gross_gbp: 200000
+  note: "Global financial centre: Canary Wharf (investment banking), City of London (insurance,
+         trading), Silicon Roundabout/King's Cross (tech). Highest salary ceilings in Europe for
+         finance (Goldman Sachs, Barclays, HSBC, JPMorgan, BlackRock). Strong tech cluster
+         (Google, Meta, Amazon, DeepMind all London-HQ'd in Europe). Post-Brexit EU citizens
+         need Skilled Worker visa sponsorship. UK personal allowance taper £100k-£125k creates
+         ~60% effective marginal rate — model using the lookup table carefully."
+
+permit:
+  eu_eea:
+    timeline: '3-8 weeks'
+    steps:
+      - 'Employer obtains Certificate of Sponsorship (CoS) from licensed sponsor'
+      - 'Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)'
+      - 'Pay NHS Immigration Health Surcharge upfront for full visa duration'
+  non_eu:
+    timeline: '3-8 weeks'
+    steps:
+      - 'Same process as EU nationals post-Brexit - no preferential treatment'
+      - 'Employer must hold a Home Office Tier 2 sponsor licence'
+      - 'Skilled Worker visa: points-based system (job offer + salary + English)'
+  complexity: high
+  sponsor_required: true
+  costs_eur: 1900
+  notes: 'Post-Brexit all non-British nationals need a Skilled Worker visa - EU citizens no longer have preferential treatment. NHS Immigration Health Surcharge: £1,035/year per person paid upfront (3-year visa = £3,105 upfront). Many employers cover the fee - always negotiate. Priority processing: £500 extra for 5-day decision. Employer must be a licensed sponsor (check UKVI register). Visa does not permit self-employment.'

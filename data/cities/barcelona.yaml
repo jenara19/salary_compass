@@ -1,0 +1,44 @@
+name: Barcelona
+country: ES
+currency: EUR
+cost_of_living:
+  rent_2bed:      {generous: 2200, comfortable: 1700, frugal: 1300, note: "Free-market LAU contracts 2025. Great = Eixample/Gràcia/Born 70–80m². Ample = Poblenou/Poble Sec/Sant Martí 65–75m². Modest = Nou Barris/Sant Andreu/Sants 60–70m². Ley de Vivienda 2023: Barcelona is tensioned zone (zona tensionada), rent caps on new contracts — but landlords often use seasonal/furnished leases (contratos de temporada) to bypass. Agency fees BANNED for tenants since June 2023."}
+  utilities:      {generous: 280, comfortable: 210, frugal: 150, note: "Electricity (PVPC avg 2025: €0.13–0.18/kWh, or mercado libre fixed ~€0.14–0.20): €45–110/month depending on season (AC in summer). Gas (hot water + cooking): €15–35/month. Water (Aigues de Barcelona): €25–40/month. Internet (Digi 1Gbps: €20; Orange/Vodafone: €30–45). 2× mobile SIM: Digi €7–10, Masmovil €10–15, Orange €15–25/person. Spain has excellent fiber coverage."}
+  health_extra:   {generous: 160, comfortable: 100, frugal: 40, note: "Public SNS healthcare is FREE when employed (via Seguridad Social registration + empadronament). This line = OPTIONAL private insurance only. Modest = 2× budget with copago (Adeslas Go ~€19/person). Ample = 2× good value without copago (DKV Integral Elite ~€32 or Sanitas Más Salud ~€35). Great = 2× comprehensive (Asisa Integral ~€55). Private gives: no waiting lists (public specialists: 2–6 months), direct access, private rooms."}
+  groceries_2pax: {generous: 700, comfortable: 520, frugal: 380, note: "Modest: Mercadona/Lidl primary. comfortable: Mercadona + neighbourhood market (Mercat Sant Antoni, Mercat Poblenou) + Carrefour. generous: El Corte Inglés + premium markets. Avoid La Boqueria for daily shopping (tourist prices). Spanish food notably cheaper than NW Europe. Key items: milk €1.09/L, eggs €4.36/12, chicken €7.88/kg."}
+  transport_2pax: {generous: 140, comfortable: 80, frugal: 50, note: "T-Usual Zone 1 (metro/bus/tram/FGC/Rodalies unlimited): ~€22/month subsidized in 2025 (30–50% state discount active; full price ~€40). T-Jove (under-30 quarterly): equiv. ~€13–18/month. Bicing annual subscription: ~€55/year = €4.60/month/person. No car needed — metro excellent. Great adds taxis/Uber (~€50/month extra)."}
+  eating_out:     {generous: 600, comfortable: 380, frugal: 200, note: "Menú del día (set weekday lunch): €12–18/person — best value in Europe. Mid-range dinner for 2 (3-course, no drinks): €60 (Numbeo, range €40–90). Tapas evening for 2: €35–60. Beer at bar: €4. Coffee: €2.57. Modest = mostly menú del día + 1–2 dinners/month. Ample = menú lunches ~5/month + weekly dinners. Great = frequent restaurant visits + cocktail bars + wine."}
+  leisure:        {generous: 350, comfortable: 200, frugal: 100, note: "McFit/Basic-Fit: €20–25/person. DiR Rítmica (mid local chain): €40–55. Holmes Place: €65–85/person. Cinema: €10/ticket. Beach + Ciutadella/Montjuïc parks effectively free. Museu Picasso free first Sunday/month. Many festivals free (Festes de la Mercè September). Outdoor lifestyle significantly reduces leisure costs vs NW Europe."}
+  misc:           {generous: 500, comfortable: 280, frugal: 150, note: "Clothing, personal care, subscriptions (Netflix/Spotify ~€15–25), gifts, pharmacy, household. Gestoría (tax/admin agent) especially useful in Year 1 for NIE, tax return: ~€200–500/year."}
+  travel:         {generous: 350, comfortable: 350, frugal: 350, fixed: true}
+  personal:       {generous: 700, comfortable: 700, frugal: 700, fixed: true}
+hidden_costs:
+  - {name: "Catalan IRPF surcharge vs Madrid (estimate)", annual: 1200, mandatory: true}
+  - {name: "Comunitat de veïns (building HOA, if not in rent)", monthly: 70, mandatory: false}
+  - {name: "Gestoría (tax/admin advisor, Year 1 recommended)", one_time: 300, mandatory: false}
+  - {name: "NIE / Certificado de Registro EU citizen (~€12 fee + admin)", one_time: 50, mandatory: true}
+  - {name: "Rental deposit (fianza 1 month + up to 2 months additional guarantee)", one_time: 3400, mandatory: true}
+  - {name: "Contents insurance (seguro de hogar arrendatario)", monthly: 12, mandatory: false}
+career:
+  market: "Barcelona tech, SaaS, tourism, media"
+  typical_cagr: 0.04
+  ceiling_gross_eur: 110000
+  note: "Amazon AWS, King/Activision, Typeform, Factorial, Vueling/Seat:Code, Criteo, BSH, Glovo. Spanish companies ceiling ~€80–90k senior IC; multinationals €90–140k. Beckham Law (flat 24% rate) may apply for qualifying new arrivals for up to 6 years."
+
+permit:
+  eu_eea:
+    timeline: "1–3 weeks"
+    steps:
+      - "NIE (Número de Identidad de Extranjero) — apply at Extranjería or consulate"
+      - "Register at Ayuntamiento padrón municipal (same day)"
+      - "TIE residency card for stays >3 months (cita previa appointment may take 2–4 weeks)"
+  non_eu:
+    timeline: "10–20 weeks"
+    steps:
+      - "Employer requests Autorización de Residencia y Trabajo at Delegación del Gobierno"
+      - "Employee applies for work visa at Spanish consulate in home country"
+      - "TIE on arrival in Spain"
+  complexity: medium
+  sponsor_required: true
+  costs_eur: 20
+  notes: "EU citizens: registration is straightforward but NIE appointment availability varies by city. Beckham Law (régimen fiscal especial para trabajadores desplazados): apply at AEAT within 6 months of becoming tax resident — deadline is strict. Non-EU: the 'autorización' step involves a labour market test (Situación Nacional de Empleo) unless the role is on the shortage occupations list."

@@ -1,0 +1,60 @@
+name: Netherlands
+code: NL
+currency: EUR
+eur_rate: 1.0
+tax_year: 2026
+disclaimer: "NL Box 1 three-bracket system (2026). Includes all heffingskortingen (arbeidskorting + algemene heffingskorting). ZVW employer contribution not included (employer cost). Sources: belastingdienst.nl 2026 tables."
+
+income_tax:
+  personal_allowance: 0
+  brackets:
+    - {up_to: 38883,  rate: 0.3575}
+    - {from: 38883,  up_to: 78426, rate: 0.3756}
+    - {from: 78426,  rate: 0.4950}
+
+  # Tax credits (heffingskortingen) — applied to tax owed, not to gross income.
+  # Computed on taxable income (i.e. after any multiplier scheme such as 30% ruling).
+  # Source: belastingdienst.nl tabel-algemene-heffingskorting-2026 / tabel-arbeidskorting-2026
+  tax_credits:
+    - type: phase_out_credit
+      name: "Algemene Heffingskorting"
+      max_credit: 3115
+      phase_out_start: 29736
+      phase_out_end: 78426
+      phase_out_rate: 0.06398
+    - type: piecewise_credit
+      name: "Arbeidskorting"
+      bands:
+        - {from: 0,      to: 11965,  base: 0,    rate:  0.08324}
+        - {from: 11965,  to: 25845,  base: 996,  rate:  0.31009}
+        - {from: 25845,  to: 45592,  base: 5300, rate:  0.01950}
+        - {from: 45592,  to: 132920, base: 5685, rate: -0.06510}
+        - {from: 132920, to: null,   base: 0,    rate:  0.0}
+
+social_contributions:
+  employee:
+    - {name: "ZVW nominal premium", monthly_flat: 159, note: "Mandatory basic health insurance nominal premium (2026 avg). Paid directly to insurer — shown here as a take-home deduction."}
+  cap_annual: null
+
+healthcare:
+  model: mandatory_private
+  employee_extra_monthly: 200
+  note: "Basic Zvw ~€159/mo (already in social_contributions). Supplemental dental/physio €100-250/mo extra."
+
+special_schemes:
+  - id: nl_30_ruling
+    name: "30% Ruling (expat)"
+    description: "30% of gross salary is paid tax-free as cost reimbursement. Only 70% of gross is subject to income tax and heffingskortingen."
+    duration_years: 5
+    min_salary_annual: 48013
+    type: taxable_multiplier
+    multiplier: 0.70
+    rate_change:
+      calendar_year: 2027
+      new_multiplier: 0.73
+      description: "Ruling reduced from 30% to 27% for all existing holders from 1 January 2027 (Budget Memorandum 2024). Only 73% of gross is taxable from 2027."
+    warning: "Expires after 5 years. Net salary drops ~€1,100+/month at expiry. Plan your next move by year 4. Rate drops 30%→27% from Jan 2027 for all holders (~€150–250/month additional drop at that point)."
+
+career:
+  typical_cagr: 0.05
+  note: "Strong Amsterdam data/tech market. Rotterdam secondary. Job hops yield 20-25% bumps. Ceiling ~€130-140k for senior ICs."

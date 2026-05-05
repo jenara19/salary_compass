@@ -1,0 +1,177 @@
+name: Oslo
+country: NOR
+currency: NOK
+cost_of_living:
+  rent_2bed:
+    generous:  25000
+    comfortable:  20000
+    frugal: 16000
+    note: "Oslo is one of Europe's most expensive rental markets. generous: Frogner/Majorstuen/
+           Skillebekk (upscale West End); renovated 70-80m². comfortable: Grünerløkka/Sagene/Sinsen
+           (trendy East Side); 65-75m². frugal: Groruddalen/Østensjø/Bjerke (outer districts);
+           60-70m². Rents rose ~5-8% YoY in 2024-2025 driven by housing shortage and high
+           immigration. Few rent controls — market determines price. Borettslag (co-op) units
+           often better value for long-term stays but require membership fees (innskudd)."
+  utilities:
+    generous:  3000
+    comfortable:  2500
+    frugal: 1800
+    note: "Electricity prices in Oslo (zone NO1) are volatile — swings from 0.10 NOK/kWh to
+           2.50+ NOK/kWh depending on hydro reservoir levels. Government strømstøtte subsidy
+           reduced household exposure 2022-2024 (73% of price above 0.73 NOK/kWh covered).
+           District heating (fjernvarme) increasingly common in Oslo blocks — included in
+           husleie or billed separately at fixed rate. Breakdown comfortable: electricity NOK 1,200
+           + heat/water NOK 600 + Altibox/Telenor broadband NOK 399 + 2x mobile NOK 300.
+           Broadband: Altibox 1Gbps ~NOK 399/month; Telenor ~NOK 449."
+  health_extra:
+    generous:  800
+    comfortable:  400
+    frugal:   0
+    note: "Norwegian public healthcare (Helseforetakene/NAV) is free at point of use after small
+           egenandel co-pays (capped annually — see hidden costs). generous: 2x comprehensive private
+           supplemental (Gjensidige Helse/Storebrand Helse) ~NOK 400/person/month — covers
+           dental, physiotherapy, faster specialist access, private hospitals. comfortable: 2x basic
+           private ~NOK 200/person. frugal: public system only — excellent quality for acute
+           care, surgery, and emergencies; egenandel cap covered separately."
+  groceries_2pax:
+    generous:  10000
+    comfortable:   8500
+    frugal:  7000
+    note: "Norway is among the most expensive countries in the world for groceries — 65-80%
+           above EU average (Eurostat). Supermarket landscape: Kiwi and Rema 1000 (budget,
+           genuinely good quality) vs. Meny and Coop Extra (mid-range) vs. Joker/Spar (local).
+           Alcohol: sold only at Vinmonopolet (state monopoly, closed Sundays) — wine from
+           NOK 120/bottle, craft beer NOK 40-60 at supermarket. Budget: Kiwi + meal planning
+           + minimal restaurant-quality ingredients. Pro tip: Matpakkekulturen (packed lunch
+           culture) is deeply Norwegian — embrace it to save NOK 200-400/week."
+  transport_2pax:
+    generous:  1600
+    comfortable:  1200
+    frugal:   800
+    note: "Ruter integrated public transport (Oslo + Viken region). Monthly pass Zone 1 (Oslo
+           city): NOK 830/person/month (2025). Annual pass Zone 1: ~NOK 8,680/person (save ~13%).
+           T-bane (metro, 6 lines), tram, bus, Båt (ferry to Nesoddtangen). frugal: 2x Zone 1
+           annual pass equivalent (~NOK 720/month each) with heavy cycling offset. comfortable: 2x
+           Zone 1-2 monthly ~NOK 1,100/person. generous: wider zones + occasional Bolt/Voi VTC.
+           Oslo Bysykkel city bikes: annual pass NOK 399 (unlimited 45-min trips). Flytoget
+           (airport express): NOK 230/trip — supplement above Ruter pass."
+  eating_out:
+    generous:  7000
+    comfortable:  5000
+    frugal: 3000
+    note: "Oslo is among Europe's most expensive cities for eating out. Cheap meal (kebab/Thai
+           lunch special): NOK 150-200/person. Mid-range restaurant main course: NOK 250-350.
+           Beer at bar: NOK 85-125/0.5L (on par with Switzerland). Coffee (flat white): NOK
+           55-80. Dinner for 2 at mid-range (2 courses + drinks): NOK 800-1,200. Aker Brygge/
+           Tjuvholmen and Aker Brygge are tourist-premium; Grünerløkka, Torggata, and Mathallen
+           Oslo food hall more accessible. Friday/Saturday bar culture adds up rapidly.
+           Very limited menú del día lunch culture vs. Spain."
+  leisure:
+    generous:  3000
+    comfortable:  2000
+    frugal: 1000
+    note: "World-class free outdoor options: Holmenkollen ski jump (free to walk), Vigeland
+           Sculpture Park (free), Marka forests (direct T-bane/bus access), Oslo Fjord
+           swimming beaches (free, multiple). Gym: SATS/Elixia (major chains) ~NOK 550-750/
+           month per person. Ski season pass at Oslo Vinterpark/Norefjell: NOK 2,500-5,000.
+           Nordmarka and Oslomarka: free year-round (hiking summer, skiing/langrenn winter).
+           Cinema: NOK 150-180/ticket. Concerts at Sentrum Scene/Oslo Spektrum: NOK 300-700.
+           Munch Museum/Viking Ship Museum: NOK 160-220/ticket."
+  misc:
+    generous:  4000
+    comfortable:  3000
+    frugal: 1500
+    note: "Clothing expensive in Norway — Norwegian wages inflate all retail prices. H&M/Zara
+           available but priced 20-40% above Spain/Germany. Haircut: NOK 350-500 (budget),
+           NOK 600-900 (mid salon). Pharmacy (apotek): very expensive — consider bringing 6-12
+           months supply of common medications from home country. Norwegian customs threshold
+           is low (NOK 350 duty-free for imports). Misc covers: clothing, self-care, pharmacy,
+           subscriptions, household goods, online shopping."
+  travel:         {generous: 4000, comfortable: 4000, frugal: 4000, fixed: true}
+  personal:       {generous: 8000, comfortable: 8000, frugal: 8000, fixed: true}
+hidden_costs:
+  - name: "Egenandel (healthcare co-pay annual cap)"
+    annual: 2750
+    mandatory: true
+    note: "Each GP visit, specialist referral, lab test, and prescription carries a co-pay.
+           Annual cap (frikortgrense) 2025: ~NOK 2,750 per person. Once exceeded, you receive
+           a frikort (free card) — all further healthcare that calendar year is free. In practice
+           ~4-8 GP visits or 2-3 specialist consultations hits the cap. Annual budget: NOK 2,750
+           per person in the household; couple: up to NOK 5,500 before any frikort."
+  - name: "Folkeregisteret + Skattekort (mandatory registration)"
+    one_time: 0
+    mandatory: true
+    note: "Register at Folkeregisteret (Tax Administration) within 8 days of settling in Norway.
+           Free. Provides fødselsnummer (permanent) or D-nummer (temporary). Required for:
+           skattekort (tax withholding card), BankID, bank account, NAV membership, lease
+           signing. CRITICAL: without a valid skattekort your employer must withhold 50% tax
+           from your first salary. Apply at Skatteetaten office with passport + employment
+           contract + rental agreement."
+  - name: "Rental deposit (depositum)"
+    one_time: 60000
+    mandatory: true
+    note: "Standard 3 months' rent. At ample tier NOK 20,000/month: NOK 60,000 upfront deposit.
+           By law must be held in a separate depositumskonto (deposit account) in tenant's name
+           at a Norwegian bank — you earn interest on it. This is one of the highest deposit
+           requirements in Europe relative to salary. Some landlords accept payment in 2-3
+           instalments — worth negotiating."
+  - name: "NRK public broadcasting (info: no separate fee since 2020)"
+    annual: 0
+    mandatory: false
+    note: "The NRK broadcast licence fee was abolished 1 January 2020. NRK is now funded
+           entirely through general income tax — there is no separate fee to pay. The former
+           licence was NOK 3,045/year. As of 2025 there is NO TV licence in Norway."
+  - name: "Wealth tax (formuesskatt)"
+    annual: 0
+    mandatory: false
+    note: "Norway taxes net wealth above NOK 1.7M (2025) at 1.0% (municipality 0.7% + state
+           0.3%). Net financial assets + occupational pension value + property value all count.
+           Foreign property must be declared at 100% market value (unlike Norwegian residential
+           property which uses a discounted taxable value ~20-25% of market). At senior salary
+           levels (NOK 900k+) combined savings and pension can trigger this. Consult a
+           Norwegian tax adviser (skatteadvokat) if you own assets abroad."
+  - name: "Boligselskap fellesutgifter (if buying into co-op)"
+    monthly: 3000
+    mandatory: false
+    note: "If you buy into a borettslag (housing co-op) or sameie (freehold apartment block),
+           you pay monthly fellesutgifter (building fees): building insurance, maintenance
+           reserve, and often water/heating. Range: NOK 1,500-6,000/month. High-debt
+           borettslager (those with large municipal loans) can have fellesutgifter of
+           NOK 4,000-8,000 — always check the annual report (årsmelding) before buying.
+           For renters: landlord's cost, but inflates asking rent in co-op buildings."
+  - name: "International moving costs"
+    one_time: 15000
+    mandatory: false
+    note: "Professional move from Southern/Central Europe: NOK 10,000-25,000 (CHF equivalent).
+           Norwegian customs: duty-free for household goods if you've owned them for 12+ months
+           (Tollvesen moving exemption — applies to EU residents relocating). Van rental +
+           ferry (Oslo-Kiel or Oslo-Copenhagen): NOK 5,000-8,000 DIY."
+career:
+  market: "Oslo finance, energy, tech"
+  typical_cagr: 0.035
+  ceiling_gross_nok: 1500000
+  note: "Key employers: Equinor (oil & gas analytics, world-class data team), DNB (Norway's
+         largest bank), Telenor (telecoms), Aker BP, Schibsted (classifieds/media: Finn.no,
+         Blocket), Kahoot!, Cognite (industrial data), Norsk Hydro. BI/data demand strong in
+         energy analytics and financial services. Structured wage growth (~3-4% CAGR) via
+         central collective bargaining (tariffoppgjør, Frontfaget model) — less job-hop culture
+         than UK/US but solid incremental raises. NOK is oil-correlated and volatile — EUR/NOK
+         can swing 10-20% in a year. Consider EUR savings accounts for cross-currency stability."
+
+permit:
+  eu_eea:
+    timeline: '1-2 weeks'
+    steps:
+      - 'Register at Folkeregisteret (Tax Administration) within 8 days of arrival'
+      - 'Obtain D-nummer or fødselsnummer (permanent ID)'
+      - 'No work permit needed - EU/EEA free movement applies'
+  non_eu:
+    timeline: '8-16 weeks'
+    steps:
+      - 'Employer submits job offer to UDI (Utlendingsdirektoratet)'
+      - 'Applicant applies for residence permit at Norwegian consulate/embassy'
+      - 'Combined residence + work permit issued (skilled worker category)'
+  complexity: medium
+  sponsor_required: true
+  costs_eur: 550
+  notes: 'EU/EEA: among Europe simplest - register and start. Get skattekort (tax card) from Skatteetaten ASAP - without it employer withholds 50% tax from first salary. Non-EU skilled worker: salary must exceed minimum threshold (around NOK 500k full-time, 2025). Norwegian language not required for tech/finance roles but helps integration. BankID requires fødselsnummer - can take 6-10 weeks to obtain.'

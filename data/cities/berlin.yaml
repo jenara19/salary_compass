@@ -1,0 +1,44 @@
+name: Berlin
+country: DE
+currency: EUR
+cost_of_living:
+  rent_2bed:      {generous: 2100, comfortable: 1550, frugal: 1100, note: "Warmmiete (Kaltmiete + Nebenkosten incl. heating/water/garbage). Modest = outer Spandau/Marzahn/Reinickendorf. Ample = mid Neukölln/Kreuzberg/Tempelhof. Great = central Prenzlauer Berg/Friedrichshain/Charlottenburg. Electricity billed separately. Mietpreisbremse in effect but must be proactively enforced by tenant (allaboutberlin.com, March 2026)."}
+  utilities:      {generous: 230, comfortable: 180, frugal: 130, note: "Electricity (Strom) only — heating/hot water/water/garbage already in Warmmiete. Berlin 2025: ~28–32 ct/kWh competitive tariff. 2-person household ~3,000 kWh/year = €70–85/month. Add broadband (O2/Vodafone/Telekom 250Mbps: €33–48/month) + 2× SIM-only mobile (ALDI Talk ~€10 to Telekom ~€35/person)."}
+  health_extra:   {generous: 120, comfortable: 40, frugal: 15, note: "GKV (public health insurance) deducted from gross salary (~8.5% employee share incl. Zusatzbeitrag) — NOT an out-of-pocket cost. This line = OPTIONAL supplemental only. Modest = Zahnzusatz dental only (~€8/person, budget plan). Ample = good dental + basic vision top-up for 2. Great = comprehensive dental + vision + Wahlleistungen (private hospital room, Chefarzt). 3–8 month waiting period before claims accepted."}
+  groceries_2pax: {generous: 640, comfortable: 450, frugal: 320, note: "Modest: primarily Aldi/Lidl/Penny. comfortable: REWE/Edeka mix + some Lidl. generous: mostly REWE/Edeka + organic. Berlin food prices ~5–10% below Munich. Includes household goods (~€30–50/month). Key Numbeo items 2025: milk €1.14/L, eggs €3.63/12, chicken €11.28/kg, bread €1.94/500g."}
+  transport_2pax: {generous: 200, comfortable: 155, frugal: 116, note: "Deutschlandticket 2025: €58/person/month (confirmed; raised from €49 Jan 2025; raised to €63 Jan 2026). Valid on all BVG (U-Bahn, S-Bahn, tram, bus) + all national regional trains. For 2 people: €116/month base. Modest = D-Ticket only. Ample = D-Ticket + bike maintenance + occasional taxi. Great = D-Ticket + quality bikes + frequent taxis/car-sharing."}
+  eating_out:     {generous: 620, comfortable: 380, frugal: 175, note: "Numbeo mid-range dinner for 2 (3-course, no drinks): €70. Döner/street food €5–7, Imbiss cheap lunch €7–10. Berlin ~14% cheaper than Munich. Modest = mainly street food + 1 restaurant/month. Ample = 2 restaurant dinners + regular lunch-outs + bars. Great = frequent nicer restaurants + active bar/brunch culture."}
+  leisure:        {generous: 450, comfortable: 250, frugal: 90, note: "Gyms: McFit €19.99, FitX €22.99, John Reed €30–40, Urban Sports Club S ~€40/month. Cinema: €13/ticket. Clubs: entry €10–20, drinks €4–8. Berlin nightlife cheaper per-hour than most European capitals. Museum Island Kombiticket €22. Many museums free or €8–15."}
+  misc:           {generous: 350, comfortable: 180, frugal: 80, note: "Includes Rundfunkbeitrag €18.36/month (per household, billed quarterly), Hausratversicherung ~€5–10/month, Haftpflichtversicherung ~€5–8/month for couple, clothing, personal care, subscriptions. Steuerberater (tax advisor) ~€150–400/year amortized for expat returns."}
+  travel:         {generous: 350, comfortable: 350, frugal: 350, fixed: true}
+  personal:       {generous: 700, comfortable: 700, frugal: 700, fixed: true}
+hidden_costs:
+  - {name: "Rundfunkbeitrag (broadcasting fee, per household)", monthly: 18.36, mandatory: true}
+  - {name: "Hausratversicherung (contents insurance, 70m²)", monthly: 8, mandatory: false}
+  - {name: "Haftpflichtversicherung (personal liability, couple)", monthly: 8, mandatory: false}
+  - {name: "Mietkaution 3× Kaltmiete (security deposit, ample tier)", one_time: 3300, mandatory: true}
+  - {name: "Steuerberater / tax software for expat filing", annual: 300, mandatory: false}
+  - {name: "Kirchensteuer opt-out (save ~9% of income tax in Berlin)", note: "Write 'keine' on Anmeldung. If accidentally enrolled, Kirchenaustritt at Amtsgericht: €30 one-time. Mid-earner €60k gross saves ~€1,260/year."}
+career:
+  market: "Berlin tech & startup scene"
+  typical_cagr: 0.04
+  ceiling_gross_eur: 130000
+  note: "Zalando, Delivery Hero, N26, Trade Republic, HelloFresh. Salaries 10–20% below Munich. Largest English-speaking tech market in continental Europe. Senior IC €75–115k; Big Tech offices approach Munich levels."
+
+permit:
+  eu_eea:
+    timeline: '2-4 weeks'
+    steps:
+      - 'Anmeldung (residence registration) at Burgeramt within 14 days - book appointment asap'
+      - 'EU free movement: no work permit or quota system'
+      - 'Tax ID (Steuer-ID) issued automatically within 4 weeks'
+  non_eu:
+    timeline: '8-16 weeks'
+    steps:
+      - 'Apply for national visa at German embassy in home country'
+      - 'Employer provides signed contract and Vorabzustimmung from Auslaenderbehoerde'
+      - 'Aufenthaltserlaubnis obtained at Auslaenderbehoerde after arrival'
+  complexity: medium
+  sponsor_required: false
+  costs_eur: 100
+  notes: 'Same rules as Munich - German federal system. Berlin Burgeramt appointments are notoriously slow - book online as soon as you know your move date (often 4-6 week wait for Anmeldung). Workaround: some districts accept walk-ins early morning. EU Blue Card: EUR 48,300 threshold (general), EUR 37,674 for STEM/shortage occupations (2025). Kirchensteuer: write keine on Anmeldung. Berlin is EU largest English-speaking tech hub - most employers experienced with EU and non-EU permits.'

@@ -1,0 +1,46 @@
+name: Spain
+code: ES
+currency: EUR
+eur_rate: 1.0
+tax_year: 2026
+disclaimer: "IRPF lookup table (national + Madrid regional rates, mínimo personal €5,550, SS deductible, €2,000 work expenses). Directional estimate only."
+
+income_tax:
+  method: effective_rate_lookup
+  marginal_retention: 0.57
+  lookup:
+    - {gross: 25000,  net_monthly: 1700}
+    - {gross: 35000,  net_monthly: 2300}
+    - {gross: 45000,  net_monthly: 2850}
+    - {gross: 57500,  net_monthly: 3450}
+    - {gross: 70000,  net_monthly: 4083}
+    - {gross: 90000,  net_monthly: 5042}
+    - {gross: 120000, net_monthly: 6350}
+    - {gross: 150000, net_monthly: 7500}
+
+social_contributions:
+  employee:
+    - {name: "Contingencias comunes", rate: 0.047}
+    - {name: "Desempleo", rate: 0.0155}
+    - {name: "Formación profesional", rate: 0.001}
+    - {name: "FOGASA", rate: 0.0002}
+  cap_annual: 57606
+
+healthcare:
+  model: public
+  employee_extra_monthly: 0
+  note: "Public healthcare via Social Security. Supplemental private optional €40-120/mo."
+
+special_schemes:
+  - id: es_beckham_law
+    name: "Beckham Law (Ley de Impatriados)"
+    description: "New tax residents who relocate for work pay a flat 24% IRPF on income up to €600,000 (instead of progressive 24–47%). Valid for 6 years. Requires: 5+ years prior non-residency, employment contract with Spanish entity. Apply via Modelo 149 within 6 months of first payslip. Significant at €80k+ gross (breaks even vs standard at ~€72k). EU Digital Nomad Visa holders also eligible."
+    duration_years: 6
+    min_salary_annual: 72000
+    type: flat_rate_override
+    rate: 0.24
+    warning: "Only beneficial above ~€72k gross. Below this level standard progressive IRPF is lower than 24%. Expires after 6 years — rate jumps to standard progressive rates. Consult a gestoría for Modelo 149 filing (€400–900)."
+
+career:
+  typical_cagr: 0.04
+  note: "Spain tech market growing but structurally capped vs Northern Europe. Job hops yield 15-20% bumps."
