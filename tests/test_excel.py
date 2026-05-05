@@ -7,8 +7,9 @@ These tests verify that:
 - All 5 expected sheets are present in the workbook
 """
 
-import zipfile
 import io
+import zipfile
+
 from output.excel import generate_excel_report
 
 
@@ -73,9 +74,7 @@ def _minimal_inputs():
     for slug, ci in city_inputs.items():
         results_matrix[slug] = {}
         for scen in scenarios_def:
-            net = calculate_net(
-                ci["effective_gross"], ci["country_code"], ci["active_schemes"]
-            )
+            net = calculate_net(ci["effective_gross"], ci["country_code"], ci["active_schemes"])
             traj = calculate_trajectory(
                 ci["effective_gross"],
                 ci["country_code"],
@@ -98,9 +97,7 @@ def _minimal_inputs():
 
 class TestExcelSmoke:
     def test_returns_bytes(self):
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
-            _minimal_inputs()
-        )
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,
@@ -114,9 +111,7 @@ class TestExcelSmoke:
 
     def test_valid_zip_structure(self):
         """XLSX is a ZIP file — verify it can be opened as such."""
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
-            _minimal_inputs()
-        )
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,
@@ -130,9 +125,7 @@ class TestExcelSmoke:
 
     def test_five_sheets_present(self):
         """Verify the workbook contains all 5 expected sheets."""
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
-            _minimal_inputs()
-        )
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,
@@ -146,6 +139,4 @@ class TestExcelSmoke:
             names = zf.namelist()
             # xl/worksheets/sheet*.xml correspond to each sheet
             sheet_files = [n for n in names if n.startswith("xl/worksheets/sheet")]
-        assert len(sheet_files) == 5, (
-            f"Expected 5 sheets, found {len(sheet_files)}: {sheet_files}"
-        )
+        assert len(sheet_files) == 5, f"Expected 5 sheets, found {len(sheet_files)}: {sheet_files}"

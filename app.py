@@ -4,26 +4,28 @@ Two-tab UX: 📋 My Setup | 📊 Compare
 """
 
 import json
-import streamlit as st
-import pandas as pd
-from datetime import datetime, date
+from datetime import date, datetime
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+
 from engine import calculate_net, calculate_trajectory
 from engine.budget import (
+    DISPLAY_LABELS,
+    _resolve_health_comfortable,
     calculate_budget_v2,
     calculate_surplus,
+    distribute_total_to_categories,
     list_cities,
     load_city,
-    DISPLAY_LABELS,
     scale_expenses_to_city,
-    distribute_total_to_categories,
-    _resolve_health_comfortable,
 )
-from engine.tax import load_country, get_schemes, find_target_gross
+from engine.tax import find_target_gross, get_schemes, load_country
 from output.charts import (
-    trajectory_line_chart,
     budget_breakdown_chart,
     negotiation_ladder_chart,
+    trajectory_line_chart,
 )
 
 st.set_page_config(
@@ -352,8 +354,7 @@ def _build_scenarios() -> list[dict]:
         result.append(
             {
                 "idx": i,
-                "name": st.session_state.get(f"scen_name_{i}")
-                or SCENARIO_DEFAULTS[i]["name"],
+                "name": st.session_state.get(f"scen_name_{i}") or SCENARIO_DEFAULTS[i]["name"],
                 "global_pct": st.session_state.get(
                     f"scen_global_{i}", SCENARIO_DEFAULTS[i]["global"]
                 ),
@@ -388,9 +389,7 @@ def _build_actuals_budget(
             "value_local": round(eur_val / eur_rate if eur_rate != 1.0 else eur_val),
             "value_eur": round(eur_val),
             "fixed": cat in PORTABLE_CATS,
-            "note": "Portable (user actuals)"
-            if cat in PORTABLE_CATS
-            else "User actuals (scaled)",
+            "note": "Portable (user actuals)" if cat in PORTABLE_CATS else "User actuals (scaled)",
         }
         total_eur += eur_val
 
@@ -445,7 +444,7 @@ def get_budget_for_city(
     lifestyle_anchors_eur: dict,
     pax: int,
     partner_net_eur: float,
-    city_overrides: dict = None,
+    city_overrides: dict | None = None,
     settling_factor: float = 0.5,
 ) -> dict:
     """Get budget for a city. Uses actuals when available, falls back to YAML.
@@ -461,22 +460,18 @@ def get_budget_for_city(
     global_mult = scenario_def["global_pct"] / 100
     all_cats = set(list(base_mults.keys()) + list(city_overrides.keys()))
     effective_mults = {
-        cat: base_mults.get(cat, global_mult) * city_overrides.get(cat, 1.0)
-        for cat in all_cats
+        cat: base_mults.get(cat, global_mult) * city_overrides.get(cat, 1.0) for cat in all_cats
     }
     cat_mults_t = tuple(sorted(effective_mults.items()))
 
     has_actuals = bool(home_city_slug and sum(user_expenses_by_cat.values()) > 0)
     if not has_actuals:
-        return cached_budget_v2(
-            city_slug, cat_mults_t, pax, anchors_tuple, partner_net_eur
-        )
+        return cached_budget_v2(city_slug, cat_mults_t, pax, anchors_tuple, partner_net_eur)
 
     if city_slug == home_city_slug:
         # Home city: actuals are the baseline, city overrides not needed
         scaled_eur = {
-            cat: val * base_mults.get(cat, global_mult)
-            for cat, val in user_expenses_by_cat.items()
+            cat: val * base_mults.get(cat, global_mult) for cat, val in user_expenses_by_cat.items()
         }
     else:
         base = cached_scale_expenses(
@@ -518,9 +513,7 @@ def get_budget_for_city(
             else:
                 scaled_eur[cat] = item["value_eur"] * s_mult
 
-    return _build_actuals_budget(
-        city_slug, scaled_eur, lifestyle_anchors_eur, pax, partner_net_eur
-    )
+    return _build_actuals_budget(city_slug, scaled_eur, lifestyle_anchors_eur, pax, partner_net_eur)
 
 
 # ── Color helper ───────────────────────────────────────────────────────────────
@@ -605,9 +598,7 @@ with st.sidebar:
 
         partner_net_monthly = 0.0
         if pax == 2:
-            partner_employed = st.checkbox(
-                "Partner is employed", key="partner_employed"
-            )
+            partner_employed = st.checkbox("Partner is employed", key="partner_employed")
             if partner_employed:
                 partner_country = st.selectbox(
                     "Partner's work country",
@@ -638,9 +629,7 @@ with st.sidebar:
                         pnet = cached_calculate_net(_pgross_local, partner_country, ())
                         partner_net_monthly = pnet["net_monthly_eur"]
                         if _pccy == "EUR":
-                            st.caption(
-                                f"Partner net: ≈ **€{partner_net_monthly:,.0f}/month**"
-                            )
+                            st.caption(f"Partner net: ≈ **€{partner_net_monthly:,.0f}/month**")
                         else:
                             st.caption(
                                 f"Partner net: ≈ **{_pccy} {pnet['net_monthly_local']:,}/month** "
@@ -743,9 +732,7 @@ with tab_setup:
 
     st.header("🌍 Cities & Salaries")
 
-    _default_cities = [
-        k for k in ["Madrid (ES)", "Rotterdam (NL)"] if k in CITY_OPTIONS
-    ]
+    _default_cities = [k for k in ["Madrid (ES)", "Rotterdam (NL)"] if k in CITY_OPTIONS]
     selected_city_displays = st.multiselect(
         "Select cities to compare",
         options=list(CITY_OPTIONS.keys()),
@@ -756,20 +743,15 @@ with tab_setup:
     home_city_slug = selected_city_slugs[0] if selected_city_slugs else None
 
     if selected_city_slugs:
-        _chunks = [
-            selected_city_slugs[i : i + 4]
-            for i in range(0, len(selected_city_slugs), 4)
-        ]
+        _chunks = [selected_city_slugs[i : i + 4] for i in range(0, len(selected_city_slugs), 4)]
         for chunk in _chunks:
             city_cols = st.columns(len(chunk))
-            for j, (city_slug, col) in enumerate(zip(chunk, city_cols)):
+            for j, (city_slug, col) in enumerate(zip(chunk, city_cols, strict=False)):
                 city_data = get_city_data(city_slug)
                 country_code = city_data["country"]
                 country_data = get_country_data(country_code)
                 currency = country_data["currency"]
-                default_cagr = (
-                    float(city_data.get("career", {}).get("typical_cagr", 0.05)) * 100
-                )
+                default_cagr = float(city_data.get("career", {}).get("typical_cagr", 0.05)) * 100
                 is_home = city_slug == home_city_slug
 
                 with col:
@@ -880,9 +862,9 @@ with tab_setup:
                             "Tax-free benefit — added directly to disposable income."
                         ),
                     )
-                    perks_monthly_eur = (
-                        travel_allowance + meal_vouchers
-                    ) * country_data["eur_rate"]
+                    perks_monthly_eur = (travel_allowance + meal_vouchers) * country_data[
+                        "eur_rate"
+                    ]
 
                     effective_gross = gross * (1 + bonus_pct / 100) + rsu
 
@@ -950,10 +932,7 @@ with tab_setup:
                             _alias = "health_kvg" if _cat == "health_extra" else None
                             _yaml_val = (
                                 _col.get(_cat, {}).get("comfortable", 0)
-                                or (
-                                    _alias
-                                    and _col.get(_alias, {}).get("comfortable", 0)
-                                )
+                                or (_alias and _col.get(_alias, {}).get("comfortable", 0))
                                 or 0
                             )
                             # Which key is actually in the YAML (for storing the override)
@@ -985,9 +964,7 @@ with tab_setup:
                                     disabled=not _locked,
                                     label_visibility="visible",
                                 )
-                                st.caption(
-                                    f"YAML estimate: {currency} {_yaml_val:,}/mo"
-                                )
+                                st.caption(f"YAML estimate: {currency} {_yaml_val:,}/mo")
                             if _locked:
                                 city_overrides[_effective_cat] = (
                                     _ov / _yaml_val
@@ -1012,9 +989,7 @@ with tab_setup:
                         "perks_monthly_eur": perks_monthly_eur,
                     }
     else:
-        st.info(
-            "👆 Select at least one city above to add salaries and see the comparison."
-        )
+        st.info("👆 Select at least one city above to add salaries and see the comparison.")
 
     st.divider()
 
@@ -1023,9 +998,7 @@ with tab_setup:
     st.header("💰 My Actual Expenses")
 
     if not selected_city_slugs:
-        st.info(
-            "👆 Select cities above first — your expenses will be scaled to each one."
-        )
+        st.info("👆 Select cities above first — your expenses will be scaled to each one.")
     else:
         home_city_data = get_city_data(home_city_slug)
         home_col = home_city_data["cost_of_living"]
@@ -1048,10 +1021,7 @@ with tab_setup:
         prev_mode = st.session_state.get("_prev_expense_mode")
 
         # Quick → Detailed: pre-populate per-category inputs from last total
-        if (
-            expense_mode == "📋 Detailed (by category)"
-            and prev_mode == "⚡ Quick (total only)"
-        ):
+        if expense_mode == "📋 Detailed (by category)" and prev_mode == "⚡ Quick (total only)":
             _seed_total = st.session_state.get("user_total_expenses", 3500)
             if home_city_slug and _seed_total > 0:
                 try:
@@ -1063,13 +1033,8 @@ with tab_setup:
                     pass
 
         # Detailed → Quick: sync total from sum of detailed inputs
-        if (
-            expense_mode == "⚡ Quick (total only)"
-            and prev_mode == "📋 Detailed (by category)"
-        ):
-            _detail_sum = sum(
-                st.session_state.get(f"exp_{cat}", 0) for cat in UI_CAT_KEYS
-            )
+        if expense_mode == "⚡ Quick (total only)" and prev_mode == "📋 Detailed (by category)":
+            _detail_sum = sum(st.session_state.get(f"exp_{cat}", 0) for cat in UI_CAT_KEYS)
             if _detail_sum > 0:
                 st.session_state["user_total_expenses"] = _detail_sum
 
@@ -1086,15 +1051,11 @@ with tab_setup:
                 key="user_total_expenses",
                 help="Everything: rent, food, transport, insurance, going out — your full monthly spend",
             )
-            st.caption(
-                "This total will be scaled to other cities using cost-of-living ratios."
-            )
+            st.caption("This total will be scaled to other cities using cost-of-living ratios.")
 
             if user_total > 0:
                 try:
-                    _dist_all = cached_distribute(
-                        float(user_total), home_city_slug, pax
-                    )
+                    _dist_all = cached_distribute(float(user_total), home_city_slug, pax)
                     user_expenses_by_cat = {
                         cat: v for cat, v in _dist_all.items() if cat in UI_CAT_KEYS
                     }
@@ -1107,15 +1068,11 @@ with tab_setup:
                             {
                                 "Category": f"{CAT_EMOJIS.get(cat, '')} {UI_CAT_LABELS.get(cat, cat)}",
                                 "EUR/mo": f"€{v:,}",
-                                "Type": "Portable ✈️"
-                                if cat in PORTABLE_CATS
-                                else "City-variable 🏙️",
+                                "Type": "Portable ✈️" if cat in PORTABLE_CATS else "City-variable 🏙️",
                             }
                             for cat, v in user_expenses_by_cat.items()
                         ]
-                        st.dataframe(
-                            pd.DataFrame(_dist_rows), hide_index=True, width="stretch"
-                        )
+                        st.dataframe(pd.DataFrame(_dist_rows), hide_index=True, width="stretch")
 
         # ── Detailed mode ──────────────────────────────────────────────────────
         else:
@@ -1258,15 +1215,11 @@ with tab_setup:
 
     st.header("📐 Scenario Calibration")
 
-    _lifestyle_total = (
-        sum(lifestyle_anchors_eur.values()) if lifestyle_anchors_eur else 0
-    )
+    _lifestyle_total = sum(lifestyle_anchors_eur.values()) if lifestyle_anchors_eur else 0
     _baseline_total = user_total + _lifestyle_total
 
     if not selected_city_slugs:
-        st.info(
-            "Select cities and enter your actual expenses above to calibrate scenarios."
-        )
+        st.info("Select cities and enter your actual expenses above to calibrate scenarios.")
     elif user_total == 0:
         st.info(
             "Enter your actual monthly expenses in Section B to calibrate scenarios against your real spend."
@@ -1338,9 +1291,7 @@ with tab_setup:
 
 with tab_compare:
     if not city_inputs:
-        st.info(
-            "👆 Go to **📋 My Setup** and select at least one city to see comparisons."
-        )
+        st.info("👆 Go to **📋 My Setup** and select at least one city to see comparisons.")
     else:
         scenarios_def = _build_scenarios()
         scen_names = [s["name"] for s in scenarios_def]
@@ -1508,9 +1459,7 @@ with tab_compare:
             overview_df = pd.DataFrame(data_rows, index=idx_labels, columns=mi)
             overview_df.index.name = "Scenario"
 
-            surplus_positions = [
-                i for i, (_, m) in enumerate(col_tuples) if m == "Surplus"
-            ]
+            surplus_positions = [i for i, (_, m) in enumerate(col_tuples) if m == "Surplus"]
 
             def _style_overview(df: pd.DataFrame) -> pd.DataFrame:
                 styles = pd.DataFrame("", index=df.index, columns=df.columns)
@@ -1548,11 +1497,8 @@ with tab_compare:
                     "label": city_names[s],
                     "items": {
                         k: v
-                        for k, v in results_matrix[s][sel_scen]["budget"][
-                            "items"
-                        ].items()
-                        if not k.startswith("lifestyle_")
-                        and k != "partner_contribution"
+                        for k, v in results_matrix[s][sel_scen]["budget"]["items"].items()
+                        if not k.startswith("lifestyle_") and k != "partner_contribution"
                     },
                 }
                 for s in city_inputs
@@ -1568,7 +1514,7 @@ with tab_compare:
 
             rows = []
             for key in all_item_keys:
-                first_slug = list(city_inputs)[0]
+                first_slug = next(iter(city_inputs))
                 row = {
                     "Category": results_matrix[first_slug][sel_scen]["budget"]["items"]
                     .get(key, {})
@@ -1680,7 +1626,7 @@ with tab_compare:
                     traj = results_matrix[city_slug][traj_scen]["trajectory"]
 
                     # ── Rate-change cliff (e.g. NL 30%→27% from 2027) ──────
-                    from engine.tax import load_country as _lc, _find_scheme as _fs
+                    from engine.tax import _find_scheme as _fs, load_country as _lc
 
                     _cd = _lc(country_code)
                     _s = _fs(_cd, scheme_id)
@@ -1691,24 +1637,17 @@ with tab_compare:
                         if 1 <= change_traj_yr <= len(traj) and (
                             not expiry_yr or change_traj_yr <= expiry_yr
                         ):
-                            yr_before = (
-                                traj[change_traj_yr - 2] if change_traj_yr > 1 else None
-                            )
+                            yr_before = traj[change_traj_yr - 2] if change_traj_yr > 1 else None
                             yr_after = traj[change_traj_yr - 1]
                             if yr_before:
-                                rc_drop = (
-                                    yr_before["net_monthly_eur"]
-                                    - yr_after["net_monthly_eur"]
-                                )
+                                rc_drop = yr_before["net_monthly_eur"] - yr_after["net_monthly_eur"]
                                 if rc_drop > 0:
                                     new_mult = rc["new_multiplier"]
                                     target_gross_rc = find_target_gross(
                                         yr_before["net_monthly_eur"],
                                         country_code,
                                         active_schemes=[scheme_id],
-                                        scheme_overrides={
-                                            scheme_id: {"multiplier": new_mult}
-                                        },
+                                        scheme_overrides={scheme_id: {"multiplier": new_mult}},
                                     )
                                     old_pct = int((1 - _s["multiplier"]) * 100)
                                     new_pct = int((1 - new_mult) * 100)
@@ -1735,9 +1674,7 @@ with tab_compare:
                         continue
                     yr_with = traj[expiry_yr - 1]  # last year with scheme
                     yr_without = traj[expiry_yr]  # first year without
-                    net_drop = (
-                        yr_with["net_monthly_eur"] - yr_without["net_monthly_eur"]
-                    )
+                    net_drop = yr_with["net_monthly_eur"] - yr_without["net_monthly_eur"]
                     if net_drop <= 0:
                         continue
                     # Find gross needed without scheme to maintain the same net
@@ -1860,16 +1797,10 @@ with tab_compare:
                     key="target_city",
                 )
 
-                ref_slug = next(
-                    s for s in city_inputs if city_names[s] == ref_city_name
-                )
-                target_slug = next(
-                    s for s in city_inputs if city_names[s] == target_city_name
-                )
+                ref_slug = next(s for s in city_inputs if city_names[s] == ref_city_name)
+                target_slug = next(s for s in city_inputs if city_names[s] == target_city_name)
 
-                ref_surplus = results_matrix[ref_slug][ref_scen_name]["surplus"][
-                    "surplus_eur"
-                ]
+                ref_surplus = results_matrix[ref_slug][ref_scen_name]["surplus"]["surplus_eur"]
                 target_ci = city_inputs[target_slug]
 
                 target_gross = target_ci["gross"]
@@ -1893,9 +1824,7 @@ with tab_compare:
                         lifestyle_anchors_eur,
                         pax,
                         partner_net_monthly,
-                        city_overrides=city_inputs.get(target_slug, {}).get(
-                            "city_overrides", {}
-                        ),
+                        city_overrides=city_inputs.get(target_slug, {}).get("city_overrides", {}),
                         settling_factor=settling_factor,
                     )
                     ladder = []
@@ -1916,17 +1845,13 @@ with tab_compare:
                         )
                     scen_ladders[scen["name"]] = ladder
 
-                comfortable_ladder = scen_ladders.get(
-                    scen_names[1], scen_ladders[scen_names[0]]
-                )
+                comfortable_ladder = scen_ladders.get(scen_names[1], scen_ladders[scen_names[0]])
                 fig = negotiation_ladder_chart(comfortable_ladder, ref_surplus)
                 st.plotly_chart(fig, width="stretch")
 
                 # ── Exact break-even (binary search) ──────────────────────
                 st.markdown("**Exact break-even gross** (binary search)")
-                target_perks = city_inputs.get(target_slug, {}).get(
-                    "perks_monthly_eur", 0.0
-                )
+                target_perks = city_inputs.get(target_slug, {}).get("perks_monthly_eur", 0.0)
                 for scen in scenarios_def:
                     scen_budget_total = get_budget_for_city(
                         target_slug,
@@ -1936,9 +1861,7 @@ with tab_compare:
                         lifestyle_anchors_eur,
                         pax,
                         partner_net_monthly,
-                        city_overrides=city_inputs.get(target_slug, {}).get(
-                            "city_overrides", {}
-                        ),
+                        city_overrides=city_inputs.get(target_slug, {}).get("city_overrides", {}),
                         settling_factor=settling_factor,
                     )["total_eur"]
                     # Target: net + perks - expenses = ref_surplus
@@ -1950,9 +1873,7 @@ with tab_compare:
                         active_schemes=list(target_ci["active_schemes"]),
                     )
                     perks_note = (
-                        f" (including €{target_perks:,.0f}/mo perks)"
-                        if target_perks > 0
-                        else ""
+                        f" (including €{target_perks:,.0f}/mo perks)" if target_perks > 0 else ""
                     )
                     st.success(
                         f"**{scen['name']}** — ask for at least "
@@ -2038,24 +1959,16 @@ with tab_compare:
                 ]["budget"]["total_eur"]
                 buffer_3m = round(comfortable_budget_eur * 3)
                 moving_costs_eur = round(moving_costs_input * eur_rate_t)
-                total_cash_needed = round(
-                    mandatory_one_time_eur + buffer_3m + moving_costs_eur
-                )
-                total_cash_with_optional = round(
-                    total_cash_needed + optional_one_time_eur
-                )
+                total_cash_needed = round(mandatory_one_time_eur + buffer_3m + moving_costs_eur)
+                total_cash_with_optional = round(total_cash_needed + optional_one_time_eur)
                 annual_return_cost = return_visits * cost_per_visit
 
                 if one_time_rows:
                     st.markdown("**One-time costs from the YAML data:**")
-                    st.dataframe(
-                        pd.DataFrame(one_time_rows), width="stretch", hide_index=True
-                    )
+                    st.dataframe(pd.DataFrame(one_time_rows), width="stretch", hide_index=True)
 
                 col_a, col_b, col_c = st.columns(3)
-                col_a.metric(
-                    "Mandatory deposits & fees", f"€{mandatory_one_time_eur:,.0f}"
-                )
+                col_a.metric("Mandatory deposits & fees", f"€{mandatory_one_time_eur:,.0f}")
                 col_b.metric("3-month comfortable buffer", f"€{buffer_3m:,.0f}")
                 col_c.metric("Moving costs", f"€{moving_costs_eur:,.0f}")
 
@@ -2080,9 +1993,7 @@ with tab_compare:
                     tuple(target_ci["active_schemes"]),
                 )
                 effective_rate_t = target_net_result["effective_rate"]
-                sign_on_gross = round(
-                    total_cash_needed / max(1 - effective_rate_t, 0.01)
-                )
+                sign_on_gross = round(total_cash_needed / max(1 - effective_rate_t, 0.01))
                 sign_on_ccy = round(sign_on_gross / max(eur_rate_t, 0.01))
                 st.markdown(
                     f"To cover your move costs after tax, ask for a **sign-on bonus of at least "
@@ -2103,16 +2014,12 @@ with tab_compare:
                     pcol1, pcol2 = st.columns(2)
                     with pcol1:
                         eu_info = permit.get("eu_eea", {})
-                        st.markdown(
-                            f"**🇪🇺 EU/EEA path** — ⏱ {eu_info.get('timeline', 'n/a')}"
-                        )
+                        st.markdown(f"**🇪🇺 EU/EEA path** — ⏱ {eu_info.get('timeline', 'n/a')}")
                         for step in eu_info.get("steps", []):
                             st.markdown(f"  {step}")
                     with pcol2:
                         non_eu = permit.get("non_eu", {})
-                        st.markdown(
-                            f"**🌍 Non-EU path** — ⏱ {non_eu.get('timeline', 'n/a')}"
-                        )
+                        st.markdown(f"**🌍 Non-EU path** — ⏱ {non_eu.get('timeline', 'n/a')}")
                         for step in non_eu.get("steps", []):
                             st.markdown(f"  {step}")
 
@@ -2167,9 +2074,7 @@ with tab_compare:
                                     f"- {_name}: **{_ccy_local} {hc_item['monthly']}/month**"
                                 )
                             elif "annual" in hc_item:
-                                st.markdown(
-                                    f"- {_name}: **{_ccy_local} {hc_item['annual']}/year**"
-                                )
+                                st.markdown(f"- {_name}: **{_ccy_local} {hc_item['annual']}/year**")
                             elif "one_time" in hc_item:
                                 st.markdown(
                                     f"- {_name}: **{_ccy_local} {hc_item['one_time']} one-time**"
@@ -2194,10 +2099,7 @@ with tab_compare:
             if lifestyle_anchors_eur:
                 st.subheader("🎯 Lifestyle Anchors")
                 anchor_df = pd.DataFrame(
-                    [
-                        {"Category": k, "EUR/month": v}
-                        for k, v in lifestyle_anchors_eur.items()
-                    ]
+                    [{"Category": k, "EUR/month": v} for k, v in lifestyle_anchors_eur.items()]
                     + [
                         {
                             "Category": "**Total**",
@@ -2212,9 +2114,7 @@ with tab_compare:
                 )
 
             st.subheader("🏘 Household Model Assumptions")
-            st.markdown(
-                f"- **Household size:** {pax} {'person' if pax == 1 else 'people'}"
-            )
+            st.markdown(f"- **Household size:** {pax} {'person' if pax == 1 else 'people'}")
             st.markdown(f"- **Relationship:** {relationship}")
             if partner_net_monthly > 0:
                 st.markdown(
@@ -2236,9 +2136,7 @@ with tab_compare:
                         f"→ net property P&L: **€{net_property:+,.0f}/month**"
                     )
                 else:
-                    st.markdown(
-                        "- No rental income entered (property stays vacant or sold)."
-                    )
+                    st.markdown("- No rental income entered (property stays vacant or sold).")
 
             if has_actuals:
                 st.subheader("📌 Expense Actuals Summary")
@@ -2250,9 +2148,7 @@ with tab_compare:
                     }
                     for cat, v in user_expenses_by_cat.items()
                 ]
-                st.dataframe(
-                    pd.DataFrame(actuals_rows), width="stretch", hide_index=True
-                )
+                st.dataframe(pd.DataFrame(actuals_rows), width="stretch", hide_index=True)
                 st.caption(
                     f"Total entered: **€{sum(user_expenses_by_cat.values()):,}/mo** · Home city: **{home_city_data['name']}**"
                 )

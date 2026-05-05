@@ -5,9 +5,9 @@ Run with:  cd C:\\Personal\\salary-compass && python -m pytest tests/ -v
 """
 
 import pytest
-from engine.trajectory import calculate_trajectory
-from engine.budget import calculate_budget_v2, calculate_surplus
 
+from engine.budget import calculate_budget_v2, calculate_surplus
+from engine.trajectory import calculate_trajectory
 
 BASE_EXPENSES = {
     "rent_2bed": 1200,
@@ -131,9 +131,7 @@ class TestExpensesEurParam:
         yaml_total = yaml_budget["total_eur"]
 
         actuals_based = yaml_total * 0.75  # 25% below YAML (plausible for frugal user)
-        traj = calculate_trajectory(
-            85000, "NL", "rotterdam", expenses_eur=actuals_based
-        )
+        traj = calculate_trajectory(85000, "NL", "rotterdam", expenses_eur=actuals_based)
         assert traj[0]["total_expenses_eur"] == pytest.approx(actuals_based, abs=1)
 
     def test_surplus_consistent_with_expenses_eur(self):
@@ -171,9 +169,7 @@ class TestSalaryGrowth:
         """Higher salary → higher net (within same tax regime)."""
         traj = calculate_trajectory(57500, "ES", "madrid", cagr=0.05, expenses_eur=3000)
         nets = [row["net_monthly_eur"] for row in traj]
-        assert nets[-1] > nets[0], (
-            "Net should grow as salary grows at 5% CAGR over 10 years"
-        )
+        assert nets[-1] > nets[0], "Net should grow as salary grows at 5% CAGR over 10 years"
 
 
 # ── Cumulative savings ────────────────────────────────────────────────────────
@@ -182,16 +178,12 @@ class TestSalaryGrowth:
 class TestCumulativeSavings:
     def test_cumulative_compounds(self):
         """cumulative[n] = cumulative[n-1] + surplus[n] * 12"""
-        traj = calculate_trajectory(
-            85000, "NL", "rotterdam", expenses_eur=3000, cagr=0.0
-        )
+        traj = calculate_trajectory(85000, "NL", "rotterdam", expenses_eur=3000, cagr=0.0)
         for i in range(1, len(traj)):
             prev = traj[i - 1]["cumulative_savings_eur"]
             monthly = traj[i]["surplus_monthly_eur"]
             expected = prev + monthly * 12
-            assert traj[i]["cumulative_savings_eur"] == pytest.approx(
-                expected, abs=2
-            ), (
+            assert traj[i]["cumulative_savings_eur"] == pytest.approx(expected, abs=2), (
                 f"Year {traj[i]['year']}: cumulative should be {expected}, "
                 f"got {traj[i]['cumulative_savings_eur']}"
             )
@@ -219,10 +211,7 @@ class TestCumulativeSavings:
         """High expenses → negative surplus → cumulative should decrease each year."""
         traj = calculate_trajectory(30000, "ES", "madrid", cagr=0.0, expenses_eur=9999)
         for i in range(1, len(traj)):
-            assert (
-                traj[i]["cumulative_savings_eur"]
-                < traj[i - 1]["cumulative_savings_eur"]
-            ), (
+            assert traj[i]["cumulative_savings_eur"] < traj[i - 1]["cumulative_savings_eur"], (
                 f"Year {traj[i]['year']}: cumulative should decrease with negative surplus"
             )
 

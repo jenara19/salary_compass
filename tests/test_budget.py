@@ -4,16 +4,20 @@ Tests for engine/budget.py
 Run with:  python -m pytest tests/ -v
 """
 
+from __future__ import annotations
+
+from typing import ClassVar
+
 import pytest
+
 from engine.budget import (
+    DISPLAY_LABELS,
+    YAML_ABSOLUTE_CATS,
     calculate_budget,
     calculate_budget_v2,
-    scale_expenses_to_city,
     distribute_total_to_categories,
-    YAML_ABSOLUTE_CATS,
-    DISPLAY_LABELS,
+    scale_expenses_to_city,
 )
-
 
 # ── Health-insurance system-difference fix ─────────────────────────────────────
 
@@ -39,9 +43,7 @@ class TestHealthScaling:
             "travel": 350,
             "personal": 700,
         }
-        result = scale_expenses_to_city(
-            madrid_expenses, "madrid", "rotterdam", {}, pax=2
-        )
+        result = scale_expenses_to_city(madrid_expenses, "madrid", "rotterdam", {}, pax=2)
         health_eur = result["items"]["health_extra"]["value_eur"]
         # Rotterdam YAML comfortable health_extra should be used directly (≥ 300)
         assert health_eur >= 300, (
@@ -63,9 +65,7 @@ class TestHealthScaling:
             "travel": 350,
             "personal": 700,
         }
-        result = scale_expenses_to_city(
-            madrid_expenses, "madrid", "rotterdam", {}, pax=2
-        )
+        result = scale_expenses_to_city(madrid_expenses, "madrid", "rotterdam", {}, pax=2)
         health_eur = result["items"]["health_extra"]["value_eur"]
         # Old (broken) behavior: 80 × 3.0 (capped) = 240 — wrong
         # Correct: use Rotterdam YAML comfortable = ~400
@@ -273,9 +273,7 @@ class TestCalculateBudget:
 
     def test_rotterdam_budget_has_health_extra(self):
         result = calculate_budget("rotterdam", "comfortable")
-        assert "health_extra" in result["items"], (
-            "Rotterdam budget must include health_extra"
-        )
+        assert "health_extra" in result["items"], "Rotterdam budget must include health_extra"
         assert result["items"]["health_extra"]["value_eur"] >= 300
 
     def test_madrid_health_is_low(self):
@@ -301,9 +299,7 @@ class TestCalculateBudget:
         """All cities should have at least 1 hidden cost."""
         for city in ("madrid", "rotterdam", "zurich", "amsterdam", "london"):
             result = calculate_budget(city, "comfortable")
-            assert len(result.get("hidden_costs", [])) > 0, (
-                f"{city} should have hidden_costs"
-            )
+            assert len(result.get("hidden_costs", [])) > 0, f"{city} should have hidden_costs"
 
 
 # ── calculate_budget_v2 ────────────────────────────────────────────────────────
@@ -324,9 +320,7 @@ class TestCalculateBudgetV2:
         )
 
     def test_lifestyle_anchor_added(self):
-        result = calculate_budget_v2(
-            "madrid", {}, pax=2, lifestyle_anchors={"Gym": 100}
-        )
+        result = calculate_budget_v2("madrid", {}, pax=2, lifestyle_anchors={"Gym": 100})
         assert "lifestyle_gym" in result["items"]
         assert result["items"]["lifestyle_gym"]["value_eur"] == 100
 
@@ -358,17 +352,13 @@ class TestDistribute:
         expected_keys = {k for k in DISPLAY_LABELS if k != "health_kvg"}
         for key in expected_keys:
             assert key in dist, f"Key {key!r} missing from distribution"
-        assert "health_kvg" not in dist, (
-            "health_kvg should be absorbed into health_extra"
-        )
+        assert "health_kvg" not in dist, "health_kvg should be absorbed into health_extra"
 
     def test_zurich_health_distributed_via_kvg(self):
         """For a CH city, health_extra bucket should reflect the larger KVG amount."""
         dist_zurich = distribute_total_to_categories(4000.0, "zurich", pax=2)
         dist_madrid = distribute_total_to_categories(4000.0, "madrid", pax=2)
-        assert "health_kvg" not in dist_zurich, (
-            "health_kvg should not appear as separate key"
-        )
+        assert "health_kvg" not in dist_zurich, "health_kvg should not appear as separate key"
         assert dist_zurich["health_extra"] > dist_madrid["health_extra"], (
             "Zurich health_extra should be larger than Madrid's (KVG > SNS optional private)"
         )
@@ -378,7 +368,7 @@ class TestDistribute:
 
 
 class TestYamlValidity:
-    CITY_SLUGS = [
+    CITY_SLUGS: ClassVar[list[str]] = [
         "madrid",
         "barcelona",
         "amsterdam",
@@ -442,7 +432,7 @@ class TestYamlValidity:
 class TestPaxHealthScaling:
     """Bug fix: health insurance must respect pax=1 multiplier in scale_expenses_to_city."""
 
-    BASE_EXPENSES = {
+    BASE_EXPENSES: ClassVar[dict[str, int]] = {
         "rent_2bed": 1200,
         "utilities": 150,
         "health_extra": 80,
@@ -457,12 +447,8 @@ class TestPaxHealthScaling:
 
     def test_single_person_health_is_half_of_two_person(self):
         """pax=1 health should be ≈ half of pax=2 (PAX_MULTIPLIER health = 0.5 for single)."""
-        two_pax = scale_expenses_to_city(
-            self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=2
-        )
-        one_pax = scale_expenses_to_city(
-            self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=1
-        )
+        two_pax = scale_expenses_to_city(self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=2)
+        one_pax = scale_expenses_to_city(self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=1)
         h2 = two_pax["items"]["health_extra"]["value_eur"]
         h1 = one_pax["items"]["health_extra"]["value_eur"]
         assert h1 == pytest.approx(h2 * 0.5, abs=5), (
@@ -471,12 +457,8 @@ class TestPaxHealthScaling:
 
     def test_single_person_zurich_kvg_is_halved(self):
         """KVG (CH) for pax=1 should be ~half the 2-person YAML comfortable value."""
-        two_pax = scale_expenses_to_city(
-            self.BASE_EXPENSES, "madrid", "zurich", {}, pax=2
-        )
-        one_pax = scale_expenses_to_city(
-            self.BASE_EXPENSES, "madrid", "zurich", {}, pax=1
-        )
+        two_pax = scale_expenses_to_city(self.BASE_EXPENSES, "madrid", "zurich", {}, pax=2)
+        one_pax = scale_expenses_to_city(self.BASE_EXPENSES, "madrid", "zurich", {}, pax=1)
         # health_extra key holds the resolved KVG value
         h2 = two_pax["items"]["health_extra"]["value_eur"]
         h1 = one_pax["items"]["health_extra"]["value_eur"]
@@ -485,9 +467,7 @@ class TestPaxHealthScaling:
 
     def test_two_person_health_uses_full_yaml_value(self):
         """pax=2 (2-person baseline) should use the full comfortable YAML value."""
-        result = scale_expenses_to_city(
-            self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=2
-        )
+        result = scale_expenses_to_city(self.BASE_EXPENSES, "madrid", "rotterdam", {}, pax=2)
         health_eur = result["items"]["health_extra"]["value_eur"]
         # Rotterdam comfortable health_extra = 345 EUR (2 pax)
         assert health_eur == pytest.approx(345, abs=5)
@@ -506,7 +486,7 @@ class TestInfrastructureScaling:
     cost floor regardless of lifestyle habits.
     """
 
-    FRUGAL_TRANSPORT_MADRID = {
+    FRUGAL_TRANSPORT_MADRID: ClassVar[dict[str, int]] = {
         "rent_2bed": 1200,
         "utilities": 150,
         "health_extra": 80,
@@ -519,7 +499,7 @@ class TestInfrastructureScaling:
         "personal": 700,
     }
 
-    FRUGAL_UTILITIES_MADRID = {
+    FRUGAL_UTILITIES_MADRID: ClassVar[dict[str, int]] = {
         "rent_2bed": 1200,
         "utilities": 20,
         "health_extra": 80,
@@ -594,7 +574,7 @@ class TestNewcomerSensitivity:
     settling_factor=1.0 means fully settled (no premium, pure ratio).
     """
 
-    BASE = {
+    BASE: ClassVar[dict[str, int]] = {
         "rent_2bed": 1200,
         "utilities": 150,
         "health_extra": 80,
@@ -644,10 +624,7 @@ class TestNewcomerSensitivity:
         settled = scale_expenses_to_city(
             self.BASE, "madrid", "rotterdam", {}, pax=2, settling_factor=1.0
         )
-        ratio = (
-            arrived["items"]["misc"]["value_eur"]
-            / settled["items"]["misc"]["value_eur"]
-        )
+        ratio = arrived["items"]["misc"]["value_eur"] / settled["items"]["misc"]["value_eur"]
         assert ratio == pytest.approx(1.20, abs=0.02), (
             f"misc newcomer premium at settling=0 should be 1.20x, got {ratio:.3f}"
         )
@@ -681,10 +658,9 @@ class TestNewcomerSensitivity:
             self.BASE, "madrid", "rotterdam", {}, pax=2, settling_factor=1.0
         )
         # travel is portable (no newcomer effect) -- should be identical
-        assert (
-            arrived["items"]["travel"]["value_eur"]
-            == settled["items"]["travel"]["value_eur"]
-        ), "Portable categories must not be affected by settling_factor"
+        assert arrived["items"]["travel"]["value_eur"] == settled["items"]["travel"]["value_eur"], (
+            "Portable categories must not be affected by settling_factor"
+        )
 
     def test_settling_factor_50_is_between_0_and_100(self):
         """Default settling=0.5 must produce a value between settled and just-arrived."""

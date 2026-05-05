@@ -9,8 +9,8 @@ Run with:  cd C:\\Personal\\salary-compass && python -m pytest tests/ -v
 """
 
 import pytest
-from engine.tax import calculate_net, find_target_gross
 
+from engine.tax import calculate_net, find_target_gross
 
 # ── Validated anchor points ────────────────────────────────────────────────────
 
@@ -40,9 +40,7 @@ class TestAnchorPoints:
         with_ruling = calculate_net(85000, "NL", active_schemes=["nl_30_ruling"])
         without_ruling = calculate_net(85000, "NL")
         diff = with_ruling["net_monthly_eur"] - without_ruling["net_monthly_eur"]
-        assert diff > 300, (
-            f"30% ruling should add >€300/mo net at €85k gross, got +€{diff}"
-        )
+        assert diff > 300, f"30% ruling should add >€300/mo net at €85k gross, got +€{diff}"
 
 
 # ── Return structure ───────────────────────────────────────────────────────────
@@ -70,9 +68,7 @@ class TestReturnStructure:
 
     def test_eur_rate_is_one_for_eur_countries(self):
         for code in ("ES", "NL", "DE"):
-            assert calculate_net(60000, code)["eur_rate"] == pytest.approx(
-                1.0, abs=0.01
-            )
+            assert calculate_net(60000, code)["eur_rate"] == pytest.approx(1.0, abs=0.01)
 
 
 # ── Sanity checks across all countries ────────────────────────────────────────
@@ -113,9 +109,7 @@ class TestCountrySanity:
     )
     def test_net_monthly_positive(self, gross, country):
         result = calculate_net(gross, country)
-        assert result["net_monthly_eur"] > 0, (
-            f"{country} {gross}: net should be positive"
-        )
+        assert result["net_monthly_eur"] > 0, f"{country} {gross}: net should be positive"
 
     @pytest.mark.parametrize(
         "gross,country",
@@ -155,9 +149,7 @@ class TestMonotonicity:
         """Progressive tax: effective rate should increase with gross."""
         low = calculate_net(50000, country)["effective_rate"]
         high = calculate_net(120000, country)["effective_rate"]
-        assert high > low, (
-            f"{country}: effective rate should be higher at €120k than €50k"
-        )
+        assert high > low, f"{country}: effective rate should be higher at €120k than €50k"
 
 
 # ── Lookup interpolation ───────────────────────────────────────────────────────
@@ -197,8 +189,7 @@ class TestGenevaTax:
         ge_net = calculate_net(gross, "GE")["net_monthly_local"]
         ch_net = calculate_net(gross, "CH")["net_monthly_local"]
         assert ge_net < ch_net, (
-            f"Geneva should give less net than Zurich at CHF {gross:,}: "
-            f"GE={ge_net}, CH={ch_net}"
+            f"Geneva should give less net than Zurich at CHF {gross:,}: GE={ge_net}, CH={ch_net}"
         )
 
     @pytest.mark.parametrize(
@@ -432,12 +423,8 @@ class TestFindTargetGross:
         from engine.tax import calculate_net, find_target_gross
 
         target_net = calculate_net(90000, "NL", ["nl_30_ruling"])["net_monthly_eur"]
-        result_gross = find_target_gross(
-            target_net, "NL", active_schemes=["nl_30_ruling"]
-        )
-        check_net = calculate_net(result_gross, "NL", ["nl_30_ruling"])[
-            "net_monthly_eur"
-        ]
+        result_gross = find_target_gross(target_net, "NL", active_schemes=["nl_30_ruling"])
+        check_net = calculate_net(result_gross, "NL", ["nl_30_ruling"])["net_monthly_eur"]
         assert abs(check_net - target_net) <= 10
 
     def test_monotonic(self):
@@ -503,9 +490,7 @@ class TestNL30to27RulingRateChange:
             scheme_overrides={"nl_30_ruling": {"multiplier": 0.73}},
         )["net_monthly_eur"]
         drop = net_30 - net_27
-        assert 100 <= drop <= 350, (
-            f"Drop should be ~€150–250/mo at €85k, got €{drop:.0f}"
-        )
+        assert 100 <= drop <= 350, f"Drop should be ~€150–250/mo at €85k, got €{drop:.0f}"
 
     def test_trajectory_emits_rate_change_event(self):
         """Trajectory emits ⚡ event in the first year the 2027 rate change hits."""
@@ -604,9 +589,7 @@ class TestNL30to27RulingRateChange:
             scheme_overrides={"nl_30_ruling": {"multiplier": 0.73}},
         )
         # With 27% ruling, need higher gross to match 30% net
-        assert gross_needed > 85000, (
-            "Need higher gross under 27% ruling to match 30% net"
-        )
+        assert gross_needed > 85000, "Need higher gross under 27% ruling to match 30% net"
         # Verify the gross actually achieves the target
         check = calculate_net(
             gross_needed,

@@ -1,7 +1,7 @@
 """Plotly chart builders for Streamlit dashboard."""
 
-import plotly.graph_objects as go
 import plotly.express as px
+import plotly.graph_objects as go
 
 COLOURS = {
     "generous": "#1A5276",
@@ -85,8 +85,8 @@ def trajectory_line_chart(trajectories: list[dict]) -> go.Figure:
                 y=values,
                 mode="lines+markers",
                 name=traj["label"],
-                line=dict(color=colour, width=2, dash=dash),
-                marker=dict(size=5),
+                line={"color": colour, "width": 2, "dash": dash},
+                marker={"size": 5},
                 hovertemplate="%{text}<br>Year %{x}: €%{y:,.0f}<extra></extra>",
                 text=[", ".join(e) if e else traj["label"] for e in events],
             )
@@ -99,7 +99,7 @@ def trajectory_line_chart(trajectories: list[dict]) -> go.Figure:
         plot_bgcolor="white",
         paper_bgcolor="white",
         height=500,
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+        legend={"yanchor": "top", "y": 0.99, "xanchor": "left", "x": 0.01},
     )
     fig.add_hline(y=0, line_dash="dash", line_color=COLOURS["neutral"])
     return fig
@@ -140,7 +140,7 @@ def budget_breakdown_chart(budgets: list[dict]) -> go.Figure:
         plot_bgcolor="white",
         paper_bgcolor="white",
         height=450,
-        legend=dict(orientation="h", yanchor="bottom", y=-0.4),
+        legend={"orientation": "h", "yanchor": "bottom", "y": -0.4},
     )
     return fig
 
@@ -153,8 +153,7 @@ def negotiation_ladder_chart(ladder: list[dict], reference_surplus: float) -> go
     labels = [f"{d['gross']:,}" for d in ladder]
     surpluses = [d["surplus_eur"] for d in ladder]
     colours = [
-        COLOURS["positive"] if s >= reference_surplus else COLOURS["negative"]
-        for s in surpluses
+        COLOURS["positive"] if s >= reference_surplus else COLOURS["negative"] for s in surpluses
     ]
 
     fig = go.Figure(
