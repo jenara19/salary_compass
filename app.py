@@ -1414,13 +1414,14 @@ with tab_compare:
         except Exception as _exc:
             st.warning(f"Excel export unavailable: {_exc}")
 
-        # ── 4 inner result tabs ────────────────────────────────────────────────
-        r_tab1, r_tab2, r_tab3, r_tab4 = st.tabs(
+        # ── 5 inner result tabs ────────────────────────────────────────────────
+        r_tab1, r_tab2, r_tab3, r_tab4, r_tab5 = st.tabs(
             [
                 "📊 Budget & Surplus",
                 "📈 10-Year Trajectory",
                 "🔢 Negotiation Ladder",
                 "ℹ️ Details & Caveats",
+                "📋 Negotiate",
             ]
         )
 
@@ -2168,3 +2169,31 @@ with tab_compare:
 - Bonus and RSU figures are added to gross before tax; vesting schedules and cliff periods are not modelled.
 - Trajectory calculations use YAML cost-of-living estimates; your entered actuals apply to the monthly snapshots only.
 """)
+
+        # ── r_tab5: Negotiate & Relocate ──────────────────────────────────────
+        with r_tab5:
+            st.header("📋 Negotiate & Relocate")
+            st.caption("Print-ready before your negotiation call.")
+
+            with st.expander("💰 Target Salary", expanded=True):
+                st.info(
+                    "🚧 Coming soon: The exact gross salary needed in each city to match "
+                    "your home monthly surplus."
+                )
+
+            with st.expander("🧳 Move Readiness", expanded=True):
+                st.info(
+                    "🚧 Coming soon: How much cash you need ready before day 1 "
+                    "(relocation costs + 3-month buffer)."
+                )
+
+            with st.expander("🎁 Sign-on Bonus", expanded=True):
+                st.info(
+                    "🚧 Coming soon: The gross sign-on bonus to ask for to cover relocation costs."
+                )
+
+            with st.expander("🛂 Permit Timeline", expanded=True):
+                st.info(
+                    "🚧 Coming soon: Work permit path, timeline, complexity, and costs "
+                    "for each destination."
+                )
