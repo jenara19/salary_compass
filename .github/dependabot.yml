@@ -1,0 +1,62 @@
+# .github/dependabot.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Dependabot — automatic dependency updates via PRs every Monday morning.
+# Docs: https://docs.github.com/en/code-security/dependabot
+# ─────────────────────────────────────────────────────────────────────────────
+version: 2
+
+updates:
+  # ── Python packages (uv ecosystem) ────────────────────────────────────────
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 5
+    groups:
+      # Batch all patch updates into one PR to reduce noise
+      python-patch:
+        applies-to: version-updates
+        update-types: ["patch"]
+      # Dev dep minor+patch together
+      python-dev-deps:
+        applies-to: version-updates
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(dev-deps)"
+      include: "scope"
+    labels: ["dependencies", "python"]
+
+  # ── GitHub Actions ────────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions-updates:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+    commit-message:
+      prefix: "chore(actions)"
+      include: "scope"
+    labels: ["dependencies", "github-actions"]
+
+  # ── Docker base images ────────────────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Amsterdam"
+    commit-message:
+      prefix: "chore(docker)"
+    labels: ["dependencies", "docker"]

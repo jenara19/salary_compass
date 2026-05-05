@@ -1,0 +1,50 @@
+name: Bug report
+description: Something is broken or producing wrong results
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill in as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: "When I select Oslo + 30% ruling, the trajectory shows..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: "I expected the net to be ~€X,XXX/mo because..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the app
+        2. Select city: Oslo
+        3. Enable 30% ruling
+        4. Click Compare
+    validations:
+      required: true
+
+  - type: input
+    id: city
+    attributes:
+      label: City / country involved (if applicable)
+      placeholder: "e.g. Amsterdam / NL"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context (screenshots, error messages)

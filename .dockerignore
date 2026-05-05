@@ -1,0 +1,22 @@
+# .dockerignore
+.git
+.github
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+__pycache__
+*.py[cod]
+*.pyo
+htmlcov
+coverage.xml
+.coverage
+.env
+.streamlit/secrets.toml
+config/profiles/*.json
+output/*.xlsx
+output/*.csv
+CHANGELOG.md
+*.md
+tests/

@@ -1,0 +1,48 @@
+name: Feature request
+description: Suggest a new city, country, or app feature
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea to improve SalaryCompass? Describe it below.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type of request
+      options:
+        - New city
+        - New country / tax engine
+        - New feature or UX improvement
+        - Data correction
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      placeholder: "I'd like to compare Warsaw (Poland)..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why is this useful?
+      placeholder: "Poland has a flat 19% PIT for expats under the..."
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Data sources (for city/country requests)
+      placeholder: "Official tax authority: https://..."
