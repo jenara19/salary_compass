@@ -2191,7 +2191,7 @@ with tab_compare:
                     _home_r = results_matrix[home_city_slug][_ref_scen]
                     _home_net = _home_r["net"]["net_monthly_eur"]
                     _home_exp = float(_home_r["budget"]["total_eur"])
-                    _home_surplus = float(_home_r["surplus"])
+                    _home_surplus = float(_home_r["surplus"]["surplus_eur"])
                     st.caption(
                         f"Home: **{city_inputs[home_city_slug]['name']}** — "
                         f"net €{_home_net:,.0f}/mo · expenses €{_home_exp:,.0f}/mo · "
