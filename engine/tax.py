@@ -4,24 +4,26 @@ Returns net monthly salary in LOCAL currency and EUR.
 """
 
 from __future__ import annotations
-import yaml
+
 from pathlib import Path
-from typing import Optional
+from typing import Any, cast
+
+import yaml
 
 COUNTRIES_DIR = Path(__file__).parent.parent / "data" / "countries"
 
 
-def load_country(code: str) -> dict:
+def load_country(code: str) -> dict[str, Any]:
     path = COUNTRIES_DIR / f"{code}.yaml"
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        return cast(dict[str, Any], yaml.safe_load(f))
 
 
 def calculate_net(
     gross_annual: float,
     country_code: str,
-    active_schemes: Optional[list[str]] = None,
-    scheme_overrides: Optional[dict[str, dict]] = None,
+    active_schemes: list[str] | None = None,
+    scheme_overrides: dict[str, dict] | None = None,
 ) -> dict:
     """
     Calculate net monthly salary.
@@ -52,9 +54,7 @@ def calculate_net(
                 social_annual = _calc_social(gross_annual, country)
                 net_annual = gross_annual - tax_annual - social_annual
                 net_monthly_local = net_annual / 12
-                effective_rate = (
-                    (tax_annual + social_annual) / gross_annual if gross_annual else 0
-                )
+                effective_rate = (tax_annual + social_annual) / gross_annual if gross_annual else 0
                 net_monthly_eur = net_monthly_local * eur_rate
                 return {
                     "gross_annual": gross_annual,
@@ -83,7 +83,7 @@ def calculate_net(
         for scheme_id in active_schemes:
             scheme = _find_scheme(country, scheme_id)
             if scheme_overrides.get(scheme_id):
-                scheme = {**scheme, **scheme_overrides[scheme_id]}
+                scheme = {**(scheme or {}), **scheme_overrides[scheme_id]}
             if scheme and scheme["type"] == "taxable_multiplier":
                 taxable = gross_annual * scheme["multiplier"]
 
@@ -93,9 +93,7 @@ def calculate_net(
         social_annual = _calc_social(gross_annual, country)
         net_annual = gross_annual - tax_annual - social_annual
         net_monthly_local = net_annual / 12
-        effective_rate = (
-            (tax_annual + social_annual) / gross_annual if gross_annual else 0
-        )
+        effective_rate = (tax_annual + social_annual) / gross_annual if gross_annual else 0
 
     net_monthly_eur = net_monthly_local * eur_rate
 
@@ -116,23 +114,25 @@ def calculate_net(
 def _lookup_net(gross: float, tax_config: dict) -> float:
     """Interpolate net monthly from lookup table."""
     lookup = sorted(tax_config["lookup"], key=lambda x: x["gross"])
-    marginal = tax_config.get("marginal_retention", 0.65)
+    marginal = float(tax_config.get("marginal_retention", 0.65))
 
     if gross <= lookup[0]["gross"]:
-        diff = gross - lookup[0]["gross"]
-        return lookup[0]["net_monthly"] + diff / 12 * marginal
+        diff = gross - float(lookup[0]["gross"])
+        return float(lookup[0]["net_monthly"]) + diff / 12 * marginal
 
     if gross >= lookup[-1]["gross"]:
-        diff = gross - lookup[-1]["gross"]
-        return lookup[-1]["net_monthly"] + diff / 12 * marginal
+        diff = gross - float(lookup[-1]["gross"])
+        return float(lookup[-1]["net_monthly"]) + diff / 12 * marginal
 
     for i in range(len(lookup) - 1):
         lo, hi = lookup[i], lookup[i + 1]
         if lo["gross"] <= gross <= hi["gross"]:
-            frac = (gross - lo["gross"]) / (hi["gross"] - lo["gross"])
-            return lo["net_monthly"] + frac * (hi["net_monthly"] - lo["net_monthly"])
+            frac = (gross - float(lo["gross"])) / (float(hi["gross"]) - float(lo["gross"]))
+            return float(lo["net_monthly"]) + frac * (
+                float(hi["net_monthly"]) - float(lo["net_monthly"])
+            )
 
-    return lookup[-1]["net_monthly"]
+    return float(lookup[-1]["net_monthly"])
 
 
 def _calc_brackets(taxable: float, tax_config: dict) -> float:
@@ -177,9 +177,9 @@ def _calc_phase_out_credit(income: float, credit: dict) -> float:
     end = credit.get("phase_out_end", float("inf"))
     rate = credit["phase_out_rate"]
     if income <= start:
-        return max_c
+        return float(max_c)
     elif income <= end:
-        return max(0.0, max_c - rate * (income - start))
+        return max(0.0, float(max_c) - float(rate) * (income - float(start)))
     else:
         return 0.0
 
@@ -193,7 +193,7 @@ def _calc_piecewise_credit(income: float, credit: dict) -> float:
         if lo <= income < hi or (hi == float("inf") and income >= lo):
             base = band.get("base", 0.0)
             rate = band.get("rate", 0.0)
-            return max(0.0, base + rate * (income - lo))
+            return max(0.0, float(base) + float(rate) * (income - float(lo)))
     return 0.0
 
 
@@ -215,28 +215,24 @@ def _calc_social(gross: float, country: dict) -> float:
     return total
 
 
-def _find_scheme(country: dict, scheme_id: str) -> Optional[dict]:
+def _find_scheme(country: dict, scheme_id: str) -> dict[str, Any] | None:
     for s in country.get("special_schemes", []):
         if s.get("id") == scheme_id:
-            return s
+            return dict(s)
     return None
 
 
 def get_schemes(country_code: str) -> list[dict]:
     """Return list of available special schemes for a country."""
     country = load_country(country_code)
-    return [
-        s
-        for s in country.get("special_schemes", [])
-        if s.get("type") != "informational"
-    ]
+    return [s for s in country.get("special_schemes", []) if s.get("type") != "informational"]
 
 
 def find_target_gross(
     target_net_monthly_eur: float,
     country_code: str,
     active_schemes: list[str] | None = None,
-    scheme_overrides: Optional[dict[str, dict]] = None,
+    scheme_overrides: dict[str, dict] | None = None,
     tolerance_eur: float = 5.0,
     max_gross: float = 2_000_000.0,
 ) -> float:
@@ -250,9 +246,11 @@ def find_target_gross(
     active_schemes = active_schemes or []
 
     def net_at(gross: float) -> float:
-        return calculate_net(
-            gross, country_code, active_schemes, scheme_overrides=scheme_overrides
-        )["net_monthly_eur"]
+        return float(
+            calculate_net(gross, country_code, active_schemes, scheme_overrides=scheme_overrides)[
+                "net_monthly_eur"
+            ]
+        )
 
     lo, hi = 0.0, max_gross
 

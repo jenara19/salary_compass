@@ -4,8 +4,9 @@ Models salary growth, scheme expiry events, and cumulative savings.
 """
 
 from __future__ import annotations
-from .tax import calculate_net
+
 from .budget import calculate_budget, calculate_budget_v2, calculate_surplus
+from .tax import calculate_net
 
 
 def calculate_trajectory(
@@ -13,9 +14,9 @@ def calculate_trajectory(
     country_code: str,
     city_slug: str,
     scenario: str = "comfortable",
-    category_multipliers: dict = None,
+    category_multipliers: dict | None = None,
     pax: int = 2,
-    lifestyle_anchors: dict = None,
+    lifestyle_anchors: dict | None = None,
     partner_net_monthly_eur: float = 0.0,
     cagr: float = 0.05,
     years: int = 10,
@@ -54,7 +55,7 @@ def calculate_trajectory(
     cumulative_savings = 0.0
 
     # Pre-load rate_change metadata for all active schemes
-    from .tax import load_country as _load_country, _find_scheme as _find_s
+    from .tax import _find_scheme as _find_s, load_country as _load_country
 
     _country_data = _load_country(country_code)
     _scheme_rate_changes: dict[str, dict] = {}
@@ -81,9 +82,7 @@ def calculate_trajectory(
 
     for year in range(1, years + 1):
         gross = gross_annual * ((1 + cagr) ** (year - 1))
-        year_expenses_eur = round(
-            base_expenses_eur * ((1 + col_inflation_rate) ** (year - 1))
-        )
+        year_expenses_eur = round(base_expenses_eur * ((1 + col_inflation_rate) ** (year - 1)))
         calendar_year = ruling_start_year + (year - 1)
 
         current_schemes = []

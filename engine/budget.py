@@ -4,8 +4,11 @@ Returns total monthly expenses and surplus for a given city + scenario.
 """
 
 from __future__ import annotations
-import yaml
+
 from pathlib import Path
+from typing import Any, cast
+
+import yaml
 
 CITIES_DIR = Path(__file__).parent.parent / "data" / "cities"
 COUNTRIES_DIR = Path(__file__).parent.parent / "data" / "countries"
@@ -105,24 +108,24 @@ def _resolve_health_comfortable(col: dict, primary_key: str) -> float:
     return v
 
 
-def load_city(city_slug: str) -> dict:
+def load_city(city_slug: str) -> dict[str, Any]:
     path = CITIES_DIR / f"{city_slug}.yaml"
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        return cast(dict[str, Any], yaml.safe_load(f))
 
 
-def load_country(code: str) -> dict:
+def load_country(code: str) -> dict[str, Any]:
     path = COUNTRIES_DIR / f"{code}.yaml"
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        return cast(dict[str, Any], yaml.safe_load(f))
 
 
 def _get_cat_mult(key: str, category_multipliers: dict) -> float:
     """Get category multiplier, using health_extra as fallback for health_kvg."""
     if key in category_multipliers:
-        return category_multipliers[key]
+        return float(category_multipliers[key])
     if key == "health_kvg" and "health_extra" in category_multipliers:
-        return category_multipliers["health_extra"]
+        return float(category_multipliers["health_extra"])
     return 1.0
 
 
@@ -130,7 +133,7 @@ def calculate_budget_v2(
     city_slug: str,
     category_multipliers: dict,
     pax: int = 2,
-    lifestyle_anchors: dict = None,
+    lifestyle_anchors: dict | None = None,
     partner_net_monthly_eur: float = 0.0,
 ) -> dict:
     """
@@ -340,9 +343,7 @@ def scale_expenses_to_city(
                 ratio = max(0.5, min(3.0, target_ref / home_ref))
                 base_scaled = user_eur * ratio
                 sensitivity = NEWCOMER_SENSITIVITIES.get(cat, 0.0)
-                newcomer_mult = 1.0 + sensitivity * (
-                    1.0 - max(0.0, min(1.0, settling_factor))
-                )
+                newcomer_mult = 1.0 + sensitivity * (1.0 - max(0.0, min(1.0, settling_factor)))
                 scaled_eur = base_scaled * newcomer_mult
                 if sensitivity > 0 and newcomer_mult > 1.001:
                     note = (
@@ -396,9 +397,7 @@ def scale_expenses_to_city(
     }
 
 
-def distribute_total_to_categories(
-    total_eur: float, city_slug: str, pax: int = 2
-) -> dict:
+def distribute_total_to_categories(total_eur: float, city_slug: str, pax: int = 2) -> dict:
     """
     Distribute a total monthly expense figure across categories
     using city YAML ample values as proportional weights.

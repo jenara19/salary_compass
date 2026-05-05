@@ -12,12 +12,12 @@ Usage:
 """
 
 from __future__ import annotations
+
 import io
 from datetime import date
 from typing import Any
 
 import xlsxwriter
-
 
 # ── colour palette (matches GIC design system) ────────────────────────────────
 _C_HEADER_BG = "#1A1F2E"
@@ -77,16 +77,10 @@ def generate_excel_report(
         "money": _fmt(font_size=9, num_format="€#,##0"),
         "money_alt": _fmt(font_size=9, num_format="€#,##0", bg_color=_C_ALT_ROW),
         "money_bold": _fmt(font_size=9, num_format="€#,##0", bold=True),
-        "surplus_pos": _fmt(
-            font_size=9, num_format="€#,##0", bold=True, font_color=_C_SURPLUS_POS
-        ),
-        "surplus_neg": _fmt(
-            font_size=9, num_format="€#,##0", bold=True, font_color=_C_SURPLUS_NEG
-        ),
+        "surplus_pos": _fmt(font_size=9, num_format="€#,##0", bold=True, font_color=_C_SURPLUS_POS),
+        "surplus_neg": _fmt(font_size=9, num_format="€#,##0", bold=True, font_color=_C_SURPLUS_NEG),
         "pct": _fmt(font_size=9, num_format="0.0%"),
-        "amber": _fmt(
-            font_size=9, bold=True, font_color=_C_AMBER, bg_color=_C_AMBER_BG
-        ),
+        "amber": _fmt(font_size=9, bold=True, font_color=_C_AMBER, bg_color=_C_AMBER_BG),
         "amber_money": _fmt(
             font_size=9,
             bold=True,
@@ -99,12 +93,8 @@ def generate_excel_report(
 
     slugs = list(city_inputs.keys())
 
-    _write_summary(
-        wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs
-    )
-    _write_budget(
-        wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs
-    )
+    _write_summary(wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs)
+    _write_budget(wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs)
     _write_trajectory(
         wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs
     )
@@ -148,9 +138,7 @@ def _write_summary(
 
     # Title row
     num_data_cols = len(slugs) * 3
-    ws.merge_range(
-        0, 0, 0, num_data_cols, f"SalaryCompass — Summary  [{date.today()}]", F["title"]
-    )
+    ws.merge_range(0, 0, 0, num_data_cols, f"SalaryCompass — Summary  [{date.today()}]", F["title"])
     ws.set_row(0, 22)
 
     # City headers (merged across 3 sub-columns each)
@@ -179,16 +167,12 @@ def _write_summary(
         for j, slug in enumerate(slugs):
             col = 1 + j * 3
             r = results_matrix[slug][scen["name"]]
-            net = r["net"]["net_monthly_eur"] + city_inputs[slug].get(
-                "perks_monthly_eur", 0
-            )
+            net = r["net"]["net_monthly_eur"] + city_inputs[slug].get("perks_monthly_eur", 0)
             exp = r["budget"]["total_eur"]
             sur = net - exp
             ws.write_number(row, col, net, F["money_alt"] if alt else F["money"])
             ws.write_number(row, col + 1, exp, F["money_alt"] if alt else F["money"])
-            ws.write_number(
-                row, col + 2, sur, F["surplus_pos"] if sur >= 0 else F["surplus_neg"]
-            )
+            ws.write_number(row, col + 2, sur, F["surplus_pos"] if sur >= 0 else F["surplus_neg"])
 
     # Perks note
     has_perks = any(ci.get("perks_monthly_eur", 0) > 0 for ci in city_inputs.values())
@@ -228,9 +212,7 @@ _CAT_LABELS = {
 }
 
 
-def _write_budget(
-    wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs
-):
+def _write_budget(wb, F, city_inputs, results_matrix, scenarios_def, city_names, scen_names, slugs):
     ws = wb.add_worksheet("2. Budget Breakdown")
     ws.set_zoom(90)
     ws.set_column(0, 0, 26)
@@ -252,9 +234,7 @@ def _write_budget(
     current_row = 1
     for scen in scenarios_def:
         # Scenario header
-        ws.merge_range(
-            current_row, 0, current_row, len(slugs), scen["name"], F["subtitle"]
-        )
+        ws.merge_range(current_row, 0, current_row, len(slugs), scen["name"], F["subtitle"])
         ws.set_row(current_row, 16)
         current_row += 1
 
@@ -276,9 +256,7 @@ def _write_budget(
                     if isinstance(items.get(cat), dict)
                     else items.get(cat, 0)
                 )
-                ws.write_number(
-                    current_row, j + 1, val, F["money_alt"] if alt else F["money"]
-                )
+                ws.write_number(current_row, j + 1, val, F["money_alt"] if alt else F["money"])
             current_row += 1
 
         # Total row
@@ -307,9 +285,7 @@ def _write_trajectory(
     ws.set_column(6, 6, 8)  # Eff rate
     ws.set_column(7, 7, 40)  # Events
 
-    ws.merge_range(
-        0, 0, 0, 7, f"SalaryCompass — 10-Year Trajectory  [{date.today()}]", F["title"]
-    )
+    ws.merge_range(0, 0, 0, 7, f"SalaryCompass — 10-Year Trajectory  [{date.today()}]", F["title"])
     ws.set_row(0, 22)
 
     COL_HEADS = [
@@ -349,11 +325,7 @@ def _write_trajectory(
                 events = yr.get("events", [])
                 has_event = len(events) > 0
                 mf = F["amber"] if has_event else (F["alt"] if alt else F["normal"])
-                mm = (
-                    F["amber_money"]
-                    if has_event
-                    else (F["money_alt"] if alt else F["money"])
-                )
+                mm = F["amber_money"] if has_event else (F["money_alt"] if alt else F["money"])
                 sur = yr["surplus_monthly_eur"]
                 sur_fmt = (
                     F["amber_money"]
@@ -401,9 +373,7 @@ def _write_negotiation(
     ws.set_column(1, 1, 20)
     ws.set_column(2, 5, 16)
 
-    ws.merge_range(
-        0, 0, 0, 5, f"SalaryCompass — Negotiation Targets  [{date.today()}]", F["title"]
-    )
+    ws.merge_range(0, 0, 0, 5, f"SalaryCompass — Negotiation Targets  [{date.today()}]", F["title"])
     ws.set_row(0, 22)
 
     non_home = [s for s in slugs if s != home_city_slug]
@@ -413,9 +383,9 @@ def _write_negotiation(
     # Reference: home city comfortable net + surplus
     if home_city_slug in city_inputs and home_city_slug in results_matrix:
         ref_scen = scen_names[min(1, len(scen_names) - 1)]
-        home_net = results_matrix[home_city_slug][ref_scen]["net"][
-            "net_monthly_eur"
-        ] + city_inputs[home_city_slug].get("perks_monthly_eur", 0)
+        home_net = results_matrix[home_city_slug][ref_scen]["net"]["net_monthly_eur"] + city_inputs[
+            home_city_slug
+        ].get("perks_monthly_eur", 0)
         home_exp = results_matrix[home_city_slug][ref_scen]["budget"]["total_eur"]
         home_surplus = home_net - home_exp
     else:
@@ -482,16 +452,14 @@ def _write_negotiation(
             for h in hidden
             if h.get("mandatory") and "one_time" in h
         )
-        comfortable_budget = results_matrix[slug][
-            scen_names[min(1, len(scen_names) - 1)]
-        ]["budget"]["total_eur"]
+        comfortable_budget = results_matrix[slug][scen_names[min(1, len(scen_names) - 1)]][
+            "budget"
+        ]["total_eur"]
         buffer_3m = comfortable_budget * 3
         total_cash = mandatory_ot + buffer_3m
 
         row += 1
-        ws.write(
-            row, 0, "Move readiness (mandatory deposits + 3-month buffer)", F["label"]
-        )
+        ws.write(row, 0, "Move readiness (mandatory deposits + 3-month buffer)", F["label"])
         ws.write_number(row, 1, total_cash, F["money_bold"])
         row += 1
 

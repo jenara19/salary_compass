@@ -61,6 +61,9 @@ ignore = [
   "E501",   # line too long (formatter handles this)
   "B008",   # function calls in default args (common in Streamlit)
   "SIM108", # ternary operator (sometimes less readable)
+  "RUF001", # ambiguous unicode in strings — intentional UI symbols (×, –, ℹ)
+  "RUF002", # ambiguous unicode in docstrings — intentional math notation
+  "RUF003", # ambiguous unicode in comments — intentional math notation
 ]
 fixable = ["ALL"]
 
@@ -91,11 +94,7 @@ ignore_missing_imports = true  # streamlit, plotly, xlsxwriter lack full stubs
 show_error_codes = true
 pretty = true
 
-[[tool.mypy.overrides]]
-# app.py is a Streamlit script — relax strict typing here
-module = ["app"]
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
+
 
 # ── Pytest ────────────────────────────────────────────────────────────────────
 [tool.pytest.ini_options]
