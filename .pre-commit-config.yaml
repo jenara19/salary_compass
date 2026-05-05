@@ -1,0 +1,48 @@
+# .pre-commit-config.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# Pre-commit hooks — run automatically before every `git commit`.
+#
+# One-time setup (per developer):
+#   uv run pre-commit install            # installs the git hook
+#   uv run pre-commit run --all-files    # run against the whole codebase now
+#
+# Refresh hook versions:
+#   uv run pre-commit autoupdate
+# ─────────────────────────────────────────────────────────────────────────────
+minimum_pre_commit_version: "3.5.0"
+
+repos:
+  # ── File hygiene ────────────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: debug-statements
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # ── Ruff: lint then format (order matters) ──────────────────────────────
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.12
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        types_or: [python, pyi]
+      - id: ruff-format
+        types_or: [python, pyi]
+
+  # ── pyproject.toml schema validation ───────────────────────────────────
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.24
+    hooks:
+      - id: validate-pyproject

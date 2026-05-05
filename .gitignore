@@ -19,10 +19,18 @@ env/
 # uv
 .uv/
 
-# Pytest
+# Pytest / coverage
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+coverage.xml
+
+# Type checking
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
 
 # Streamlit
 .streamlit/secrets.toml
@@ -45,3 +53,4 @@ output/*.csv
 # Profiles — user-specific, not committed
 config/profiles/*.json
 !config/profiles/.gitkeep
+

@@ -1,0 +1,69 @@
+# .github/workflows/release.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Release workflow — triggered by pushing a semantic version tag (v1.x.x).
+#
+# Developer workflow:
+#   1. Bump version:  uv version --bump patch   (or minor / major)
+#   2. Update CHANGELOG.md — move [Unreleased] → [x.y.z] with today's date
+#   3. Commit:  git add pyproject.toml CHANGELOG.md && git commit -m "chore: release vX.Y.Z"
+#   4. Tag + push:  git tag vX.Y.Z && git push origin main --tags
+# ─────────────────────────────────────────────────────────────────────────────
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.9"
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify pyproject.toml version matches tag
+        run: |
+          TOML_VERSION=$(uv version --short 2>/dev/null || python -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d['project']['version'])")
+          TAG_VERSION="${{ steps.version.outputs.version }}"
+          if [[ "${TOML_VERSION}" != "${TAG_VERSION}" ]]; then
+            echo "❌ Version mismatch: pyproject.toml=${TOML_VERSION}, tag=${TAG_VERSION}"
+            exit 1
+          fi
+          echo "✅ Version consistent: ${TOML_VERSION}"
+
+      - name: Extract changelog section for this release
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          NOTES=$(awk "/^## \[${VERSION}\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
+          if [[ -z "${NOTES}" ]]; then
+            NOTES="See [CHANGELOG.md](https://github.com/jenara19/salary_compass/blob/main/CHANGELOG.md) for details."
+          fi
+          echo "${NOTES}" > release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "Release ${{ steps.version.outputs.tag }}"
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.tag, '-') }}
+          token: ${{ secrets.GITHUB_TOKEN }}

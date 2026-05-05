@@ -1,0 +1,116 @@
+# .github/workflows/ci.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Continuous Integration — runs on every push to main and all pull requests.
+# Tools: uv · ruff (lint + format) · mypy · pytest + coverage
+# ─────────────────────────────────────────────────────────────────────────────
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+# Cancel in-progress runs when a new commit is pushed to the same PR/branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Job 1: Lint (ruff check + ruff format) ────────────────────────────────
+  # Fast-fail gate — runs before the heavier test job.
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.9"
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dev dependencies
+        run: uv sync --locked --dev
+
+      - name: Ruff — lint
+        run: uv run ruff check . --output-format=github
+
+      - name: Ruff — format check
+        run: uv run ruff format --check .
+
+  # ── Job 2: Type check (mypy) ──────────────────────────────────────────────
+  type-check:
+    name: Type check (mypy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.9"
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dev dependencies
+        run: uv sync --locked --dev
+
+      - name: Run mypy
+        run: uv run mypy engine/ output/
+
+  # ── Job 3: Tests + Coverage ───────────────────────────────────────────────
+  test:
+    name: Tests (pytest + coverage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.9"
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dev dependencies
+        run: uv sync --locked --dev
+
+      - name: Run pytest with coverage
+        run: uv run python -m pytest
+
+      - name: Upload coverage HTML as artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ github.run_id }}
+          path: htmlcov/
+          retention-days: 14
+
+  # ── Gate job — branch protection points ONLY at this ─────────────────────
+  # Add/remove jobs above without ever touching branch protection settings.
+  ci-passed:
+    name: CI passed
+    needs: [lint, type-check, test]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all jobs succeeded
+        run: |
+          if [[ "${{ needs.lint.result }}"       != "success" ||
+                "${{ needs.type-check.result }}" != "success" ||
+                "${{ needs.test.result }}"       != "success" ]]; then
+            echo "One or more CI jobs failed."
+            exit 1
+          fi
+          echo "All CI jobs passed ✅"
