@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from engine import calculate_net, calculate_trajectory
+from engine import calculate_net, calculate_trajectory, find_gross_to_match_surplus
 from engine.budget import (
     DISPLAY_LABELS,
     _resolve_health_comfortable,
@@ -2175,25 +2175,222 @@ with tab_compare:
             st.header("📋 Negotiate & Relocate")
             st.caption("Print-ready before your negotiation call.")
 
+            _ref_scen = scen_names[0]
+            _dest_slugs = [s for s in city_inputs if s != home_city_slug]
+
+            # ── 💰 Target Salary ──────────────────────────────────────────────
             with st.expander("💰 Target Salary", expanded=True):
-                st.info(
-                    "🚧 Coming soon: The exact gross salary needed in each city to match "
-                    "your home monthly surplus."
-                )
+                if not has_actuals:
+                    st.info(
+                        "Enter your actual expenses in **📋 My Setup** to unlock "
+                        "target salary calculations."
+                    )
+                elif not _dest_slugs:
+                    st.info("Add at least one destination city in **📋 My Setup**.")
+                else:
+                    _home_r = results_matrix[home_city_slug][_ref_scen]
+                    _home_net = _home_r["net"]["net_monthly_eur"]
+                    _home_exp = float(_home_r["budget"]["total_eur"])
+                    _home_surplus = float(_home_r["surplus"])
+                    st.caption(
+                        f"Home: **{city_inputs[home_city_slug]['name']}** — "
+                        f"net €{_home_net:,.0f}/mo · expenses €{_home_exp:,.0f}/mo · "
+                        f"surplus **€{_home_surplus:+,.0f}/mo**"
+                    )
+                    _ts_rows = []
+                    for _slug in _dest_slugs:
+                        _ci = city_inputs[_slug]
+                        _dest_r = results_matrix[_slug][_ref_scen]
+                        _dest_exp = float(_dest_r["budget"]["total_eur"])
+                        _eur_rate = _ci["eur_rate"]
+                        _ccy = _ci["currency"]
+                        try:
+                            _tg_local = find_gross_to_match_surplus(
+                                home_net_monthly_eur=_home_net,
+                                home_expenses_eur=_home_exp,
+                                dest_expenses_eur=_dest_exp,
+                                country_code=_ci["country_code"],
+                                active_schemes=_ci["active_schemes"] or None,
+                            )
+                            _cur_eur = _ci["gross"] * _eur_rate
+                            _tg_eur = _tg_local * _eur_rate
+                            _gap = _tg_eur - _cur_eur
+                            _ts_rows.append(
+                                {
+                                    "City": _ci["name"],
+                                    "Current gross (€/yr)": f"€{_cur_eur:,.0f}",
+                                    "Target gross (€/yr)": f"€{_tg_eur:,.0f}",
+                                    "Gap (€/yr)": f"€{_gap:+,.0f}",
+                                    f"Target ({_ccy}/yr)": (
+                                        f"{_ccy} {_tg_local:,.0f}" if _ccy != "EUR" else "—"
+                                    ),
+                                    "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
+                                }
+                            )
+                        except Exception:
+                            _ts_rows.append(
+                                {
+                                    "City": _ci["name"],
+                                    "Current gross (€/yr)": "—",
+                                    "Target gross (€/yr)": "—",
+                                    "Gap (€/yr)": "—",
+                                    f"Target ({_ccy}/yr)": "—",
+                                    "Dest expenses (€/mo)": f"€{_dest_exp:,.0f}",
+                                }
+                            )
+                    st.dataframe(pd.DataFrame(_ts_rows).set_index("City"), width="stretch")
+                    st.caption(
+                        f"_Target gross_ = annual gross yielding the same monthly surplus "
+                        f"as home (€{_home_surplus:+,.0f}/mo), after local taxes and "
+                        "destination cost of living. Based on Comfortable scenario."
+                    )
 
+            # ── 🧳 Move Readiness ─────────────────────────────────────────────
             with st.expander("🧳 Move Readiness", expanded=True):
-                st.info(
-                    "🚧 Coming soon: How much cash you need ready before day 1 "
-                    "(relocation costs + 3-month buffer)."
-                )
+                if not has_actuals:
+                    st.info(
+                        "Enter your actual expenses in **📋 My Setup** to unlock "
+                        "move readiness calculations."
+                    )
+                elif not _dest_slugs:
+                    st.info("Add at least one destination city in **📋 My Setup**.")
+                else:
+                    _mr_col1, _mr_col2 = st.columns(2)
+                    with _mr_col1:
+                        _reloc_cost = st.number_input(
+                            "One-off relocation costs (flights, shipping, admin) €",
+                            min_value=0,
+                            max_value=30_000,
+                            value=3_000,
+                            step=500,
+                            key="neg_reloc_cost",
+                            help="EU short-haul: €1,000–4,000. International: €3,000–8,000.",
+                        )
+                    with _mr_col2:
+                        _buffer_mo = st.slider(
+                            "Cash buffer (months of dest expenses)",
+                            min_value=1,
+                            max_value=6,
+                            value=3,
+                            key="neg_buffer_months",
+                            help="Months of living expenses to have in the bank on day 1.",
+                        )
+                    _mr_rows = []
+                    for _slug in _dest_slugs:
+                        _ci = city_inputs[_slug]
+                        _dest_r = results_matrix[_slug][_ref_scen]
+                        _dest_exp = float(_dest_r["budget"]["total_eur"])
+                        _city_d = get_city_data(_slug)
+                        _rent = float(
+                            _city_d.get("cost_of_living", {})
+                            .get("rent_2bed", {})
+                            .get("comfortable", 0)
+                        )
+                        _deposit = _rent * 2
+                        _buffer = _dest_exp * _buffer_mo
+                        _total = _buffer + _deposit + _reloc_cost
+                        _mr_rows.append(
+                            {
+                                "City": _ci["name"],
+                                f"{_buffer_mo}mo buffer (€)": f"€{_buffer:,.0f}",
+                                "Rent deposit 2mo (€)": f"€{_deposit:,.0f}",
+                                "Relocation (€)": f"€{_reloc_cost:,.0f}",
+                                "Total cash needed (€)": f"€{_total:,.0f}",
+                            }
+                        )
+                    st.dataframe(pd.DataFrame(_mr_rows).set_index("City"), width="stretch")
+                    st.caption(
+                        "Buffer = destination monthly expenses × months. "
+                        "Deposit = 2 × comfortable 2-bed rent. "
+                        "Relocation = one-off amount above."
+                    )
 
+            # ── 🎁 Sign-on Bonus ──────────────────────────────────────────────
             with st.expander("🎁 Sign-on Bonus", expanded=True):
-                st.info(
-                    "🚧 Coming soon: The gross sign-on bonus to ask for to cover relocation costs."
-                )
+                if not has_actuals:
+                    st.info("Enter your actual expenses in **📋 My Setup** first.")
+                elif not _dest_slugs:
+                    st.info("Add at least one destination city in **📋 My Setup**.")
+                else:
+                    _so_rows = []
+                    _reloc_ref = st.session_state.get("neg_reloc_cost", 3_000)
+                    _buf_ref = st.session_state.get("neg_buffer_months", 3)
+                    for _slug in _dest_slugs:
+                        _ci = city_inputs[_slug]
+                        _dest_r = results_matrix[_slug][_ref_scen]
+                        _dest_exp = float(_dest_r["budget"]["total_eur"])
+                        _eff_rate = _dest_r["net"]["effective_rate"]
+                        _city_d = get_city_data(_slug)
+                        _rent = float(
+                            _city_d.get("cost_of_living", {})
+                            .get("rent_2bed", {})
+                            .get("comfortable", 0)
+                        )
+                        _deposit = _rent * 2
+                        _net_needed = _dest_exp * _buf_ref + _deposit + _reloc_ref
+                        _gross_signon = (
+                            _net_needed / (1.0 - _eff_rate) if 0 < _eff_rate < 1 else _net_needed
+                        )
+                        _so_rows.append(
+                            {
+                                "City": _ci["name"],
+                                "Net needed (€)": f"€{_net_needed:,.0f}",
+                                "Effective tax": f"{_eff_rate * 100:.1f}%",
+                                "Ask gross sign-on (€)": f"€{_gross_signon:,.0f}",
+                            }
+                        )
+                    st.dataframe(pd.DataFrame(_so_rows).set_index("City"), width="stretch")
+                    st.caption(
+                        "Gross sign-on = net relocation costs ÷ (1 − effective tax rate). "
+                        "Use as a negotiation floor. Inputs from Move Readiness above."
+                    )
 
+            # ── 🛂 Permit Timeline ────────────────────────────────────────────
             with st.expander("🛂 Permit Timeline", expanded=True):
-                st.info(
-                    "🚧 Coming soon: Work permit path, timeline, complexity, and costs "
-                    "for each destination."
+                _is_eu = st.toggle(
+                    "I hold an EU / EEA passport",
+                    value=True,
+                    key="neg_is_eu_eea",
+                    help=(
+                        "EU/EEA nationals have freedom of movement in EU member states "
+                        "— no work permit required."
+                    ),
                 )
+                _passport_key = "eu_eea" if _is_eu else "non_eu"
+                _complexity_icon = {"low": "🟢", "medium": "🟡", "high": "🔴"}
+                if not _dest_slugs:
+                    st.info("Add at least one destination city in **📋 My Setup**.")
+                else:
+                    for _slug in _dest_slugs:
+                        _ci = city_inputs[_slug]
+                        _city_d = get_city_data(_slug)
+                        _permit = _city_d.get("permit", {}).get(_passport_key, {})
+                        st.markdown(f"#### {_ci['name']}")
+                        if not _permit:
+                            st.warning("Permit data not available for this city.")
+                        else:
+                            _p_col1, _p_col2 = st.columns([3, 1])
+                            with _p_col1:
+                                st.markdown(f"**Path:** {_permit.get('path', '—')}")
+                                for _step in _permit.get("steps", []):
+                                    st.markdown(f"- {_step}")
+                                if _permit.get("notes"):
+                                    st.caption(_permit["notes"])
+                            with _p_col2:
+                                _weeks = _permit.get("timeline_weeks", 0)
+                                st.metric(
+                                    "Timeline",
+                                    "Immediate" if _weeks == 0 else f"{_weeks} wks",
+                                )
+                                _cx = _permit.get("complexity", "")
+                                if _cx:
+                                    st.markdown(
+                                        f"{_complexity_icon.get(_cx, '⚪')} **{_cx.capitalize()}** complexity"
+                                    )
+                                if not _is_eu:
+                                    _costs = _permit.get("costs_eur", 0)
+                                    if _costs:
+                                        st.metric("Govt fees", f"≈ €{_costs:,}")
+                                    if _permit.get("sponsor_required"):
+                                        st.caption("🏢 Employer sponsorship required")
+                        st.divider()
