@@ -202,19 +202,23 @@ career:
 
 permit:
   eu_eea:
-    timeline: '2-4 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 3
     steps:
-      - 'Register at OCPM (Office cantonal de la population et des migrations) within 14 days'
-      - 'Employer notifies OCPM'
-      - 'Permit B issued (5-year, renewable)'
+      - "Register at OCPM (Office cantonal de la population et des migrations) within 14 days"
+      - "Employer notifies OCPM of employment"
+      - "Permit B (1-year, renewable to 5-year) or Permit L (short-stay) issued"
+    notes: "AFMP free movement. Fee ~CHF 145. Register within 8 days. Permit required for bank account and rental agreement."
   non_eu:
-    timeline: '16-24 weeks'
+    path: "Employer-sponsored cantonal work permit"
+    timeline_weeks: 12
     steps:
-      - 'Cantonal quota - Geneva has a separate allocation from Zurich'
-      - 'Employer applies at OCPM with full documentation'
-      - 'Federal SEM approval'
-      - 'Labour market test required (Inlaendervorrang)'
-  complexity: high
-  sponsor_required: true
-  costs_eur: 145
-  notes: 'Same federal rules as Zurich but under Geneva cantonal jurisdiction. Geneva hosts many international organisations (UN, ICRC, WHO, CERN, WTO) - these use different accreditation processes outside Swiss immigration law. Finance (private banking, commodity trading) and pharma employers in the Geneva arc are experienced sponsors. International school costs in Geneva are very high if children are involved.'
+      - "Employer checks cantonal quota availability (very limited annual slots)"
+      - "Employer submits application to OCPM with full documentation"
+      - "Federal SEM (State Secretariat for Migration) approval"
+      - "Labour market test (Inlaendervorrang): Swiss/EU/EFTA candidates must be ruled out first"
+      - "Permit issued; register with OCPM on arrival"
+    complexity: "high"
+    sponsor_required: true
+    costs_eur: 100
+    notes: "Strictly limited annual cantonal quotas. International organisations (UN, WHO, ICRC, CERN, WTO) use separate accreditation outside Swiss immigration law."

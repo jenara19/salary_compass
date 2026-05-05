@@ -147,18 +147,21 @@ career:
 
 permit:
   eu_eea:
-    timeline: '3-8 weeks'
+    path: "Skilled Worker visa required (same as non-EU post-Brexit)"
+    timeline_weeks: 6
     steps:
-      - 'Employer obtains Certificate of Sponsorship (CoS) from licensed sponsor'
-      - 'Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)'
-      - 'Pay NHS Immigration Health Surcharge upfront for full visa duration'
+      - "Employer obtains Certificate of Sponsorship (CoS) from licensed Home Office sponsor"
+      - "Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)"
+      - "Pay NHS Immigration Health Surcharge (GBP 1,035/year) upfront for full visa duration"
+    notes: "Post-Brexit: EU citizens have no preferential treatment - same Skilled Worker visa as non-EU. Many employers cover the visa fee."
   non_eu:
-    timeline: '3-8 weeks'
+    path: "Employer-sponsored Skilled Worker visa"
+    timeline_weeks: 6
     steps:
-      - 'Same process as EU nationals post-Brexit - no preferential treatment'
-      - 'Employer must hold a Home Office Tier 2 sponsor licence'
-      - 'Skilled Worker visa: points-based system (job offer + salary + English)'
-  complexity: high
-  sponsor_required: true
-  costs_eur: 1900
-  notes: 'Post-Brexit all non-British nationals need a Skilled Worker visa - EU citizens no longer have preferential treatment. NHS Immigration Health Surcharge: £1,035/year per person paid upfront (3-year visa = £3,105 upfront). Many employers cover the fee - always negotiate. Priority processing: £500 extra for 5-day decision. Employer must be a licensed sponsor (check UKVI register). Visa does not permit self-employment.'
+      - "Employer holds Home Office Tier 2 sponsor licence and issues Certificate of Sponsorship"
+      - "Apply for Skilled Worker visa: points-based (job offer + salary threshold + English)"
+      - "Pay NHS Immigration Health Surcharge upfront for full visa duration"
+    complexity: "high"
+    sponsor_required: true
+    costs_eur: 1900
+    notes: "Points-based system applies equally to EU and non-EU nationals post-Brexit. Priority processing: +GBP 500 for 5-day decision. Visa does not permit self-employment."

@@ -27,18 +27,22 @@ career:
 
 permit:
   eu_eea:
-    timeline: '2-5 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 3
     steps:
-      - 'Anmeldung (residence registration) at Burgeramt within 14 days - very important'
-      - 'EU free movement: no work permit needed, no quota system'
-      - 'Tax ID (Steuer-ID) issued automatically by post within 4 weeks'
+      - "Anmeldung (residence registration) at Buergeramt within 14 days - very important"
+      - "EU free movement applies: no work permit or quota system"
+      - "Tax ID (Steuer-ID) issued automatically by post within 4 weeks"
+    notes: "Anmeldung is the critical first step - required for bank account, health insurance, and employer tax setup. Buergeramt appointments typically 2-4 weeks wait."
   non_eu:
-    timeline: '8-16 weeks'
+    path: "EU Blue Card or employer-sponsored work permit"
+    timeline_weeks: 10
     steps:
-      - 'Apply for national visa (Arbeitsvisa) at German embassy/consulate in home country'
-      - 'Employer provides work contract and Vorabzustimmung (advance approval) from Auslaenderbehoerde'
-      - 'Aufenthaltserlaubnis (residence permit) obtained at Burgeramt after arrival'
-  complexity: medium
-  sponsor_required: false
-  costs_eur: 100
-  notes: 'Germany Fachkraeftemigration (Skilled Immigration Act, expanded 2023) makes it significantly easier for qualified non-EU workers. EU Blue Card: available for university graduates earning above EUR 48,300 (2025 threshold) - fast-tracks to permanent residence after 21-33 months. Opportunity Card (Chancenkarte): allows 1 year to job-seek without offer. Kirchensteuer: write keine on Anmeldung to avoid 8% of income tax charge. Anmeldung is the most critical first step - required for bank account, health insurance enrollment, employer tax setup.'
+      - "Apply for national visa (Arbeitsvisa) at German embassy/consulate in home country"
+      - "Employer provides signed work contract and Vorabzustimmung from Auslaenderbehoerde"
+      - "Arrive; obtain EU Blue Card or Aufenthaltserlaubnis at Buergeramt"
+      - "Biometrics collected; residence card issued"
+    complexity: "medium"
+    sponsor_required: false
+    costs_eur: 140
+    notes: "Same federal rules as Berlin. EU Blue Card: salary >= EUR 45,552 (general) or EUR 35,760 (shortage). Opportunity Card (Chancenkarte) allows 1 year to job-seek without offer."

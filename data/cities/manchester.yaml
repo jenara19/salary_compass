@@ -27,18 +27,21 @@ career:
 
 permit:
   eu_eea:
-    timeline: '3-8 weeks'
+    path: "Skilled Worker visa required (same as non-EU post-Brexit)"
+    timeline_weeks: 6
     steps:
-      - 'Employer obtains Certificate of Sponsorship from licensed sponsor'
-      - 'Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)'
-      - 'Pay NHS Immigration Health Surcharge upfront'
+      - "Employer obtains Certificate of Sponsorship from licensed Home Office sponsor"
+      - "Apply for Skilled Worker visa via UK Visas and Immigration (UKVI)"
+      - "Pay NHS Immigration Health Surcharge (GBP 1,035/year) upfront for full visa duration"
+    notes: "Post-Brexit: EU citizens have no preferential treatment. Manchester employers (MediaCity, NHS, BBC, Amazon) are well-established sponsors."
   non_eu:
-    timeline: '3-8 weeks'
+    path: "Employer-sponsored Skilled Worker visa"
+    timeline_weeks: 6
     steps:
-      - 'Same process as EU nationals post-Brexit'
-      - 'Employer must hold Home Office sponsor licence'
-      - 'Points-based Skilled Worker system'
-  complexity: high
-  sponsor_required: true
-  costs_eur: 1900
-  notes: 'Identical UK-wide rules to London. Manchester employers (MediaCity, Manchester Airport, NHS, BBC) are established sponsors. Processing time same as London. NHS IHS: £1,035/year paid upfront. Many digital/tech companies cover visa costs - ask before signing.'
+      - "Employer holds Home Office Tier 2 sponsor licence and issues Certificate of Sponsorship"
+      - "Apply for Skilled Worker visa: points-based (job offer + salary threshold + English)"
+      - "Pay NHS Immigration Health Surcharge upfront for full visa duration"
+    complexity: "high"
+    sponsor_required: true
+    costs_eur: 1900
+    notes: "Identical UK-wide rules to London. NHS IHS: GBP 1,035/year paid upfront. Many digital/tech companies cover visa costs."

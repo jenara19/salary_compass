@@ -160,18 +160,23 @@ career:
 
 permit:
   eu_eea:
-    timeline: '1-2 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 1
     steps:
-      - 'Register at Folkeregisteret (Tax Administration) within 8 days of arrival'
-      - 'Obtain D-nummer or fødselsnummer (permanent ID)'
-      - 'No work permit needed - EU/EEA free movement applies'
+      - "Register at Folkeregisteret (Tax Administration) within 8 days of arrival"
+      - "Obtain D-nummer (temporary) or foedselsnummer (permanent national ID)"
+      - "No work permit needed - EU/EEA free movement applies"
+    notes: "Get skattekort (tax withholding card) from Skatteetaten ASAP - without it employer withholds 50% tax. BankID requires foedselsnummer."
   non_eu:
-    timeline: '8-16 weeks'
+    path: "Employer-sponsored skilled worker permit"
+    timeline_weeks: 10
     steps:
-      - 'Employer submits job offer to UDI (Utlendingsdirektoratet)'
-      - 'Applicant applies for residence permit at Norwegian consulate/embassy'
-      - 'Combined residence + work permit issued (skilled worker category)'
-  complexity: medium
-  sponsor_required: true
-  costs_eur: 550
-  notes: 'EU/EEA: among Europe simplest - register and start. Get skattekort (tax card) from Skatteetaten ASAP - without it employer withholds 50% tax from first salary. Non-EU skilled worker: salary must exceed minimum threshold (around NOK 500k full-time, 2025). Norwegian language not required for tech/finance roles but helps integration. BankID requires fødselsnummer - can take 6-10 weeks to obtain.'
+      - "Apply for skilled worker residence permit via UDI portal from home country"
+      - "Pay UDI application fee (~NOK 6,300)"
+      - "Biometrics at Norwegian embassy/consulate in home country"
+      - "Permit decision received; arrive in Norway"
+      - "Register with police/UDI and collect residence card"
+    complexity: "medium"
+    sponsor_required: true
+    costs_eur: 600
+    notes: "Must have job offer and qualifications. Salary must exceed ~NOK 500k full-time (2025). Norwegian language not required for tech/finance roles."

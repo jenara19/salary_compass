@@ -27,18 +27,22 @@ career:
 
 permit:
   eu_eea:
-    timeline: '2-4 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 2
     steps:
-      - 'Anmeldung (residence registration) at Burgeramt within 14 days - book appointment asap'
-      - 'EU free movement: no work permit or quota system'
-      - 'Tax ID (Steuer-ID) issued automatically within 4 weeks'
+      - "Anmeldung (residence registration) at Buergeramt within 14 days - book appointment ASAP"
+      - "EU free movement applies: no work permit or quota system"
+      - "Tax ID (Steuer-ID) issued automatically by post within 4 weeks"
+    notes: "Berlin Buergeramt appointments often have 4-6 week waits. Some districts accept walk-ins early morning. Kirchensteuer: write keine on Anmeldung."
   non_eu:
-    timeline: '8-16 weeks'
+    path: "EU Blue Card or employer-sponsored work permit"
+    timeline_weeks: 10
     steps:
-      - 'Apply for national visa at German embassy in home country'
-      - 'Employer provides signed contract and Vorabzustimmung from Auslaenderbehoerde'
-      - 'Aufenthaltserlaubnis obtained at Auslaenderbehoerde after arrival'
-  complexity: medium
-  sponsor_required: false
-  costs_eur: 100
-  notes: 'Same rules as Munich - German federal system. Berlin Burgeramt appointments are notoriously slow - book online as soon as you know your move date (often 4-6 week wait for Anmeldung). Workaround: some districts accept walk-ins early morning. EU Blue Card: EUR 48,300 threshold (general), EUR 37,674 for STEM/shortage occupations (2025). Kirchensteuer: write keine on Anmeldung. Berlin is EU largest English-speaking tech hub - most employers experienced with EU and non-EU permits.'
+      - "Apply for national visa (D-Visum) at German embassy in home country"
+      - "Employer provides signed contract and Vorabzustimmung from Auslaenderbehoerde"
+      - "Arrive; obtain EU Blue Card or Aufenthaltserlaubnis at Auslaenderbehoerde"
+      - "Biometrics collected; card issued and mailed"
+    complexity: "medium"
+    sponsor_required: false
+    costs_eur: 140
+    notes: "EU Blue Card: salary >= EUR 45,552 (general) or EUR 35,760 (STEM/shortage). No recognised-sponsor requirement - employer provides job offer and Vorabzustimmung."
