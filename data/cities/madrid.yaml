@@ -137,19 +137,22 @@ career:
 
 permit:
   eu_eea:
-    timeline: '1-3 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 2
     steps:
-      - 'Obtain NIE at Extranjeria or via consulate abroad'
-      - 'Register at Ayuntamiento padron municipal (same day, free)'
-      - 'Apply for TIE for stays more than 3 months - cita previa wait 2-4 weeks'
+      - "Obtain NIE at Extranjeria or via consulate abroad (EUR 10.24 fee, Modelo 790-012)"
+      - "Register at Ayuntamiento padron municipal (same day, free)"
+      - "Apply for TIE residency card for stays >3 months (cita previa wait 2-4 weeks)"
+    notes: "Empadronamiento required before TIE and most bank accounts. NIE appointment waits 3-8 weeks in Madrid (2025)."
   non_eu:
-    timeline: '10-20 weeks'
+    path: "Employer-sponsored work permit / visa"
+    timeline_weeks: 16
     steps:
-      - 'Employer requests Autorizacion de Residencia y Trabajo at Delegacion del Gobierno'
-      - 'Labour market test unless role is on shortage list'
-      - 'Employee applies at Spanish consulate in home country'
-      - 'TIE card on arrival in Spain'
-  complexity: medium
-  sponsor_required: true
-  costs_eur: 20
-  notes: 'Beckham Law: apply via Modelo 149 within 6 months of first payslip - no extensions. EU citizens: NIE appointment waits 3-8 weeks in Madrid (2025). Hire a gestoria (150-350 euros). Empadronamiento required before TIE and before opening most bank accounts.'
+      - "Employer requests Autorizacion de Residencia y Trabajo at Delegacion del Gobierno"
+      - "Labour market test unless role is on shortage occupations list"
+      - "Approval received; employee applies at Spanish consulate in home country"
+      - "Arrive in Spain; register at padron and obtain TIE card"
+    complexity: "high"
+    sponsor_required: true
+    costs_eur: 75
+    notes: "Same national rules as Barcelona. Beckham Law: apply via Modelo 149 within 6 months of first payslip - no extensions."

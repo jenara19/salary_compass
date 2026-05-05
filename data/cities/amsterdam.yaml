@@ -28,18 +28,21 @@ career:
 
 permit:
   eu_eea:
-    timeline: "1–3 weeks"
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 1
     steps:
-      - "Register at city hall (DigiD + BSN — can be obtained same day at Gemeente)"
-      - "No work permit needed — EU free movement applies"
-      - "Optional: apply for BSN on Day 1 to unlock banking and utilities faster"
+      - "Register at gemeente (city hall) within 5 days of establishing residence"
+      - "Obtain BSN number (can be done same day at Gemeente appointment)"
+      - "No work permit needed - EU free movement applies"
+    notes: "BSN is required for banking, utilities, and employer tax setup. Apply for DigiD for digital government services."
   non_eu:
-    timeline: "8–14 weeks"
+    path: "Employer-sponsored Highly Skilled Migrant (HSM) permit"
+    timeline_weeks: 7
     steps:
-      - "Employer applies for TWV (tewerkstellingsvergunning) at UWV"
-      - "IND processes combined residence + work permit (GVVA)"
-      - "Non-exempt nationalities: apply for MVV visa at Dutch embassy first"
-  complexity: medium
-  sponsor_required: true
-  costs_eur: 0
-  notes: "EU/EEA: free movement — just register. 30% ruling application: file with employer within 4 months of start date; backdating only to employment start. Non-EU: employer bears full permit cost. IND decisions typically 8–14 weeks; priority track (€1,400) available. Highly skilled migrant permit fast-track (5 weeks) available if salary above €5,688/mo (2026 threshold)."
+      - "Employer (IND-recognised sponsor) submits HSM/kennismigrant permit application to IND"
+      - "Non-exempt nationalities apply for MVV entry visa at Dutch embassy"
+      - "Arrive and register at gemeente to obtain BSN"
+    complexity: "low"
+    sponsor_required: true
+    costs_eur: 350
+    notes: "IND fast-track 2-4 weeks if employer is recognised sponsor. 30% ruling: file within 4 months of start date."

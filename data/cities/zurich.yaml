@@ -110,19 +110,23 @@ career:
 
 permit:
   eu_eea:
-    timeline: '2-4 weeks'
+    path: "Freedom of movement / no permit needed"
+    timeline_weeks: 3
     steps:
-      - 'Register at Einwohnerkontrolle within 14 days of arrival'
-      - 'Employer notifies cantonal migration office (Migrationsamt)'
-      - 'Permit B (5-year renewable) or Permit L (short-stay) issued'
+      - "Register at Einwohnerkontrolle within 14 days of arrival"
+      - "Employer notifies cantonal migration office (Migrationsamt)"
+      - "Permit B (5-year renewable) or Permit L (short-stay) issued"
+    notes: "AFMP free movement. Admin fee ~CHF 25. Permit B required for bank account and rental agreement. Keep permit valid - gaps can reset years toward Permit C."
   non_eu:
-    timeline: '16-24 weeks'
+    path: "Employer-sponsored cantonal work permit"
+    timeline_weeks: 7
     steps:
-      - 'Cantonal quota allocation required - limited slots per year'
-      - 'Employer applies at cantonal Migrationsamt with full documentation'
-      - 'Federal SEM approval required after cantonal recommendation'
-      - 'Labour market test (Inlaendervorrang): Swiss/EU/EFTA candidates must be ruled out first'
-  complexity: high
-  sponsor_required: true
-  costs_eur: 145
-  notes: 'Switzerland uses strict annual cantonal quotas for non-EU nationals. Inlaendervorrang (Swiss/EU priority) means the employer must document why no local candidate was suitable. Tech, finance, and pharma get quota exceptions more easily than other sectors. Start the process months before the intended start date. Permit B holders: keep it valid - gaps in residency can reset years toward Permit C (permanent). Pillar 3a pension: can only be opened once you have a work permit.'
+      - "Cantonal quota allocation required - limited annual slots from Migrationsamt"
+      - "Employer submits application at cantonal Migrationsamt with full documentation"
+      - "Federal SEM (State Secretariat for Migration) approval"
+      - "Labour market test (Inlaendervorrang): Swiss/EU/EFTA candidates must be ruled out first"
+      - "Permit issued; register at Einwohnerkontrolle on arrival"
+    complexity: "high"
+    sponsor_required: true
+    costs_eur: 145
+    notes: "Strict annual cantonal quotas. Tech, finance, and pharma get quota exceptions more easily. Start months before intended start date. Pillar 3a pension only after work permit is in hand."
