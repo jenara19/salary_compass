@@ -270,3 +270,27 @@ def find_target_gross(
             break
 
     return round(hi)
+
+
+def find_gross_to_match_surplus(
+    *,
+    home_net_monthly_eur: float,
+    home_expenses_eur: float,
+    dest_expenses_eur: float,
+    country_code: str,
+    active_schemes: list[str] | None = None,
+    scheme_overrides: dict[str, dict] | None = None,
+) -> float:
+    """Return the gross needed in dest country so monthly surplus matches home surplus.
+
+    Home surplus  = home_net_monthly_eur - home_expenses_eur
+    Target dest net = home_surplus + dest_expenses_eur
+    """
+    home_surplus = home_net_monthly_eur - home_expenses_eur
+    target_net = home_surplus + dest_expenses_eur
+    return find_target_gross(
+        target_net_monthly_eur=target_net,
+        country_code=country_code,
+        active_schemes=active_schemes,
+        scheme_overrides=scheme_overrides,
+    )
