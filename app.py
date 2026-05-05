@@ -1609,11 +1609,13 @@ with tab_compare:
                 )
 
             for city_slug in city_inputs:
+                city_events: set[str] = set()
                 for scen in scenarios_def:
                     traj = results_matrix[city_slug][scen["name"]]["trajectory"]
-                    all_events = [e for yr in traj for e in yr.get("events", [])]
-                    for ev in set(all_events):
-                        st.warning(f"{city_names[city_slug]} · {scen['name']}: {ev}")
+                    for yr in traj:
+                        city_events.update(yr.get("events", []))
+                for ev in sorted(city_events):
+                    st.warning(f"{city_names[city_slug]}: {ev}")
 
             # ── 30% Ruling / Beckham Law cliff analysis ──────────────────────
             cliff_entries = []
