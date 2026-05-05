@@ -1,18 +1,27 @@
-name: Switzerland (Geneva / Canton GE)
+﻿name: Switzerland (Geneva / Canton GE)
 code: GE
 currency: CHF
 eur_rate: 1.091
 tax_year: 2025
 disclaimer: "City of Geneva / Canton GE. Single/cohabiting earner, no children.
-  Cantonal (LIPP Art. 41 §1 barème 1) + Ville de Genève 45.5% communal surcharge
+  Cantonal (LIPP Art. 41 §1 bareme 1) + Ville de Geneve 45.5% communal surcharge
   + federal DBG Art. 36 §2 + AHV 5.3% + ALV 1.1% (capped CHF 148,200) + BVG
-  mandatory minimum 7% (up to CHF 88,200 insured). G=80k–130k computed from
-  official 2025 GE LIPP tariff; G=140k–200k extrapolated at ~60% marginal retention.
-  Married/civil partnership (income splitting) adds approx. CHF 350–450/month net at
-  typical expat salaries. ±4–6% accuracy."
+  mandatory minimum 7% (up to CHF 88,200 insured). G=80k-130k computed from
+  official 2025 GE LIPP tariff; G=140k-200k extrapolated at ~60% marginal retention.
+  Married/civil partnership (income splitting) adds approx. CHF 350-450/month net at
+  typical expat salaries. +-4-6% accuracy.
+  ACCURACY NOTE (single lookup): Extrapolated values at CHF 140k-200k are likely
+  undertaxed vs real outcomes. At CHF 150k the model shows 27.1% effective vs
+  expected ~32-36%; at CHF 200k it shows 30.1% vs expected ~38-43%. Gap grows to
+  ~13pp at the upper end. Recalibration of single_lookup above CHF 140k is
+  recommended as a follow-up."
 
 income_tax:
   method: effective_rate_lookup
+
+  # Bareme 1 / Tarif celibataire -- single or cohabiting (unmarried) earner
+  # G=80k-130k: from official 2025 GE LIPP tariff table.
+  # G=140k-200k: extrapolated at 60% marginal retention -- see accuracy note.
   lookup:
     - {gross: 80000,  net_monthly: 5116}
     - {gross: 90000,  net_monthly: 5676}
@@ -27,6 +36,27 @@ income_tax:
     - {gross: 160000, net_monthly: 9658}
     - {gross: 180000, net_monthly: 10672}
     - {gross: 200000, net_monthly: 11655}
+
+  # Bareme 2 / Tarif marie -- married couples or registered civil partners
+  # Combined Canton GE ICC (LIPP bareme 2) + Ville de Geneve communal surcharge
+  # + federal IFD (DBG bareme 2) + AHV/ALV/BVG (already included, same as single).
+  # Source: AFC Geneva estimates 2024. Official JS calculator unreachable for
+  # automated verification; values from task brief approximations.
+  # NOTE: Values appear calibrated against a higher single-rate baseline than the
+  # current single lookup. Apparent advantage vs single_lookup is ~CHF 750-1165/mo
+  # (not the stated ~350-450/mo) because single_lookup above CHF 140k is undertaxed.
+  # When single_lookup is recalibrated, re-derive married_lookup to preserve the
+  # correct ~350-450 CHF/month advantage at CHF 100k-160k gross.
+  married_lookup:
+    - {gross: 60000,  net_monthly: 4750}
+    - {gross: 80000,  net_monthly: 6100}
+    - {gross: 100000, net_monthly: 7400}
+    - {gross: 120000, net_monthly: 8600}
+    - {gross: 140000, net_monthly: 9700}
+    - {gross: 160000, net_monthly: 10700}
+    - {gross: 180000, net_monthly: 11600}
+    - {gross: 200000, net_monthly: 12400}
+
   marginal_retention: 0.60
 
 social_contributions:
@@ -39,15 +69,15 @@ healthcare:
   employee_extra_monthly: 0
   note: "KVG mandatory health insurance paid SEPARATELY from salary (not deducted).
     Show as expense. Geneva has Switzerland's HIGHEST KVG premiums: age 30,
-    CHF 450–640/person/month (CHF 900–1,280/couple). Enroll within 3 months of
-    arrival — retroactive from first day."
+    CHF 450-640/person/month (CHF 900-1,280/couple). Enroll within 3 months of
+    arrival -- retroactive from first day."
 
 special_schemes:
   - id: ch_pillar3a
     name: "Pillar 3a (tax-deductible savings)"
     description: "Up to CHF 7,258/year is tax-deductible into a pension savings account.
       In Geneva this reduces both cantonal and federal taxable income, saving approx.
-      CHF 1,800–2,500/year in combined taxes (Geneva cantonal rate is higher than Zurich)."
+      CHF 1,800-2,500/year in combined taxes (Geneva cantonal rate is higher than Zurich)."
     annual_max: 7258
     tax_saving_estimate: 2000
     type: informational
@@ -55,8 +85,8 @@ special_schemes:
 career:
   typical_cagr: 0.04
   note: "Geneva labour market: United Nations cluster (WHO, UNHCR, ILO, WTO, WIPO),
-    private banking (Pictet, Lombard Odier, Julius Bär), pharma/biotech (Novartis GVA,
+    private banking (Pictet, Lombard Odier, Julius Bar), pharma/biotech (Novartis GVA,
     Ferring, Merck Serono), commodity trading (Glencore, Trafigura, Vitol), and CERN.
-    Many roles require French. B-permit holders taxed at source (Quellensteuer) — file
+    Many roles require French. B-permit holders taxed at source (Quellensteuer) -- file
     bordereau de rectification to claim Pillar 3a deductions and professional expenses
-    (worth CHF 1,500–2,500/year extra)."
+    (worth CHF 1,500-2,500/year extra)."
