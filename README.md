@@ -2,6 +2,8 @@
 
 Compare net income, cost of living, and 10-year career trajectory across European cities.
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://salarycompass.streamlit.app)
+
 ## Countries supported
 🇪🇸 Spain · 🇳🇱 Netherlands · 🇨🇭 Switzerland · 🇩🇪 Germany · 🇳🇴 Norway · 🇬🇧 United Kingdom
 
@@ -18,24 +20,34 @@ Madrid, Barcelona, Rotterdam, Amsterdam, Zurich, Geneva, Berlin, Munich, Oslo, L
 - **10-year savings trajectory** with salary growth, CoL inflation, and scheme expiry cliff analysis
 - **Negotiation tools**: exact break-even salary via binary search, salary ladder chart
 - **Move readiness**: mandatory upfront costs, 3-month buffer, sign-on bonus recommendation
-- **Permit & visa timeline** for all 11 cities (EU/EEA and non-EU paths)
+- **Permit & visa timeline** for all 11 cities (EU/EEA and non-EU paths, complexity rating, government fees)
 - **Profile save/load** — persist your setup across sessions
 - **Tax-free perks** — travel allowance and meal vouchers per city (threaded through trajectory)
 - **Excel export** — ⬇️ Download a 5-sheet workbook (Summary, Budget Breakdown, Trajectory, Negotiation Targets, Assumptions)
 
-## Quick start
+## Quick start (local)
 
 ```bash
-# Python 3.10+ required
+# Recommended — with uv
+uv sync && uv run streamlit run app.py
+
+# Or with plain pip
 pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
 Open http://localhost:8501 in your browser.
 
-👉 **New to Python or setting this up on a fresh machine? Read [SETUP.md](SETUP.md) for full step-by-step instructions.**
+👉 **New to Python or setting this up on a fresh machine? Read [SETUP.md](SETUP.md) for step-by-step instructions.**
 
-> Use `python -m streamlit` rather than `streamlit run` — the CLI shortcut may not be on PATH.
+## Deploy to Streamlit Community Cloud
+
+1. Fork or clone this repo to your GitHub account
+2. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
+3. Select your repo, branch `main`, entrypoint `app.py`
+4. Click **Deploy** — no secrets or environment variables required
+
+The `requirements.txt` and `runtime.txt` (Python 3.12) are already configured.
 
 ## For developers / LLMs
 Read **[CONTEXT.md](CONTEXT.md)** first. It covers architecture, data schemas, tax engine details, known gotchas, and current state of the app.
@@ -50,42 +62,6 @@ Create `data/cities/<slug>.yaml` following the schema of any existing city file 
 
 ## Design System
 UI design tokens, color palette, typography, and component guidelines live in [`docs/DESIGN.md`](docs/DESIGN.md).
-
-## Disclaimer
-Directional estimates only. Not financial or tax advice.
-
-Compare net income, cost of living, and 10-year career trajectory across countries.
-
-## Countries supported
-🇪🇸 Spain · 🇳🇱 Netherlands · 🇨🇭 Switzerland · 🇩🇪 Germany · 🇳🇴 Norway · 🇬🇧 United Kingdom
-
-## Cities
-Madrid, Barcelona, Rotterdam, Amsterdam, Zurich, Geneva, Berlin, Munich, Oslo, London, Manchester
-
-## Quick start
-
-```bash
-# Python 3.10+ required
-pip install -r requirements.txt
-python -m streamlit run app.py
-```
-
-Open http://localhost:8501 in your browser.
-
-👉 **New to Python or setting this up on a fresh machine? Read [SETUP.md](SETUP.md) for full step-by-step instructions.**
-
-> Use `python -m streamlit` rather than `streamlit run` — the CLI shortcut may not be on PATH.
-
-## For developers / LLMs
-Read **[CONTEXT.md](CONTEXT.md)** first. It covers architecture, data schemas, tax engine details, known gotchas, and current state of the app.
-
-## Adding a new city
-Create `data/cities/<slug>.yaml` following the schema of any existing city file. No code changes needed — the app discovers cities automatically.
-
-## Adding a new country
-1. Create `data/countries/XX.yaml` with tax brackets or lookup table
-2. Create city YAMLs referencing `country: XX`
-3. Restart the app to clear cache
 
 ## Disclaimer
 Directional estimates only. Not financial or tax advice.

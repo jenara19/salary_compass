@@ -8,6 +8,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+- **Negotiate tab** (5th inner tab in Compare): Target Salary solver, Move Readiness calculator, Sign-on Bonus gross-up, Permit Timeline (EU/EEA and non-EU paths)
+- **`find_gross_to_match_surplus()`** engine function — binary-search gross to match home monthly surplus in destination city
+- **Geneva married tariff** (`married_lookup`, barème 2) in `GE.yaml`
+- **Permit YAML schema** standardised to `eu_eea`/`non_eu` nested structure for all 11 cities
+- **Streamlit Community Cloud** deployment config (`runtime.txt`, `requirements.txt`)
+
+### Changed
+- `CONTEXT.md` — removed duplicate second half, added Negotiate tab docs, new engine function, permit schema, session-portability guide
+- `README.md` — removed duplicate second half, added Streamlit Cloud badge + deploy instructions, uv quick-start
+- `.github/copilot-instructions.md` — added parallel agent coordination rules (worktree isolation, pre-flight checklist)
+
+### Removed
+- Stale "pending improvements" items that were completed (Geneva married tariff, Streamlit Cloud deploy)
+
 ---
 
 ## [1.0.0] — 2026-05-05

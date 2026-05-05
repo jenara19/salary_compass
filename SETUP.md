@@ -188,3 +188,42 @@ If you receive an updated version of `salary-compass`:
 
 See `CONTEXT.md` for the full architecture reference, data schemas, tax engine details,
 and known gotchas before making any code changes.
+
+The recommended dev setup uses [uv](https://docs.astral.sh/uv/):
+
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS/Linux
+# or: pip install uv                               # Windows
+
+# Install all deps (including dev: ruff, pytest, mypy, pre-commit)
+uv sync
+
+# Run the app
+uv run streamlit run app.py
+
+# Run tests
+uv run pytest tests/ -v
+
+# Lint
+uv run ruff check .
+```
+
+---
+
+## Deploying to Streamlit Community Cloud
+
+Share the app publicly with a free Streamlit Community Cloud account:
+
+1. Fork or clone this repository to your own GitHub account
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub
+3. Click **Create app** → **From existing repo**
+4. Select your repo, branch `main`, main file `app.py`
+5. Click **Deploy**
+
+No secrets or environment variables are required — the app reads only local YAML files.
+
+The following files are already configured for Streamlit Cloud:
+- `requirements.txt` — dependencies (pip-installable)
+- `runtime.txt` — Python version (`python-3.12`)
+- `.streamlit/config.toml` — theme settings
