@@ -2,6 +2,7 @@
 Tax calculation engine. Supports bracket method and lookup table method.
 Returns net monthly salary in LOCAL currency and EUR.
 """
+
 from __future__ import annotations
 import yaml
 from pathlib import Path
@@ -51,7 +52,9 @@ def calculate_net(
                 social_annual = _calc_social(gross_annual, country)
                 net_annual = gross_annual - tax_annual - social_annual
                 net_monthly_local = net_annual / 12
-                effective_rate = (tax_annual + social_annual) / gross_annual if gross_annual else 0
+                effective_rate = (
+                    (tax_annual + social_annual) / gross_annual if gross_annual else 0
+                )
                 net_monthly_eur = net_monthly_local * eur_rate
                 return {
                     "gross_annual": gross_annual,
@@ -85,12 +88,14 @@ def calculate_net(
                 taxable = gross_annual * scheme["multiplier"]
 
         bracket_tax = _calc_brackets(taxable, country["income_tax"])
-        credits     = _calc_tax_credits(taxable, country["income_tax"])
-        tax_annual  = max(0.0, bracket_tax - credits)
+        credits = _calc_tax_credits(taxable, country["income_tax"])
+        tax_annual = max(0.0, bracket_tax - credits)
         social_annual = _calc_social(gross_annual, country)
         net_annual = gross_annual - tax_annual - social_annual
         net_monthly_local = net_annual / 12
-        effective_rate = (tax_annual + social_annual) / gross_annual if gross_annual else 0
+        effective_rate = (
+            (tax_annual + social_annual) / gross_annual if gross_annual else 0
+        )
 
     net_monthly_eur = net_monthly_local * eur_rate
 
@@ -169,8 +174,8 @@ def _calc_phase_out_credit(income: float, credit: dict) -> float:
     """Linear phase-out credit (e.g. Algemene Heffingskorting)."""
     max_c = credit["max_credit"]
     start = credit["phase_out_start"]
-    end   = credit.get("phase_out_end", float("inf"))
-    rate  = credit["phase_out_rate"]
+    end = credit.get("phase_out_end", float("inf"))
+    rate = credit["phase_out_rate"]
     if income <= start:
         return max_c
     elif income <= end:
@@ -200,7 +205,11 @@ def _calc_social(gross: float, country: dict) -> float:
             total += contrib["monthly_flat"] * 12
         elif "rate" in contrib:
             lower = contrib.get("from", 0)
-            upper = contrib.get("up_to", country.get("social_contributions", {}).get("cap_annual", float("inf")) or float("inf"))
+            upper = contrib.get(
+                "up_to",
+                country.get("social_contributions", {}).get("cap_annual", float("inf"))
+                or float("inf"),
+            )
             base = max(0, min(gross, upper) - lower)
             total += base * contrib["rate"]
     return total
@@ -216,7 +225,11 @@ def _find_scheme(country: dict, scheme_id: str) -> Optional[dict]:
 def get_schemes(country_code: str) -> list[dict]:
     """Return list of available special schemes for a country."""
     country = load_country(country_code)
-    return [s for s in country.get("special_schemes", []) if s.get("type") != "informational"]
+    return [
+        s
+        for s in country.get("special_schemes", [])
+        if s.get("type") != "informational"
+    ]
 
 
 def find_target_gross(
@@ -237,8 +250,9 @@ def find_target_gross(
     active_schemes = active_schemes or []
 
     def net_at(gross: float) -> float:
-        return calculate_net(gross, country_code, active_schemes,
-                             scheme_overrides=scheme_overrides)["net_monthly_eur"]
+        return calculate_net(
+            gross, country_code, active_schemes, scheme_overrides=scheme_overrides
+        )["net_monthly_eur"]
 
     lo, hi = 0.0, max_gross
 
@@ -258,4 +272,3 @@ def find_target_gross(
             break
 
     return round(hi)
-

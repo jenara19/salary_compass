@@ -6,9 +6,9 @@ These tests verify that:
 - The bytes form a valid ZIP/XLSX file
 - All 5 expected sheets are present in the workbook
 """
+
 import zipfile
 import io
-import pytest
 from output.excel import generate_excel_report
 
 
@@ -52,8 +52,12 @@ def _minimal_inputs():
             "name": "comfortable",
             "label": "Comfortable",
             "category_multipliers": {
-                "rent": 1.0, "food": 1.0, "transport": 1.0,
-                "healthcare": 1.0, "entertainment": 1.0, "misc": 1.0,
+                "rent": 1.0,
+                "food": 1.0,
+                "transport": 1.0,
+                "healthcare": 1.0,
+                "entertainment": 1.0,
+                "misc": 1.0,
             },
         }
     ]
@@ -69,9 +73,13 @@ def _minimal_inputs():
     for slug, ci in city_inputs.items():
         results_matrix[slug] = {}
         for scen in scenarios_def:
-            net = calculate_net(ci["effective_gross"], ci["country_code"], ci["active_schemes"])
+            net = calculate_net(
+                ci["effective_gross"], ci["country_code"], ci["active_schemes"]
+            )
             traj = calculate_trajectory(
-                ci["effective_gross"], ci["country_code"], slug,
+                ci["effective_gross"],
+                ci["country_code"],
+                slug,
                 active_schemes=ci["active_schemes"],
                 scheme_expiry=ci["scheme_expiry"],
                 expenses_eur=2500,
@@ -90,7 +98,9 @@ def _minimal_inputs():
 
 class TestExcelSmoke:
     def test_returns_bytes(self):
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
+            _minimal_inputs()
+        )
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,
@@ -104,7 +114,9 @@ class TestExcelSmoke:
 
     def test_valid_zip_structure(self):
         """XLSX is a ZIP file — verify it can be opened as such."""
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
+            _minimal_inputs()
+        )
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,
@@ -118,7 +130,9 @@ class TestExcelSmoke:
 
     def test_five_sheets_present(self):
         """Verify the workbook contains all 5 expected sheets."""
-        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs()
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = (
+            _minimal_inputs()
+        )
         raw = generate_excel_report(
             city_inputs=city_inputs,
             results_matrix=results_matrix,

@@ -2,6 +2,7 @@
 10-year salary and surplus trajectory engine.
 Models salary growth, scheme expiry events, and cumulative savings.
 """
+
 from __future__ import annotations
 from .tax import calculate_net
 from .budget import calculate_budget, calculate_budget_v2, calculate_surplus
@@ -54,6 +55,7 @@ def calculate_trajectory(
 
     # Pre-load rate_change metadata for all active schemes
     from .tax import load_country as _load_country, _find_scheme as _find_s
+
     _country_data = _load_country(country_code)
     _scheme_rate_changes: dict[str, dict] = {}
     for sid in active_schemes:
@@ -79,7 +81,9 @@ def calculate_trajectory(
 
     for year in range(1, years + 1):
         gross = gross_annual * ((1 + cagr) ** (year - 1))
-        year_expenses_eur = round(base_expenses_eur * ((1 + col_inflation_rate) ** (year - 1)))
+        year_expenses_eur = round(
+            base_expenses_eur * ((1 + col_inflation_rate) ** (year - 1))
+        )
         calendar_year = ruling_start_year + (year - 1)
 
         current_schemes = []
@@ -105,8 +109,12 @@ def calculate_trajectory(
                             f"from {rc['calendar_year']})"
                         )
 
-        net = calculate_net(gross, country_code, current_schemes,
-                            scheme_overrides=scheme_overrides if scheme_overrides else None)
+        net = calculate_net(
+            gross,
+            country_code,
+            current_schemes,
+            scheme_overrides=scheme_overrides if scheme_overrides else None,
+        )
         net_mo_eur = net["net_monthly_eur"] + perks_monthly_eur
 
         surplus = calculate_surplus(net_mo_eur, {"total_eur": year_expenses_eur})
@@ -114,18 +122,20 @@ def calculate_trajectory(
         annual_saving = monthly_saving * 12
         cumulative_savings += annual_saving
 
-        results.append({
-            "year": year,
-            "gross_annual_local": round(gross),
-            "gross_annual_eur": round(gross * net["eur_rate"]),
-            "net_monthly_eur": net_mo_eur,
-            "total_expenses_eur": year_expenses_eur,
-            "surplus_monthly_eur": round(monthly_saving),
-            "surplus_annual_eur": round(annual_saving),
-            "cumulative_savings_eur": round(cumulative_savings),
-            "active_schemes": current_schemes,
-            "events": events,
-            "effective_rate": round(net["effective_rate"] * 100, 1),
-        })
+        results.append(
+            {
+                "year": year,
+                "gross_annual_local": round(gross),
+                "gross_annual_eur": round(gross * net["eur_rate"]),
+                "net_monthly_eur": net_mo_eur,
+                "total_expenses_eur": year_expenses_eur,
+                "surplus_monthly_eur": round(monthly_saving),
+                "surplus_annual_eur": round(annual_saving),
+                "cumulative_savings_eur": round(cumulative_savings),
+                "active_schemes": current_schemes,
+                "events": events,
+                "effective_rate": round(net["effective_rate"] * 100, 1),
+            }
+        )
 
     return results

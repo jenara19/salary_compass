@@ -2,6 +2,7 @@
 Cost of living aggregation engine.
 Returns total monthly expenses and surplus for a given city + scenario.
 """
+
 from __future__ import annotations
 import yaml
 from pathlib import Path
@@ -25,17 +26,17 @@ DISPLAY_LABELS = {
 
 # Per-category pax multipliers (2pax = 1.0 baseline, 1pax = reduced)
 PAX_MULTIPLIERS = {
-    "rent_2bed":      {1: 1.0,  2: 1.0},
-    "utilities":      {1: 0.85, 2: 1.0},
-    "health_extra":   {1: 0.5,  2: 1.0},
-    "health_kvg":     {1: 0.5,  2: 1.0},
+    "rent_2bed": {1: 1.0, 2: 1.0},
+    "utilities": {1: 0.85, 2: 1.0},
+    "health_extra": {1: 0.5, 2: 1.0},
+    "health_kvg": {1: 0.5, 2: 1.0},
     "groceries_2pax": {1: 0.60, 2: 1.0},
     "transport_2pax": {1: 0.65, 2: 1.0},
-    "eating_out":     {1: 0.55, 2: 1.0},
-    "leisure":        {1: 0.70, 2: 1.0},
-    "misc":           {1: 0.75, 2: 1.0},
-    "travel":         {1: 0.70, 2: 1.0},
-    "personal":       {1: 0.5,  2: 1.0},
+    "eating_out": {1: 0.55, 2: 1.0},
+    "leisure": {1: 0.70, 2: 1.0},
+    "misc": {1: 0.75, 2: 1.0},
+    "travel": {1: 0.70, 2: 1.0},
+    "personal": {1: 0.5, 2: 1.0},
 }
 
 
@@ -59,9 +60,11 @@ PORTABLE_CATEGORIES = {"travel", "personal"}  # don't scale by city — follow t
 #     knowledge, short-term-contract premium, and no time to search properly.
 #     The YAML comfortable value is calibrated for exactly this newcomer profile.
 YAML_ABSOLUTE_CATS = {
-    "health_extra", "health_kvg",   # healthcare system (Tier 1)
-    "utilities", "transport_2pax",  # city infrastructure (Tier 1)
-    "rent_2bed",                    # market anchored (Tier 2)
+    "health_extra",
+    "health_kvg",  # healthcare system (Tier 1)
+    "utilities",
+    "transport_2pax",  # city infrastructure (Tier 1)
+    "rent_2bed",  # market anchored (Tier 2)
 }
 
 # Settling-in sensitivity per category.
@@ -76,9 +79,9 @@ YAML_ABSOLUTE_CATS = {
 #   leisure     0.15 — cultural exploration: museums, gym memberships, events
 #   groceries   0.10 — mild: you find the cheap supermarket within a few weeks
 NEWCOMER_SENSITIVITIES: dict[str, float] = {
-    "eating_out":     0.25,
-    "misc":           0.20,
-    "leisure":        0.15,
+    "eating_out": 0.25,
+    "misc": 0.20,
+    "leisure": 0.15,
     "groceries_2pax": 0.10,
 }
 
@@ -331,13 +334,15 @@ def scale_expenses_to_city(
 
         else:
             # Tier 3: ratio-scale from home city, then apply newcomer premium
-            home_ref   = home_col.get(cat, {}).get("comfortable", 0) or 0
+            home_ref = home_col.get(cat, {}).get("comfortable", 0) or 0
             target_ref = target_col.get(cat, {}).get("comfortable", 0) or 0
             if home_ref > 0 and target_ref > 0:
                 ratio = max(0.5, min(3.0, target_ref / home_ref))
                 base_scaled = user_eur * ratio
                 sensitivity = NEWCOMER_SENSITIVITIES.get(cat, 0.0)
-                newcomer_mult = 1.0 + sensitivity * (1.0 - max(0.0, min(1.0, settling_factor)))
+                newcomer_mult = 1.0 + sensitivity * (
+                    1.0 - max(0.0, min(1.0, settling_factor))
+                )
                 scaled_eur = base_scaled * newcomer_mult
                 if sensitivity > 0 and newcomer_mult > 1.001:
                     note = (
@@ -391,7 +396,9 @@ def scale_expenses_to_city(
     }
 
 
-def distribute_total_to_categories(total_eur: float, city_slug: str, pax: int = 2) -> dict:
+def distribute_total_to_categories(
+    total_eur: float, city_slug: str, pax: int = 2
+) -> dict:
     """
     Distribute a total monthly expense figure across categories
     using city YAML ample values as proportional weights.
@@ -423,11 +430,12 @@ def list_cities() -> list[dict]:
     for path in sorted(CITIES_DIR.glob("*.yaml")):
         with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
-        cities.append({
-            "slug": path.stem,
-            "name": data["name"],
-            "country": data["country"],
-            "currency": data["currency"],
-        })
+        cities.append(
+            {
+                "slug": path.stem,
+                "name": data["name"],
+                "country": data["country"],
+                "currency": data["currency"],
+            }
+        )
     return cities
-

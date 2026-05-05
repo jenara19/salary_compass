@@ -1,7 +1,7 @@
 """Plotly chart builders for Streamlit dashboard."""
+
 import plotly.graph_objects as go
 import plotly.express as px
-from plotly.subplots import make_subplots
 
 COLOURS = {
     "generous": "#1A5276",
@@ -14,8 +14,14 @@ COLOURS = {
 }
 
 CITY_COLOURS = [
-    "#1A5276", "#1E8449", "#6E2F8E", "#B7950B",
-    "#A93226", "#17A589", "#D35400", "#839192",
+    "#1A5276",
+    "#1E8449",
+    "#6E2F8E",
+    "#B7950B",
+    "#A93226",
+    "#17A589",
+    "#D35400",
+    "#839192",
 ]
 
 
@@ -28,13 +34,15 @@ def surplus_bar_chart(scenarios: list[dict]) -> go.Figure:
     values = [s["surplus_eur"] for s in scenarios]
     colours = [COLOURS["positive"] if v >= 0 else COLOURS["negative"] for v in values]
 
-    fig = go.Figure(go.Bar(
-        x=labels,
-        y=values,
-        marker_color=colours,
-        text=[f"€{v:+,.0f}" for v in values],
-        textposition="outside",
-    ))
+    fig = go.Figure(
+        go.Bar(
+            x=labels,
+            y=values,
+            marker_color=colours,
+            text=[f"€{v:+,.0f}" for v in values],
+            textposition="outside",
+        )
+    )
     fig.add_hline(y=0, line_dash="dash", line_color=COLOURS["neutral"])
     fig.update_layout(
         title="Monthly Surplus / Deficit (EUR)",
@@ -71,16 +79,18 @@ def trajectory_line_chart(trajectories: list[dict]) -> go.Figure:
         values = [d["cumulative_savings_eur"] for d in traj["data"]]
         events = [d.get("events", []) for d in traj["data"]]
 
-        fig.add_trace(go.Scatter(
-            x=years,
-            y=values,
-            mode="lines+markers",
-            name=traj["label"],
-            line=dict(color=colour, width=2, dash=dash),
-            marker=dict(size=5),
-            hovertemplate="%{text}<br>Year %{x}: €%{y:,.0f}<extra></extra>",
-            text=[", ".join(e) if e else traj["label"] for e in events],
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=years,
+                y=values,
+                mode="lines+markers",
+                name=traj["label"],
+                line=dict(color=colour, width=2, dash=dash),
+                marker=dict(size=5),
+                hovertemplate="%{text}<br>Year %{x}: €%{y:,.0f}<extra></extra>",
+                text=[", ".join(e) if e else traj["label"] for e in events],
+            )
+        )
 
     fig.update_layout(
         title="10-Year Cumulative Savings (EUR)",
@@ -101,6 +111,7 @@ def budget_breakdown_chart(budgets: list[dict]) -> go.Figure:
     budgets: list of {label, items: {key: {label, value_eur}}}
     """
     from engine.budget import DISPLAY_LABELS
+
     all_keys = list(DISPLAY_LABELS.keys())
 
     fig = go.Figure()
@@ -113,12 +124,14 @@ def budget_breakdown_chart(budgets: list[dict]) -> go.Figure:
             item = b["items"].get(key)
             values.append(item["value_eur"] if item else 0)
 
-        fig.add_trace(go.Bar(
-            name=label,
-            x=[b["label"] for b in budgets],
-            y=values,
-            marker_color=palette[all_keys.index(key) % len(palette)],
-        ))
+        fig.add_trace(
+            go.Bar(
+                name=label,
+                x=[b["label"] for b in budgets],
+                y=values,
+                marker_color=palette[all_keys.index(key) % len(palette)],
+            )
+        )
 
     fig.update_layout(
         barmode="stack",
@@ -139,18 +152,27 @@ def negotiation_ladder_chart(ladder: list[dict], reference_surplus: float) -> go
     """
     labels = [f"{d['gross']:,}" for d in ladder]
     surpluses = [d["surplus_eur"] for d in ladder]
-    colours = [COLOURS["positive"] if s >= reference_surplus else COLOURS["negative"] for s in surpluses]
+    colours = [
+        COLOURS["positive"] if s >= reference_surplus else COLOURS["negative"]
+        for s in surpluses
+    ]
 
-    fig = go.Figure(go.Bar(
-        y=labels,
-        x=surpluses,
-        orientation="h",
-        marker_color=colours,
-        text=[f"€{s:+,.0f}/mo" for s in surpluses],
-        textposition="outside",
-    ))
-    fig.add_vline(x=reference_surplus, line_dash="dash", line_color="#E67E22",
-                  annotation_text=f"Reference: €{reference_surplus:+,.0f}/mo")
+    fig = go.Figure(
+        go.Bar(
+            y=labels,
+            x=surpluses,
+            orientation="h",
+            marker_color=colours,
+            text=[f"€{s:+,.0f}/mo" for s in surpluses],
+            textposition="outside",
+        )
+    )
+    fig.add_vline(
+        x=reference_surplus,
+        line_dash="dash",
+        line_color="#E67E22",
+        annotation_text=f"Reference: €{reference_surplus:+,.0f}/mo",
+    )
     fig.update_layout(
         title="Salary Ladder — Monthly Surplus (EUR)",
         xaxis_title="EUR surplus / month",
