@@ -8,7 +8,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Stage 1: Install dependencies ────────────────────────────────────────────
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.14-slim-bookworm AS builder
 
 # Inject uv from the official image — no curl / apt required
 COPY --from=ghcr.io/astral-sh/uv:0.11.9 /uv /uvx /bin/
@@ -28,7 +28,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────────
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 # Copy the pre-built virtualenv from builder (no uv, no build tools in runtime)
 COPY --from=builder /app/.venv /app/.venv
