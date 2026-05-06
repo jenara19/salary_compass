@@ -180,3 +180,13 @@ permit:
     sponsor_required: true
     costs_eur: 600
     notes: "Must have job offer and qualifications. Salary must exceed ~NOK 500k full-time (2025). Norwegian language not required for tech/finance roles."
+
+qualitative:
+  safety_score: 8.5
+  english_friendliness: 9.5
+  expat_community: "medium"
+  climate: "Subarctic/humid continental; long cold winters, short warm summers"
+  healthcare_quality: 9.0
+  bureaucracy_complexity: "low"
+  overall_livability: 8.5
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

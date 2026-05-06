@@ -8,6 +8,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+- **Qualitative city data block** — all 11 city YAMLs now include a `qualitative:` block with
+  `safety_score`, `english_friendliness`, `expat_community`, `climate`, `healthcare_quality`,
+  `bureaucracy_complexity`, `overall_livability`, and `sources` fields for future UI display.
+  Sources: Numbeo 2025, Mercer 2024, EIU Livability Index 2024. (A6)
+
 ### Fixed
 - **Excel Sheet 2 (Budget Breakdown) silent zeros** — was reading `items[cat]["eur"]` but the
   correct key is `"value_eur"` (aligns with `engine/budget.py`). All budget category cells now
