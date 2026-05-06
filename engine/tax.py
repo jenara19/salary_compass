@@ -118,7 +118,7 @@ def _lookup_net(gross: float, tax_config: dict) -> float:
 
     if gross <= lookup[0]["gross"]:
         diff = gross - float(lookup[0]["gross"])
-        return float(lookup[0]["net_monthly"]) + diff / 12 * marginal
+        return max(0.0, float(lookup[0]["net_monthly"]) + diff / 12 * marginal)
 
     if gross >= lookup[-1]["gross"]:
         diff = gross - float(lookup[-1]["gross"])
@@ -228,6 +228,12 @@ def get_schemes(country_code: str) -> list[dict]:
     return [s for s in country.get("special_schemes", []) if s.get("type") != "informational"]
 
 
+# Sentinel returned by find_target_gross when the target net is unachievable
+# even at the maximum search cap. Callers can check `result >= FIND_GROSS_UNREACHABLE`
+# to detect this condition and surface a warning instead of a misleading number.
+FIND_GROSS_UNREACHABLE: float = 2_000_000.0
+
+
 def find_target_gross(
     target_net_monthly_eur: float,
     country_code: str,
@@ -242,6 +248,8 @@ def find_target_gross(
 
     scheme_overrides: passed through to calculate_net (e.g. for 27% ruling cliff calc).
     Returns the minimum gross (local currency, annual) needed to reach the target net.
+    When the target is unachievable at max_gross, returns FIND_GROSS_UNREACHABLE
+    (== max_gross). Callers should check ``result >= FIND_GROSS_UNREACHABLE``.
     """
     active_schemes = active_schemes or []
 

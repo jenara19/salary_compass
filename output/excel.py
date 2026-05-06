@@ -251,11 +251,8 @@ def _write_budget(wb, F, city_inputs, results_matrix, scenarios_def, city_names,
             ws.write(current_row, 0, _CAT_LABELS[cat], F["alt"] if alt else F["normal"])
             for j, slug in enumerate(slugs):
                 items = results_matrix[slug][scen["name"]]["budget"].get("items", {})
-                val = (
-                    items.get(cat, {}).get("eur", 0)
-                    if isinstance(items.get(cat), dict)
-                    else items.get(cat, 0)
-                )
+                item = items.get(cat, {})
+                val = item.get("value_eur", 0) if isinstance(item, dict) else 0
                 ws.write_number(current_row, j + 1, val, F["money_alt"] if alt else F["money"])
             current_row += 1
 
@@ -365,7 +362,7 @@ def _write_negotiation(
     slugs,
     home_city_slug,
 ):
-    from engine.tax import find_target_gross
+    from engine.tax import _find_scheme, calculate_net, find_target_gross, load_country
 
     ws = wb.add_worksheet("4. Negotiation Targets")
     ws.set_zoom(90)
@@ -416,20 +413,17 @@ def _write_negotiation(
         row += 1
 
         perks = ci.get("perks_monthly_eur", 0)
+        active_schemes = list(ci.get("active_schemes", []))
         for scen in scenarios_def:
             budget_eur = results_matrix[slug][scen["name"]]["budget"]["total_eur"]
             target_net = home_surplus + budget_eur - perks
             be_gross = find_target_gross(
                 target_net,
                 ci["country_code"],
-                active_schemes=list(ci["active_schemes"]),
+                active_schemes=active_schemes,
             )
-            from engine.tax import calculate_net
-
             check_net = (
-                calculate_net(be_gross, ci["country_code"], list(ci["active_schemes"]))[
-                    "net_monthly_eur"
-                ]
+                calculate_net(be_gross, ci["country_code"], active_schemes)["net_monthly_eur"]
                 + perks
             )
             actual_surplus = check_net - budget_eur
@@ -438,6 +432,52 @@ def _write_negotiation(
             ws.write(row, 1, f"{ci['currency']} {be_gross:,}", F["normal"])
             ws.write_number(row, 2, actual_surplus, sur_fmt)
             row += 1
+
+        # Post-rate-change rows (e.g. NL 30%→27% from 2027)
+        _cd = load_country(ci["country_code"])
+        rc_schemes = [
+            (sid, _find_scheme(_cd, sid))
+            for sid in active_schemes
+            if _find_scheme(_cd, sid) and _find_scheme(_cd, sid).get("rate_change")  # type: ignore[union-attr]
+        ]
+        if rc_schemes:
+            row += 1
+            ws.merge_range(row, 0, row, 2, "Post rate-change break-even", F["subtitle"])
+            row += 1
+            ws.write(row, 0, "Scenario", F["header"])
+            ws.write(row, 1, "Break-even gross/yr (post-change)", F["header"])
+            ws.write(row, 2, "Resulting surplus/mo", F["header"])
+            row += 1
+            for sid, scheme_data in rc_schemes:
+                rc = scheme_data["rate_change"]  # type: ignore[index]
+                new_mult = rc["new_multiplier"]
+                old_pct = int((1 - scheme_data["multiplier"]) * 100)  # type: ignore[index]
+                new_pct = int((1 - new_mult) * 100)
+                overrides = {sid: {"multiplier": new_mult}}
+                for scen in scenarios_def:
+                    budget_eur = results_matrix[slug][scen["name"]]["budget"]["total_eur"]
+                    target_net = home_surplus + budget_eur - perks
+                    be_rc = find_target_gross(
+                        target_net,
+                        ci["country_code"],
+                        active_schemes=active_schemes,
+                        scheme_overrides=overrides,
+                    )
+                    check_net_rc = (
+                        calculate_net(
+                            be_rc, ci["country_code"], active_schemes, scheme_overrides=overrides
+                        )["net_monthly_eur"]
+                        + perks
+                    )
+                    actual_surplus_rc = check_net_rc - budget_eur
+                    sur_fmt_rc = F["surplus_pos"] if actual_surplus_rc >= 0 else F["surplus_neg"]
+                    label = (
+                        f"{scen['name']} ({old_pct}%→{new_pct}% ruling from {rc['calendar_year']})"
+                    )
+                    ws.write(row, 0, label, F["amber"])
+                    ws.write(row, 1, f"{ci['currency']} {be_rc:,}", F["amber"])
+                    ws.write_number(row, 2, actual_surplus_rc, sur_fmt_rc)
+                    row += 1
 
         # Move readiness
         from engine.budget import load_city
@@ -536,10 +576,8 @@ def _write_assumptions(
     ws.write(row, 1, "Gross/yr", F["header"])
     ws.write(row, 2, "Active schemes", F["header"])
     ws.write(row, 3, "CAGR", F["header"])
-    ws.write(row, 4, "Travel allow.", F["header"])
-    ws.write(row, 5, "Meal vouchers", F["header"])
-    ws.set_column(4, 4, 16)
-    ws.set_column(5, 5, 16)
+    ws.write(row, 4, "Tax-free perks/mo", F["header"])
+    ws.set_column(4, 4, 18)
     row += 1
 
     for slug, ci in city_inputs.items():

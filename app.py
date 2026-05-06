@@ -21,7 +21,7 @@ from engine.budget import (
     load_city,
     scale_expenses_to_city,
 )
-from engine.tax import find_target_gross, get_schemes, load_country
+from engine.tax import FIND_GROSS_UNREACHABLE, find_target_gross, get_schemes, load_country
 from output.charts import (
     budget_breakdown_chart,
     negotiation_ladder_chart,
@@ -637,6 +637,15 @@ with st.sidebar:
                             )
                     except Exception:
                         st.caption("Could not calculate partner net — check country.")
+                else:
+                    partner_net_monthly = st.number_input(
+                        "Partner net income (€/mo)",
+                        min_value=0,
+                        step=100,
+                        value=2500,
+                        help="Enter your partner's after-tax monthly income in EUR.",
+                        key="partner_net_manual",
+                    )
 
     st.divider()
 
@@ -1338,6 +1347,8 @@ with tab_compare:
         settling_factor = settling_pct / 100.0
 
         # ── Build results matrix ───────────────────────────────────────────────
+        # Net property effect: rental income offsets mortgage cost (portable across all cities).
+        property_net_monthly_eur = float(rental_income) - float(mortgage_monthly)
         results_matrix: dict[str, dict[str, dict]] = {}
         for city_slug, ci in city_inputs.items():
             results_matrix[city_slug] = {}
@@ -1345,7 +1356,7 @@ with tab_compare:
                 ci["effective_gross"], ci["country_code"], tuple(ci["active_schemes"])
             )
             perks_eur = ci.get("perks_monthly_eur", 0.0)
-            adjusted_net_eur = net["net_monthly_eur"] + perks_eur
+            adjusted_net_eur = net["net_monthly_eur"] + perks_eur + property_net_monthly_eur
             for scen in scenarios_def:
                 cat_mults_t = tuple(sorted(scen["category_multipliers"].items()))
                 scheme_exp_t = tuple(sorted(ci["scheme_expiry"].items()))
@@ -1878,12 +1889,19 @@ with tab_compare:
                     perks_note = (
                         f" (including €{target_perks:,.0f}/mo perks)" if target_perks > 0 else ""
                     )
-                    st.success(
-                        f"**{scen['name']}** — ask for at least "
-                        f"**{ccy} {breakeven_exact:,}/yr gross** "
-                        f"to match €{ref_surplus:+,.0f}/mo surplus in {ref_city_name}"
-                        f"{perks_note}"
-                    )
+                    if breakeven_exact >= FIND_GROSS_UNREACHABLE:
+                        st.warning(
+                            f"**{scen['name']}** — target net is unreachable even at the search "
+                            f"cap (€{FIND_GROSS_UNREACHABLE:,.0f}/yr gross). "
+                            "Verify the scenario expenses and surplus target."
+                        )
+                    else:
+                        st.success(
+                            f"**{scen['name']}** — ask for at least "
+                            f"**{ccy} {breakeven_exact:,}/yr gross** "
+                            f"to match €{ref_surplus:+,.0f}/mo surplus in {ref_city_name}"
+                            f"{perks_note}"
+                        )
 
                 st.divider()
 

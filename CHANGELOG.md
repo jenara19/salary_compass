@@ -8,6 +8,35 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+- **Excel Sheet 2 (Budget Breakdown) silent zeros** — was reading `items[cat]["eur"]` but the
+  correct key is `"value_eur"` (aligns with `engine/budget.py`). All budget category cells now
+  show real values instead of zero. (`output/excel.py`, B1)
+- **Excel Sheet 5 (Assumptions) "Meal vouchers" phantom column** — a header was written at
+  column 5 but the data loop only filled column 4. Renamed column 4 header to
+  "Tax-free perks/mo" and removed the orphaned "Meal vouchers" header. (`output/excel.py`, B2)
+- **Excel Sheet 4 (Negotiation Targets) ignores 30%→27% rate change** — the break-even gross
+  calculation now detects active schemes with a `rate_change` block and appends a dedicated
+  "Post rate-change break-even" section per city, matching the in-app cliff card. (`output/excel.py`, B3)
+- **`_lookup_net` can return negative net** — linear extrapolation below the first lookup
+  point is now floored at 0.0 (`max(0.0, ...)`). Prevents nonsense values for very low gross
+  inputs in lookup-method countries (ES, CH, GE, NOR). (`engine/tax.py`, B6)
+- **Partner "Other" country silently zeroed household income** — sidebar now shows a manual
+  "Partner net income (€/mo)" number input when "Other" is selected, so the partner
+  contribution flows into surplus and trajectory. (`app.py`, B14)
+
+### Added
+- **`FIND_GROSS_UNREACHABLE` sentinel** (`engine/tax.py`) — module-level constant (2,000,000)
+  documenting the value returned by `find_target_gross` when the target net is unachievable.
+  The negotiate tab now shows a `st.warning` instead of a misleadingly large gross figure. (B5)
+- **Property net wired into surplus** — `rental_income − mortgage_monthly` is now included in
+  `adjusted_net_eur` for every city, so mortgage holders see accurate surpluses and trajectory
+  projections. (`app.py`, A5)
+- **`openpyxl`** added to dev dependencies for Excel regression testing.
+- **New tests**: `TestExcelBudgetBreakdown` (B1 regression), `TestLookupNetFloor` (B6
+  regression), `TestFindGrossUnreachableSentinel` (B5). (`tests/test_excel.py`,
+  `tests/test_tax.py`)
+
 ### Added
 - **Negotiate tab** (5th inner tab in Compare): Target Salary solver, Move Readiness calculator, Sign-on Bonus gross-up, Permit Timeline (EU/EEA and non-EU paths)
 - **`find_gross_to_match_surplus()`** engine function — binary-search gross to match home monthly surplus in destination city
