@@ -46,3 +46,13 @@ permit:
     sponsor_required: true
     costs_eur: 75
     notes: "Long multi-step process (1-3 months). Beckham Law: flat 24% IRPF rate for qualifying new arrivals for up to 6 years."
+
+qualitative:
+  safety_score: 5.5
+  english_friendliness: 6.5
+  expat_community: "high"
+  climate: "Mediterranean; hot dry summers, mild winters, 300+ sunny days"
+  healthcare_quality: 7.5
+  bureaucracy_complexity: "high"
+  overall_livability: 7.5
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

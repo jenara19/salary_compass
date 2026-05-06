@@ -165,3 +165,13 @@ permit:
     sponsor_required: true
     costs_eur: 1900
     notes: "Points-based system applies equally to EU and non-EU nationals post-Brexit. Priority processing: +GBP 500 for 5-day decision. Visa does not permit self-employment."
+
+qualitative:
+  safety_score: 6.0
+  english_friendliness: 10.0
+  expat_community: "high"
+  climate: "Temperate oceanic; mild damp winters, warm summers"
+  healthcare_quality: 7.5
+  bureaucracy_complexity: "low"
+  overall_livability: 7.0
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

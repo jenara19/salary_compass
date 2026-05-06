@@ -46,3 +46,13 @@ permit:
     sponsor_required: false
     costs_eur: 140
     notes: "EU Blue Card: salary >= EUR 45,552 (general) or EUR 35,760 (STEM/shortage). No recognised-sponsor requirement - employer provides job offer and Vorabzustimmung."
+
+qualitative:
+  safety_score: 6.0
+  english_friendliness: 7.5
+  expat_community: "high"
+  climate: "Continental; cold winters, warm summers, moderate rainfall year-round"
+  healthcare_quality: 8.5
+  bureaucracy_complexity: "high"
+  overall_livability: 7.5
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

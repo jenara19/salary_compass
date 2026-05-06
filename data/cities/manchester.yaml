@@ -45,3 +45,13 @@ permit:
     sponsor_required: true
     costs_eur: 1900
     notes: "Identical UK-wide rules to London. NHS IHS: GBP 1,035/year paid upfront. Many digital/tech companies cover visa costs."
+
+qualitative:
+  safety_score: 7.0
+  english_friendliness: 9.5
+  expat_community: "medium"
+  climate: "Temperate oceanic; famously rainy, mild temperatures, limited sunshine"
+  healthcare_quality: 7.0
+  bureaucracy_complexity: "low"
+  overall_livability: 7.0
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

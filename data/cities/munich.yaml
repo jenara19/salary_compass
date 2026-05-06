@@ -46,3 +46,13 @@ permit:
     sponsor_required: false
     costs_eur: 140
     notes: "Same federal rules as Berlin. EU Blue Card: salary >= EUR 45,552 (general) or EUR 35,760 (shortage). Opportunity Card (Chancenkarte) allows 1 year to job-seek without offer."
+
+qualitative:
+  safety_score: 8.5
+  english_friendliness: 7.0
+  expat_community: "high"
+  climate: "Continental; cold snowy winters, warm sunny summers, occasional Föhn winds"
+  healthcare_quality: 8.5
+  bureaucracy_complexity: "high"
+  overall_livability: 8.5
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

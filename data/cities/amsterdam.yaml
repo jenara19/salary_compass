@@ -46,3 +46,13 @@ permit:
     sponsor_required: true
     costs_eur: 350
     notes: "IND fast-track 2-4 weeks if employer is recognised sponsor. 30% ruling: file within 4 months of start date."
+
+qualitative:
+  safety_score: 6.5
+  english_friendliness: 9.5
+  expat_community: "high"
+  climate: "Mild maritime; overcast, rainy winters; warm summers"
+  healthcare_quality: 8.0
+  bureaucracy_complexity: "medium"
+  overall_livability: 8.0
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"

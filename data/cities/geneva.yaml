@@ -222,3 +222,13 @@ permit:
     sponsor_required: true
     costs_eur: 100
     notes: "Strictly limited annual cantonal quotas. International organisations (UN, WHO, ICRC, CERN, WTO) use separate accreditation outside Swiss immigration law."
+
+qualitative:
+  safety_score: 8.5
+  english_friendliness: 8.5
+  expat_community: "high"
+  climate: "Temperate; cold winters, hot summers, lake moderates extremes"
+  healthcare_quality: 9.5
+  bureaucracy_complexity: "medium"
+  overall_livability: 9.0
+  sources: "Numbeo 2025, Mercer 2024, EIU Livability Index 2024"
