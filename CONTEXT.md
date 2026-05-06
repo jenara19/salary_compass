@@ -21,7 +21,7 @@ describe the current state and next priorities.
 - All 4 Compare tab inner tabs fully implemented (Budget/Surplus, 10yr Trajectory, Negotiate ladder, Details)
 - Negotiate tab: Target Salary, Move Readiness, Sign-on Bonus, Permit Timeline all live
 - 11 cities, 7 countries, 197 tests, deployed on Streamlit Community Cloud
-- Open work: LLM qualitative layer, GE single_lookup recalibration above CHF 140k
+- Open work: GE single_lookup recalibration above CHF 140k
 
 ---
 
@@ -465,7 +465,6 @@ New keys added: `city_travel_<slug>` (travel allowance) and `city_meals_<slug>` 
 
 ## Pending improvements (not yet built)
 
-- **LLM qualitative layer** — `engine/llm.py` planned but not yet built; would add per-city narrative summaries
 - **Geneva single_lookup recalibration** — CHF 140k–200k values extrapolated at 60% marginal retention; likely undertaxed vs real outcomes (see GE.yaml disclaimer + tax accuracy table). Requires official LIPP tariff data from ge.ch Quellensteuer tables.
 
 ---
@@ -539,8 +538,6 @@ When applying `.style.apply()` with `axis=None`, use `df.iloc[i, j]` for positio
 
 ## Pending improvements (not yet built)
 
-- **Excel export** — `xlsxwriter` is already in `requirements.txt`, just not wired up
-- **LLM qualitative layer** — `engine/llm.py` was planned but never built
 - **Push to GitHub + Streamlit Community Cloud** — for sharing via URL
 
 ---

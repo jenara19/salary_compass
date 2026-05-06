@@ -5,15 +5,18 @@ These tests verify that:
 - The function returns non-empty bytes
 - The bytes form a valid ZIP/XLSX file
 - All 5 expected sheets are present in the workbook
+- Sheet 2 (Budget Breakdown) correctly reads `value_eur` from budget items (B1 regression)
 """
 
 import io
 import zipfile
 
+import openpyxl
+
 from output.excel import generate_excel_report
 
 
-def _minimal_inputs():
+def _minimal_inputs(with_budget_items: bool = False):
     """Minimal but structurally complete inputs for the export function."""
     city_inputs = {
         "amsterdam": {
@@ -70,6 +73,13 @@ def _minimal_inputs():
     from engine.tax import calculate_net
     from engine.trajectory import calculate_trajectory
 
+    # Sample budget items using the correct key `value_eur`
+    sample_items = {
+        "rent_2bed": {"label": "Rent / Housing", "value_eur": 1500, "value_local": 1500},
+        "food": {"label": "Food", "value_eur": 400, "value_local": 400},
+        "transport": {"label": "Transport", "value_eur": 150, "value_local": 150},
+    }
+
     results_matrix = {}
     for slug, ci in city_inputs.items():
         results_matrix[slug] = {}
@@ -86,10 +96,14 @@ def _minimal_inputs():
                 ruling_start_year=ci["ruling_start_year"],
                 perks_monthly_eur=ci["perks_monthly_eur"],
             )
+            budget = {
+                "total_eur": 2050,
+                "items": sample_items if with_budget_items else {},
+            }
             results_matrix[slug][scen["name"]] = {
                 "net": net,
                 "trajectory": traj,
-                "budget": {"total_eur": 2500, "items": {}},
+                "budget": budget,
             }
 
     return city_inputs, results_matrix, scenarios_def, city_names, scen_names
@@ -140,3 +154,67 @@ class TestExcelSmoke:
             # xl/worksheets/sheet*.xml correspond to each sheet
             sheet_files = [n for n in names if n.startswith("xl/worksheets/sheet")]
         assert len(sheet_files) == 5, f"Expected 5 sheets, found {len(sheet_files)}: {sheet_files}"
+
+
+class TestExcelBudgetBreakdown:
+    """Regression tests for B1: budget items must use `value_eur` key (not `eur`)."""
+
+    def test_budget_cells_non_zero_when_items_provided(self):
+        """Budget breakdown sheet must show non-zero values when items have `value_eur`."""
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs(
+            with_budget_items=True
+        )
+        raw = generate_excel_report(
+            city_inputs=city_inputs,
+            results_matrix=results_matrix,
+            scenarios_def=scenarios_def,
+            city_names=city_names,
+            home_city_slug="amsterdam",
+            scen_names=scen_names,
+        )
+        wb = openpyxl.load_workbook(io.BytesIO(raw), data_only=True)
+        sheet_names = wb.sheetnames
+        budget_sheet = next((s for s in sheet_names if "Budget" in s or "2." in s), None)
+        assert budget_sheet is not None, f"Budget sheet not found in: {sheet_names}"
+        ws = wb[budget_sheet]
+
+        # Collect all numeric cell values from the sheet
+        numeric_values = [
+            cell.value
+            for row in ws.iter_rows()
+            for cell in row
+            if isinstance(cell.value, (int, float))
+        ]
+        # With our sample_items, total=2050, and individual items have values like 1500, 400, 150
+        assert any(v > 0 for v in numeric_values), (
+            f"Budget breakdown sheet has no positive numeric values — "
+            f"likely reading wrong key ('eur' instead of 'value_eur'). "
+            f"Found values: {numeric_values[:20]}"
+        )
+
+    def test_budget_cells_total_row_correct(self):
+        """Total row in budget sheet should match sum of items (budget['total_eur'])."""
+        city_inputs, results_matrix, scenarios_def, city_names, scen_names = _minimal_inputs(
+            with_budget_items=True
+        )
+        raw = generate_excel_report(
+            city_inputs=city_inputs,
+            results_matrix=results_matrix,
+            scenarios_def=scenarios_def,
+            city_names=city_names,
+            home_city_slug="amsterdam",
+            scen_names=scen_names,
+        )
+        wb = openpyxl.load_workbook(io.BytesIO(raw), data_only=True)
+        sheet_names = wb.sheetnames
+        budget_sheet = next((s for s in sheet_names if "Budget" in s or "2." in s), None)
+        assert budget_sheet is not None
+        ws = wb[budget_sheet]
+
+        # Find the TOTAL row and check value for Amsterdam (column B = col index 2)
+        for row in ws.iter_rows():
+            cells = list(row)
+            if cells and cells[0].value == "TOTAL":
+                total_val = cells[1].value  # col B = Amsterdam
+                assert total_val == 2050, f"TOTAL row should be 2050, got {total_val}"
+                break

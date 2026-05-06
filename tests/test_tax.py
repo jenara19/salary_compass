@@ -793,3 +793,57 @@ class TestFindGrossToMatchSurplus:
             scheme_overrides={"nl_30_ruling": {"multiplier": 0.73}},
         )
         assert abs(check["net_monthly_eur"] - net_30) <= 10
+
+
+# ── _lookup_net floor (B6 regression) ────────────────────────────────────────
+
+
+class TestLookupNetFloor:
+    """Verify that _lookup_net never returns a negative value.
+
+    Bug: for lookup-method countries, linear extrapolation below the first
+    lookup point could produce a negative net.  Fix: max(0.0, ...) floor.
+    """
+
+    @pytest.mark.parametrize("country", ["ES", "CH", "GE", "NOR"])
+    def test_near_zero_gross_is_non_negative(self, country):
+        """Gross of 1 should give net >= 0, never a negative number."""
+        result = calculate_net(1, country)
+        assert result["net_monthly_eur"] >= 0, (
+            f"{country}: net at gross=1 should be ≥ 0, got {result['net_monthly_eur']}"
+        )
+
+    @pytest.mark.parametrize("country", ["ES", "CH", "GE", "NOR"])
+    def test_zero_gross_is_non_negative(self, country):
+        """Gross of 0 should give net = 0."""
+        result = calculate_net(0, country)
+        assert result["net_monthly_eur"] >= 0, (
+            f"{country}: net at gross=0 should be ≥ 0, got {result['net_monthly_eur']}"
+        )
+
+
+# ── FIND_GROSS_UNREACHABLE sentinel ───────────────────────────────────────────
+
+
+class TestFindGrossUnreachableSentinel:
+    """Verify that find_target_gross returns FIND_GROSS_UNREACHABLE when the
+    target net exceeds what is achievable at max_gross."""
+
+    def test_unreachable_returns_sentinel(self):
+        """Asking for €1M/mo net should return FIND_GROSS_UNREACHABLE."""
+        from engine.tax import FIND_GROSS_UNREACHABLE, find_target_gross
+
+        result = find_target_gross(1_000_000, "NL")
+        assert result >= FIND_GROSS_UNREACHABLE, (
+            f"Unreachable target should return FIND_GROSS_UNREACHABLE ({FIND_GROSS_UNREACHABLE}), "
+            f"got {result}"
+        )
+
+    def test_reachable_target_below_sentinel(self):
+        """A normal target should return well below FIND_GROSS_UNREACHABLE."""
+        from engine.tax import FIND_GROSS_UNREACHABLE, find_target_gross
+
+        result = find_target_gross(5000, "NL")
+        assert result < FIND_GROSS_UNREACHABLE, (
+            f"Reachable target should be << FIND_GROSS_UNREACHABLE, got {result}"
+        )
