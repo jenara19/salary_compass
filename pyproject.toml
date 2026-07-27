@@ -12,7 +12,7 @@ dependencies = [
   "pyyaml>=6.0",
   "plotly>=5.18.0",
   "xlsxwriter>=3.1.9",
-  "pandas>=2.0.0",
+  "pandas>=3.0.5",
 ]
 
 [project.urls]
@@ -35,7 +35,7 @@ dev = [
   "pytest-cov>=5.0",
   "mypy>=1.10",
   "ruff>=0.4",
-  "pre-commit>=3.7",
+  "pre-commit>=4.6.1",
   "types-PyYAML>=6.0",
   "openpyxl>=3.1",
 ]
